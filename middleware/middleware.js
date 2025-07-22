@@ -1,7 +1,7 @@
-const { pgSchema, reviewSchema  } = require('./schemas');
-const ExpressError = require('./utils/ExpressError');
-const Pg = require('./models/pg'); 
-const Review = require('./models/review');
+const { pgSchema, reviewSchema  } = require('../schemas');
+const ExpressError = require('../utils/ExpressError');
+const Pg = require('../models/pg'); 
+const Review = require('../models/review');
 
 module.exports.isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {

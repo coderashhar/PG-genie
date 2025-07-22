@@ -1,5 +1,6 @@
 const Pg = require('../models/pg');
-const { cloudinary } = require('../cloudinary');
+const cloudinary = require("cloudinary").v2;
+const { uploadOnCloudinary } = require("../cloudinary");
 const maptilerClient = require("@maptiler/client");
 maptilerClient.config.apiKey = process.env.MAPTILER_API_KEY;
 
@@ -16,7 +17,20 @@ module.exports.createPg = async(req, res, next) => {
     const geoData = await maptilerClient.geocoding.forward(req.body.PG.location, { limit: 1 });
     const pg = new Pg(req.body.PG);
     pg.geometry = geoData.features[0].geometry;
-    pg.images = req.files.map( file => ({ url: file.path, filename: file.filename }));
+
+    if(req.files && req.files?.length > 0){
+        const uploadPromises = req.files.map(async (file) => {
+            const result = await uploadOnCloudinary(file.path);
+            return result;
+        })
+        const uploadedImages = await Promise.all(uploadPromises);
+    
+           pg.images = uploadedImages.map(img => ({
+               url: img.secure_url,
+               filename: img.public_id
+           }));
+    }
+    
     pg.author = req.user._id;
     await pg.save();
     console.log(pg); 
@@ -50,13 +64,19 @@ module.exports.renderEditForm = async(req,res) => {
 
 module.exports.updatePg = async(req, res) => {
     const { id } = req.params;
-    const pg = await Pg.findByIdAndUpdate(id, {...req.body.PG});
+    const pg = await Pg.findByIdAndUpdate(id, {...req.body.PG}, { new: true });
 
     const geoData = await maptilerClient.geocoding.forward(req.body.PG.location, { limit: 1 });
     pg.geometry = geoData.features[0].geometry;
 
-    const imgs = req.files.map( file => ({ url: file.path, filename: file.filename }));
-    pg.images.push(... imgs);
+const uploadPromises = req.files.map(async (file) => {
+        const result = await uploadOnCloudinary(file.path)
+        return result;
+})
+
+const uploadedImages = await Promise.all(uploadPromises)
+pg.images.push(...uploadedImages.map(img => ({ url: img.secure_url, filename: img.public_id })));
+
 
     await pg.save();
 
