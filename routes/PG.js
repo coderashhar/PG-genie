@@ -15,7 +15,7 @@ router.route('/')
 
 router.get('/new', isLoggedIn, PG.renderNewForm)
 
-router.get('/search', PG.searchPg);
+//router.get('/search', PG.searchPg);
 
 router.route('/:id')
     .get(catchAsync(PG.showPg))

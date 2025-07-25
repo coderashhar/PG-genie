@@ -3,10 +3,54 @@ const { cloudinary } = require('../cloudinary');
 const maptilerClient = require("@maptiler/client");
 maptilerClient.config.apiKey = process.env.MAPTILER_API_KEY;
 
-module.exports.index = async(req, res) => {
-    const PG = await Pg.find({});
-    res.render('PG/index' , {PG});
-}
+module.exports.index = async (req, res) => {
+    const { query, city, minPrice, maxPrice, sortBy } = req.query;
+
+    let filters = {};
+
+    // Search by title or location
+    if (query) {
+        filters.$or = [
+            { title: { $regex: query, $options: 'i' } },
+            { location: { $regex: query, $options: 'i' } }
+        ];
+    }
+
+    // City filter
+    if (city) {
+        filters.city = city;
+    }
+
+    // Price range filter
+    if (minPrice || maxPrice) {
+        filters.price = {};
+        if (minPrice) filters.price.$gte = Number(minPrice);
+        if (maxPrice) filters.price.$lte = Number(maxPrice);
+    }
+
+    // Sorting
+    let sortQuery = {};
+    if (sortBy === 'priceAsc') sortQuery.price = 1;
+    else if (sortBy === 'priceDesc') sortQuery.price = -1;
+    else if (sortBy === 'ratingDesc') sortQuery.rating = -1;
+
+    try {
+        const PG = await Pg.find(filters).sort(sortQuery);
+
+        res.render('PG/index', {
+            PG,
+            query: query || '',
+            city: city || '',
+            minPrice: minPrice || '',
+            maxPrice: maxPrice || '',
+            sortBy: sortBy || ''
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Server Error");
+    }
+};
+
 
 module.exports.renderNewForm = (req, res) => {
     res.render('PG/new');
@@ -78,21 +122,21 @@ module.exports.deletePg = async(req, res) => {
     res.redirect('/PG');
 }
 
-module.exports.searchPg = async (req, res) => {
-    const { query } = req.query; // Get the search query from the URL
+// module.exports.searchPg = async (req, res) => {
+//     const { query } = req.query; // Get the search query from the URL
 
-    try {
-        // Search PGs by title or location (case-insensitive)
-        const pgResults = await Pg.find({
-            $or: [
-                { title: { $regex: query, $options: 'i' } },
-                { location: { $regex: query, $options: 'i' } }
-            ]
-        });
+//     try {
+//         // Search PGs by title or location (case-insensitive)
+//         const pgResults = await Pg.find({
+//             $or: [
+//                 { title: { $regex: query, $options: 'i' } },
+//                 { location: { $regex: query, $options: 'i' } }
+//             ]
+//         });
 
-        res.render('PG/searchResults', { pgResults, query }); // Render results
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Server Error");
-    }
-}
+//         res.render('PG/searchResults', { pgResults, query }); // Render results
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).send("Server Error");
+//     }
+// }
