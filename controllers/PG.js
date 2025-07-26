@@ -4,7 +4,11 @@ const maptilerClient = require("@maptiler/client");
 const fs = require("fs");
 maptilerClient.config.apiKey = process.env.MAPTILER_API_KEY;
 
-// Add a new method for Cloudinary upload after verification
+const fs = require("fs");
+const cloudinary = require("cloudinary").v2;
+const Pg = require("../models/pg"); // Ensure correct path to your model
+
+// Handle image uploads to Cloudinary
 module.exports.uploadToCloudinary = async (req, res, next) => {
   if (!req.files || req.files.length === 0) {
     return next();
@@ -16,34 +20,71 @@ module.exports.uploadToCloudinary = async (req, res, next) => {
         const stream = cloudinary.uploader.upload_stream(
           { folder: "PGBuddy", allowed_formats: ["jpeg", "png", "jpg"] },
           (error, result) => {
-            if (error) {
-              return reject(error);
-            }
+            if (error) return reject(error);
             resolve({
               url: result.secure_url,
               filename: result.public_id,
             });
           }
         );
-
         fs.createReadStream(file.path).pipe(stream);
       });
     });
 
     const results = await Promise.all(uploadPromises);
-
-    // Store uploaded files info in req for later use
     req.cloudinaryFiles = results;
-
     next();
   } catch (err) {
     next(err);
   }
 };
 
+// Enhanced PG listing with filtering, sorting, and search
 module.exports.index = async (req, res) => {
-  const PG = await Pg.find({});
-  res.render("PG/index", { PG });
+  const { query, city, minPrice, maxPrice, sortBy } = req.query;
+
+  let filters = {};
+
+  // Search by title or location
+  if (query) {
+    filters.$or = [
+      { title: { $regex: query, $options: "i" } },
+      { location: { $regex: query, $options: "i" } },
+    ];
+  }
+
+  // Filter by city
+  if (city) {
+    filters.city = city;
+  }
+
+  // Filter by price range
+  if (minPrice || maxPrice) {
+    filters.price = {};
+    if (minPrice) filters.price.$gte = Number(minPrice);
+    if (maxPrice) filters.price.$lte = Number(maxPrice);
+  }
+
+  // Sorting logic
+  let sortQuery = {};
+  if (sortBy === "priceAsc") sortQuery.price = 1;
+  else if (sortBy === "priceDesc") sortQuery.price = -1;
+  else if (sortBy === "ratingDesc") sortQuery.rating = -1;
+
+  try {
+    const PG = await Pg.find(filters).sort(sortQuery);
+    res.render("PG/index", {
+      PG,
+      query: query || "",
+      city: city || "",
+      minPrice: minPrice || "",
+      maxPrice: maxPrice || "",
+      sortBy: sortBy || "",
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
 };
 
 module.exports.renderNewForm = (req, res) => {
