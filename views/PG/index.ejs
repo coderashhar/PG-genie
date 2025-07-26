@@ -1,18 +1,14 @@
-    <% layout('./layout/boilerplate') %>
-    <div class="input-group row mb-4">
+<% layout('./layout/boilerplate') %>
+    <div class="row mb-4">
         <div class="col-md-6 offset-md-3">
-            <form action="/PG/search" method="GET" class="d-flex input-group col-6">
-                <input 
-                    type="text" 
-                    class="form-control" 
-                    name="query" 
-                    placeholder="Search by location or title" 
-                    aria-label="Search" 
-                    required>
+            <form action="/PG/search" method="GET" class="d-flex gap-2">
+                <input type="text" class="form-control" name="query" placeholder="Search by location or title"
+                    aria-label="Search" required>
                 <button class="btn btn-secondary" type="submit">Search</button>
             </form>
         </div>
     </div>
+
     <div id="cluster-map" class="rounded-2"></div>
     <ul>
         <% for (let pg of PG) { %>
@@ -20,17 +16,26 @@
                 <div class="row">
                     <div class="col-md-4">
                         <% if (pg.images.length) { %>
-                            <img crossorigin="anonymous" src="<%= pg.images[0].url %>" alt="" class="img-fluid w-100 rounded-start-2">
-                        <% } else{ %>
-                            <img crossorigin="anonymous" src="https://res.cloudinary.com/dqwsuokwl/image/upload/v1736588613/PGBuddy/x7qlzfw6hnnqva0vo2w9.jpg" alt="" class="img-fluid  w-100 rounded-start-2"> 
-                        <% } %>
+                            <img crossorigin="anonymous" src="<%= pg.images[0].url %>" alt=""
+                                class="img-fluid w-100 rounded-start-2">
+                            <% } else{ %>
+                                <img crossorigin="anonymous"
+                                    src="https://res.cloudinary.com/dqwsuokwl/image/upload/v1736588613/PGBuddy/x7qlzfw6hnnqva0vo2w9.jpg"
+                                    alt="" class="img-fluid  w-100 rounded-start-2">
+                                <% } %>
                     </div>
                     <div class="col-md-8">
                         <div class="card-body rounded-3">
-                            <h5 class="card-title mb-1"><%= pg.title %></h5>
-                            <p class="card-text mb-1"><%= pg.description %></p>
+                            <h5 class="card-title mb-1">
+                                <%= pg.title %>
+                            </h5>
+                            <p class="card-text mb-1">
+                                <%= pg.description %>
+                            </p>
                             <p class="card-text mb-0">
-                                <small class="text-muted"><%= pg.location %></small>
+                                <small class="text-muted">
+                                    <%= pg.location %>
+                                </small>
                             </p>
                             <p class="card-text mb-2">
                                 <small>&#8377; <%= pg.price %>/month</small>
@@ -40,12 +45,12 @@
                     </div>
                 </div>
             </div>
-        <% } %>
+            <% } %>
     </ul>
 
     <script>
         const maptilerApiKey = '<%- process.env.MAPTILER_API_KEY %>';
-        const pgs = {features : <%- JSON.stringify(PG) %>}
+        const pgs = { features: '<%- JSON.stringify(PG) %>' }
     </script>
 
     <script src="/javascripts/clusterMap.js"></script>
