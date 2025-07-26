@@ -1,11 +1,11 @@
 body {
-    height: 100vh;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)),
+  height: 100vh;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)),
     url("../images/home.jpg");
-    background-size: cover;
-    background-position: 0% 80%;
-    text-shadow: 0 0.05rem 0.1rem rgba(0, 0, 0, 0.5);
-    box-shadow: inset 0 0 5rem rgba(0, 0, 0, 0.5);
+  background-size: cover;
+  background-position: 0% 80%;
+  text-shadow: 0 0.05rem 0.1rem rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 0 5rem rgba(0, 0, 0, 0.5);
 }
 
 .cover-container {
@@ -32,52 +32,100 @@ body {
   transition: all 0.3s ease;
 }
 
-.nav-link:hover{
-    color: rgba(255, 255, 255, 0.8);
-    border-bottom-color: rgba(255, 255, 255, 0.5);
+.nav-link:hover {
+  color: rgba(255, 255, 255, 0.8);
+  border-bottom-color: rgba(255, 255, 255, 0.5);
 }
 
 .nav-link.active {
-    color: white;
-    border-bottom-color:white;
-
+  color: white;
+  border-bottom-color: white;
 }
 
-.btn-secondary, .btn-secondary:hover{
-    color: #333;
-    text-shadow: none;
+.btn-secondary,
+.btn-secondary:hover {
+  color: #333;
+  text-shadow: none;
 }
 
 .responsive-text {
-    font-size: 1.25rem; /* Default font size (for larger screens) */
-  }
-  
-  @media (max-width: 768px) {
-    .responsive-text {
-      font-size: 1rem; /* Smaller font size for tablets */
-    }
-  }
-  
-  @media (max-width: 576px) {
-    .responsive-text {
-      font-size: 0.875rem; /* Smaller font size for mobile phones */
-    }
-  }
+  font-size: 1.25rem; /* Default font size (for larger screens) */
+}
 
-  .btn {
-    transition: all 0.3s ease-in-out;
-    transform: scale(1);
-    backdrop-filter: blur(2px);
-    background-color: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: rgb(10, 10, 10);
+@media (max-width: 768px) {
+  .responsive-text {
+    font-size: 1rem; /* Smaller font size for tablets */
+  }
+}
+
+@media (max-width: 576px) {
+  .responsive-text {
+    font-size: 0.875rem; /* Smaller font size for mobile phones */
+  }
+}
+
+.btn {
+  transition: all 0.3s ease-in-out;
+  transform: scale(1);
+  backdrop-filter: blur(2px);
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: rgb(10, 10, 10);
 }
 
 .btn:hover {
-    transform: scale(1.03);
-    background-color: rgba(255, 255, 255, 0.25);
-    border-color: rgba(255, 255, 255, 0.6);
-    color: #000;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  transform: scale(1.03);
+  background-color: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.6);
+  color: #000;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+.user-avatar-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
 }
 
+.user-avatar-name {
+  font-size: 0.85rem;
+  color: white;
+  transform: translateY(-5px);
+}
+
+.user-avatar-circle {
+  width: 30px;
+  height: 30px;
+  background-color: #70757a;
+  color: white;
+  border-radius: 50%;
+  border: 2px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+/* 🔻 Responsive changes for small screens */
+@media (max-width: 768px) {
+  .user-avatar-container {
+    top: 10px;
+    right: 10px; /* Override right positioning */
+    left: auto; /* Reset right */
+    gap: 6px;
+    scale: 0.9; /* Slightly shrink on mobile */
+  }
+
+  .user-avatar-circle {
+    width: 28px;
+    height: 28px;
+    font-size: 0.85rem;
+  }
+
+  .user-avatar-name {
+    font-size: 0.75rem;
+    transform: translateY(-4px);
+  }
+}

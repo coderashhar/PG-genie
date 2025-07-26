@@ -83,6 +83,10 @@
             <div class="mb-3">
                 <label for="image" class="form-label">Add Photos</label>
                 <input class="form-control" type="file" name="image" id="image" multiple>
+                <div class="form-text text-muted">
+                    All images will be scanned for inappropriate content before uploading.
+                    Images containing NSFW content will be rejected.
+                </div>
             </div>
             <div class="mb-3">
                 <% pg.images.forEach(function(img, i) {  %>
@@ -100,4 +104,3 @@
         <a href="/PG/<%= pg._id%>">Back to PG</a>
     </div>
 </div>
- 
