@@ -1,84 +1,67 @@
 import { useState } from "react";
-import loginImage from '../assets/PG-genie-login.jpeg';
+import loginImage from '../assets/login.jpg';
 
 const Login = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-const [username, setUsername] = useState("")
-const [password, setPassword] = useState("")
-
-const handleSubmit = (e) => {
-  e.preventDefault();
-
-  if(!username || !password){
-    console.error("All fields are necessary to proceed!");
-  } else{
-    console.log("Logged In successfully having username: ", username);
-  }
-}
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!username || !password) {
+      console.error("All fields are necessary!");
+    } else {
+      console.log("Logged in as:", username);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#ececec] px-4">
-      <div className="flex w-full max-w-4xl shadow-lg rounded-xl overflow-hidden bg-white items-center">
-        
+      <div className="flex w-full max-w-[950px] h-[580px] bg-white rounded-xl shadow-xl overflow-hidden">
 
-        <div className="w-1/2 hidden md:block relative">
+        <div className="hidden md:block md:w-1/2 relative">
           <img
             src={loginImage}
-            alt="Room"
-            className="h-full w-full object-cover"
+            alt="Login visual"
+            className="w-full h-full object-cover"
           />
-          <div className="absolute top-3 left-9 text-[#4e3d32] drop-shadow-md text-lg font-black">
+          <div className="absolute bottom-2 left-30 text-white text-xl font-semibold leading-relaxed drop-shadow-md">
             <p>Your journey begins with</p>
-            <p>finding the right place to stay – <em>PG Buddy</em></p>
+            <p>finding the right place to</p>
+            <p>stay - <em className="font-bold text-sm">PG Buddy</em></p>
           </div>
         </div>
 
+        <div className="w-full md:w-1/2 p-15 flex flex-col justify-center text-black">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-8">Login</h2>
 
-        <div className="w-full md:w-1/2 p-10 text-black flex flex-col gap-4">
-          <h2 className="text-3xl font-bold text-center mb-6">Login</h2>
-          
-          <form 
-          onSubmit={handleSubmit}
-          className="space-y-6">
-            <div>
-              <input
-                value={username}
-                onChange={(e) => {
-                  setUsername(e.target.value)
-                }}
-                type="text"
-                id="username"
-                className="w-full mt-1 p-2 border-b-2 border-[#4e3d32] outline-none focus:border-[#4e3d32] transition-all"
-                placeholder="Username"
+          <form onSubmit={handleSubmit} className="space-y-6 text-black">
+            <input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="h-[45px] w-full bg-transparent border-b focus:border-[#934b2a] border-black/20 outline-none mb-5 text-[#40414a]"
               />
-            </div>
 
-            <div>
-              <input
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value)
-                }}
-                type="password"
-                id="password"
-                className="w-full mt-1 p-2 border-b-2 border-gray-300 outline-none focus:border-[#4e3d32] transition-all"
-                placeholder="Password"
-              />
-            </div>
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="h-[45px] w-full bg-transparent border-b focus:border-[#934b2a] border-black/20 outline-none mb-5 text-[#40414a]"
+            />
 
             <button
               type="submit"
-              className="w-full py-2 !bg-brown-500 text-white rounded-md hover:!bg-[#453326] transition"
+              className="w-full !bg-[#ececec] text-black py-2 rounded hover:bg-brown transition hover:!bg-[#533e2d] hover:!text-[#fff]"
             >
               Login
             </button>
           </form>
 
-          <p className="text-center text-sm text-gray-600 mt-4">
-            Don’t have an account?{' '}
-            <a href="/register" className="!text-black !font-bold hover:!underline">
-              Register here
-            </a>
+          <p className="text-center text-sm text-gray-600 mt-6">
+            Don’t have an account?{" "}
+            <a href="/register" className="!font-bold hover:!underline !text-black">Register here</a>
           </p>
         </div>
       </div>
