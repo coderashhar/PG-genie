@@ -4,10 +4,6 @@ const maptilerClient = require("@maptiler/client");
 const fs = require("fs");
 maptilerClient.config.apiKey = process.env.MAPTILER_API_KEY;
 
-const fs = require("fs");
-const cloudinary = require("cloudinary").v2;
-const Pg = require("../models/pg"); // Ensure correct path to your model
-
 // Handle image uploads to Cloudinary
 module.exports.uploadToCloudinary = async (req, res, next) => {
   if (!req.files || req.files.length === 0) {
