@@ -1,5 +1,6 @@
-const Pg = require("../models/pg");
-const { cloudinary } = require("../cloudinary");
+const Pg = require('../models/pg');
+const cloudinary = require("cloudinary").v2;
+const { uploadOnCloudinary } = require("../cloudinary");
 const maptilerClient = require("@maptiler/client");
 const fs = require("fs");
 maptilerClient.config.apiKey = process.env.MAPTILER_API_KEY;
@@ -101,7 +102,7 @@ module.exports.createPg = async (req, res, next) => {
       }
     );
 
-    const pg = new Pg(req.body.PG);
+    const pg = new Pg(req.body.PG); 
 
     // Check if geocoding results exist
     if (geoData.features && geoData.features.length > 0) {
@@ -177,6 +178,7 @@ module.exports.updatePg = async (req, res) => {
         limit: 1,
       }
     );
+
 
     // Check if geocoding results exist
     if (geoData.features && geoData.features.length > 0) {
