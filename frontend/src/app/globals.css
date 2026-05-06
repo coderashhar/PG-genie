@@ -1,0 +1,360 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ───────────────────── Design Tokens ───────────────────── */
+:root {
+  --bg: #FFFFFF;
+  --fg: #181C20;
+  --primary: #004D40;           /* Midnight Emerald */
+  --primary-light: #00796B;
+  --primary-dark: #00342B;
+  --accent: #FFC107;            /* Amber Gold */
+  --accent-light: #FFD54F;
+  --accent-dark: #FFA000;
+  --surface: #FFFFFF;
+  --surface-dim: #F5F7F5;
+  --on-surface: #3F4945;
+  --outline: #E0E0E0;
+  --glass-bg: rgba(255,255,255,0.65);
+  --glass-border: rgba(255,255,255,0.35);
+  --shadow-primary: rgba(0,77,64,0.08);
+  --shadow-accent: rgba(255,193,7,0.25);
+}
+
+/* ───────────────────── Reset & Base ───────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  color: var(--fg);
+  background: var(--bg);
+}
+
+::selection {
+  background: rgba(0,77,64,0.15);
+  color: var(--primary);
+}
+
+/* ───────────────────── Keyframe Animations ───────────────────── */
+
+/* Hero entry */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(60px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* 3D Form rotation */
+@keyframes floatRotate {
+  0%   { transform: rotateY(0deg)   rotateX(5deg)  translateY(0px); }
+  25%  { transform: rotateY(8deg)   rotateX(-3deg) translateY(-12px); }
+  50%  { transform: rotateY(-5deg)  rotateX(7deg)  translateY(-6px); }
+  75%  { transform: rotateY(3deg)   rotateX(-5deg) translateY(-14px); }
+  100% { transform: rotateY(0deg)   rotateX(5deg)  translateY(0px); }
+}
+
+@keyframes glowPulse {
+  0%, 100% { filter: drop-shadow(0 0 20px rgba(0,77,64,0.15)) drop-shadow(0 0 40px rgba(0,77,64,0.05)); }
+  50%      { filter: drop-shadow(0 0 30px rgba(0,77,64,0.25)) drop-shadow(0 0 60px rgba(0,77,64,0.1)); }
+}
+
+/* Unfurl / reveal animations for the 3D structure */
+@keyframes panelUnfurl1 {
+  0%   { transform: rotateY(0deg) scale(1); opacity: 1; }
+  100% { transform: rotateY(-65deg) scale(0.92); opacity: 0.3; }
+}
+@keyframes panelUnfurl2 {
+  0%   { transform: rotateY(0deg) scale(1); opacity: 1; }
+  100% { transform: rotateY(55deg) scale(0.88); opacity: 0.25; }
+}
+@keyframes panelUnfurl3 {
+  0%   { transform: rotateY(0deg) translateX(0); opacity: 1; }
+  100% { transform: rotateY(-40deg) translateX(-30px); opacity: 0.2; }
+}
+
+@keyframes revealContent {
+  0%   { opacity: 0; transform: scale(0.7); }
+  60%  { opacity: 0; transform: scale(0.7); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes iconFloat {
+  0%, 100% { transform: translateY(0px); }
+  50%      { transform: translateY(-6px); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Parallax depth layers */
+@keyframes parallaxSlow {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50%      { transform: translateY(-8px) translateX(3px); }
+}
+@keyframes parallaxFast {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50%      { transform: translateY(-14px) translateX(-5px); }
+}
+
+/* Card entrance */
+@keyframes cardSlideUp {
+  from { opacity: 0; transform: translateY(60px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Badge pulse */
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,193,7,0.4); }
+  50%      { box-shadow: 0 0 0 8px rgba(255,193,7,0); }
+}
+
+/* Gradient line */
+@keyframes gradientSlide {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* Subtle scale hover */
+@keyframes subtleBreath {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.01); }
+}
+
+/* Search bar focus glow */
+@keyframes searchGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,193,7,0); }
+  50%      { box-shadow: 0 0 20px 2px rgba(255,193,7,0.15); }
+}
+
+/* ───────────────────── Utility Animation Classes ───────────────────── */
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-fade-in-right {
+  animation: fadeInRight 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease both;
+}
+
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+.delay-600 { animation-delay: 0.6s; }
+.delay-700 { animation-delay: 0.7s; }
+.delay-800 { animation-delay: 0.8s; }
+
+/* ───────────────────── 3D Hero Visual ───────────────────── */
+
+.hero-3d-container {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+.hero-3d-form {
+  transform-style: preserve-3d;
+  animation: floatRotate 12s ease-in-out infinite, glowPulse 4s ease-in-out infinite;
+  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-3d-form:hover {
+  animation-play-state: paused;
+}
+
+/* Translucent emerald glass panes */
+.glass-pane {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 77, 64, 0.12) 0%,
+    rgba(0, 77, 64, 0.06) 50%,
+    rgba(0, 77, 64, 0.18) 100%
+  );
+  border: 1px solid rgba(0, 77, 64, 0.15);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.3),
+    0 8px 32px rgba(0,77,64,0.08);
+}
+
+.glass-pane::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.15) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+}
+
+/* Soft glow edge effect */
+.glass-pane-glow {
+  box-shadow:
+    0 0 15px rgba(0,77,64,0.1),
+    0 0 30px rgba(0,77,64,0.05),
+    inset 0 1px 0 rgba(255,255,255,0.3);
+}
+
+/* Unfurl state (activated on hover of parent) */
+.hero-3d-form.is-unfurled .pane-1 {
+  animation: panelUnfurl1 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.hero-3d-form.is-unfurled .pane-2 {
+  animation: panelUnfurl2 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
+}
+.hero-3d-form.is-unfurled .pane-3 {
+  animation: panelUnfurl3 1s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+}
+
+.hero-3d-form.is-unfurled .reveal-content {
+  animation: revealContent 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.reveal-icon {
+  animation: iconFloat 2.5s ease-in-out infinite;
+}
+
+/* ───────────────────── Glassmorphism Search Bar ───────────────────── */
+
+.search-glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  border: 1.5px solid var(--glass-border);
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.search-glass:focus-within {
+  border-color: var(--accent);
+  box-shadow:
+    0 0 0 3px rgba(255,193,7,0.12),
+    0 8px 40px rgba(0,0,0,0.06);
+  animation: searchGlow 2s ease-in-out infinite;
+}
+
+.search-glass input::placeholder {
+  color: #9CA3AF;
+  font-style: italic;
+}
+
+/* ───────────────────── M3 Cards (Premium) ───────────────────── */
+
+.m3-card-premium {
+  background: var(--surface);
+  border: 1px solid var(--outline);
+  border-radius: 24px;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+}
+
+.m3-card-premium::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 3px;
+  background: linear-gradient(90deg, var(--primary), var(--accent), var(--primary));
+  background-size: 200% 100%;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.m3-card-premium:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 20px 60px var(--shadow-primary),
+    0 8px 20px rgba(0,0,0,0.04);
+  border-color: transparent;
+}
+
+.m3-card-premium:hover::before {
+  opacity: 1;
+  animation: gradientSlide 3s linear infinite;
+}
+
+/* ───────────────────── Grid Lines (architectural) ───────────────────── */
+
+.grid-architectural {
+  background-image:
+    linear-gradient(rgba(0,77,64,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,77,64,0.04) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+
+/* ───────────────────── Premium Typography ───────────────────── */
+
+.headline-serif {
+  font-family: 'DM Serif Display', Georgia, serif;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.text-body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  line-height: 1.6;
+}
+
+/* ───────────────────── Decorative Elements ───────────────────── */
+
+.accent-line {
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+  border-radius: 2px;
+}
+
+.dot-accent {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: badgePulse 2s ease-in-out infinite;
+}
+
+/* ───────────────────── Scrollbar ───────────────────── */
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(0,77,64,0.15);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,77,64,0.3);
+}
+
+/* ───────────────────── Responsive Helpers ───────────────────── */
+
+@media (max-width: 768px) {
+  .headline-serif {
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+}
