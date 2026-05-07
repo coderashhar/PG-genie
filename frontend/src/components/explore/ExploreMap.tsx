@@ -1,38 +1,79 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import { setOptions, importLibrary } from '@googlemaps/js-api-loader';
 
-interface PGPin {
+interface Property {
   id: string;
-  name: string;
+  title: string;
   price: string;
   type: string;
+  location?: { lat: number; lng: number };
 }
 
-const PG_LOCATIONS: PGPin[] = [
-  { id: '1', name: 'Emerald Heights', price: '₹8,500/mo', type: 'Boys PG' },
-  { id: '2', name: 'Sunrise Residency', price: '₹9,200/mo', type: 'Girls PG' },
-  { id: '3', name: 'The Oasis', price: '₹7,800/mo', type: 'Coliving' },
-  { id: '4', name: 'Green Valley PG', price: '₹6,500/mo', type: 'Boys PG' },
-  { id: '5', name: 'Campus Nest', price: '₹10,000/mo', type: 'Girls PG' },
-  { id: '6', name: 'Royal Stay PG', price: '₹8,000/mo', type: 'Coliving' },
-];
+export function ExploreMap({ properties }: { properties: Property[] }) {
+  const mapRef = useRef<HTMLDivElement>(null);
 
-const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '';
+  useEffect(() => {
+    let isMounted = true;
 
-export function ExploreMap() {
-  const embedSrc = `https://www.google.com/maps/embed/v1/place?key=${API_KEY}&q=VIT+Bhopal+University,Bhopal&zoom=14&maptype=roadmap`;
+    const initMap = async () => {
+      try {
+        setOptions({
+          apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || process.env.NEXT_PUBLIC_MAPS_API_KEY || "",
+          version: "weekly",
+        });
+
+        const { Map } = await importLibrary("maps") as google.maps.MapsLibrary;
+        const { AdvancedMarkerElement, PinElement } = await importLibrary("marker") as google.maps.MarkerLibrary;
+
+        if (!mapRef.current || !isMounted) return;
+
+        const map = new Map(mapRef.current, {
+          center: { lat: 23.0775, lng: 76.8513 }, // VIT Bhopal (Kothri Kalan) Coordinates
+          zoom: 14,
+          mapId: process.env.NEXT_PUBLIC_MAP_ID || "DEMO_MAP_ID", // Required for Advanced Markers
+          disableDefaultUI: true, // Keeps it clean for that Awwwards look
+        });
+
+        // Loop through your PG data to create markers
+        properties.forEach((pg) => {
+          if (!pg.location) return;
+
+          // Create the Amber Gold Pin
+          const pin = new PinElement({
+            background: "#FFC107", // Amber Gold
+            borderColor: "#004D40", // Midnight Emerald
+            glyphColor: "#004D40",
+          });
+
+          const marker = new AdvancedMarkerElement({
+            map,
+            position: { lat: pg.location.lat, lng: pg.location.lng },
+            title: pg.title,
+            content: pin.element,
+          });
+
+          // Add a click listener to show PG details or redirect
+          marker.addListener("click", () => {
+            console.log(`Clicked on ${pg.title}`);
+          });
+        });
+      } catch (e) {
+        console.error("Google Maps failed to load", e);
+      }
+    };
+
+    initMap();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [properties]);
 
   return (
     <div className="w-full h-full rounded-2xl overflow-hidden border border-outline/50 relative bg-surface-dim">
-      <iframe
-        className="w-full h-full border-0"
-        src={embedSrc}
-        allowFullScreen
-        loading="lazy"
-        referrerPolicy="no-referrer-when-downgrade"
-        title="PG locations near VIT Bhopal"
-      />
+      <div ref={mapRef} className="w-full h-full" />
 
       {/* Legend */}
       <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm rounded-xl px-3 py-2 shadow-sm z-10">
@@ -43,25 +84,6 @@ export function ExploreMap() {
           <span className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-primary" /> Campus
           </span>
-        </div>
-      </div>
-
-      {/* PG list overlay */}
-      <div className="absolute bottom-3 left-3 right-3 z-10">
-        <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-3 max-h-[140px] overflow-y-auto hide-scrollbar">
-          <p className="text-[10px] font-semibold text-on-surface/40 uppercase tracking-wider mb-2">Nearby PGs</p>
-          <div className="space-y-1.5">
-            {PG_LOCATIONS.map((pg) => (
-              <div key={pg.id} className="flex items-center justify-between py-1 px-2 rounded-lg hover:bg-primary/5 transition-colors cursor-pointer">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-accent flex-shrink-0" />
-                  <span className="text-xs font-medium text-primary">{pg.name}</span>
-                  <span className="text-[10px] text-on-surface/40">{pg.type}</span>
-                </div>
-                <span className="text-[10px] font-bold text-accent">{pg.price}</span>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
     </div>

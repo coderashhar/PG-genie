@@ -11,12 +11,12 @@ import {
 
 /* ── Dummy data ── */
 const LISTINGS = [
-  { id: '1', title: 'Emerald Heights', type: 'Boys PG', distance: '1.2 km', price: '₹8,500', amenities: ['WiFi', 'AC', 'Food'], verified: true, tag: 'Popular', gradient: 'from-primary/15 to-primary/5' },
-  { id: '2', title: 'Sunrise Residency', type: 'Girls PG', distance: '0.8 km', price: '₹9,200', amenities: ['WiFi', 'Laundry', 'CCTV'], verified: true, tag: 'Premium', gradient: 'from-accent/15 to-accent/5' },
-  { id: '3', title: 'The Oasis Co-living', type: 'Coliving', distance: '1.5 km', price: '₹7,800', amenities: ['WiFi', 'Gym', 'Food'], verified: true, gradient: 'from-primary-light/15 to-primary/5' },
-  { id: '4', title: 'Green Valley PG', type: 'Boys PG', distance: '2.0 km', price: '₹6,500', amenities: ['WiFi', 'Food', 'Parking'], verified: true, tag: 'Best Value', gradient: 'from-primary/10 to-accent/5' },
-  { id: '5', title: 'Campus Nest', type: 'Girls PG', distance: '0.5 km', price: '₹10,000', amenities: ['WiFi', 'AC', 'Laundry', 'Food'], verified: true, tag: 'Nearest', gradient: 'from-accent/10 to-primary/5' },
-  { id: '6', title: 'Royal Stay PG', type: 'Coliving', distance: '3.1 km', price: '₹8,000', amenities: ['WiFi', 'AC', 'Parking'], verified: false, gradient: 'from-primary/12 to-primary-light/5' },
+  { id: '1', title: 'Emerald Heights', type: 'Boys PG', distance: '1.2 km', price: '₹8,500', amenities: ['WiFi', 'AC', 'Food'], verified: true, tag: 'Popular', gradient: 'from-primary/15 to-primary/5', location: { lat: 23.0780, lng: 76.8520 } },
+  { id: '2', title: 'Sunrise Residency', type: 'Girls PG', distance: '0.8 km', price: '₹9,200', amenities: ['WiFi', 'Laundry', 'CCTV'], verified: true, tag: 'Premium', gradient: 'from-accent/15 to-accent/5', location: { lat: 23.0790, lng: 76.8510 } },
+  { id: '3', title: 'The Oasis Co-living', type: 'Coliving', distance: '1.5 km', price: '₹7,800', amenities: ['WiFi', 'Gym', 'Food'], verified: true, gradient: 'from-primary-light/15 to-primary/5', location: { lat: 23.0760, lng: 76.8530 } },
+  { id: '4', title: 'Green Valley PG', type: 'Boys PG', distance: '2.0 km', price: '₹6,500', amenities: ['WiFi', 'Food', 'Parking'], verified: true, tag: 'Best Value', gradient: 'from-primary/10 to-accent/5', location: { lat: 23.0800, lng: 76.8500 } },
+  { id: '5', title: 'Campus Nest', type: 'Girls PG', distance: '0.5 km', price: '₹10,000', amenities: ['WiFi', 'AC', 'Laundry', 'Food'], verified: true, tag: 'Nearest', gradient: 'from-accent/10 to-primary/5', location: { lat: 23.0750, lng: 76.8490 } },
+  { id: '6', title: 'Royal Stay PG', type: 'Coliving', distance: '3.1 km', price: '₹8,000', amenities: ['WiFi', 'AC', 'Parking'], verified: false, gradient: 'from-primary/12 to-primary-light/5', location: { lat: 23.0740, lng: 76.8480 } },
 ];
 
 export default function ExplorePage() {
@@ -155,7 +155,7 @@ export default function ExplorePage() {
 
         {/* RIGHT 50%: Google Map */}
         <div className="hidden md:block w-1/2 sticky top-0 h-full p-4 pl-2">
-          <ExploreMap />
+          <ExploreMap properties={LISTINGS} />
         </div>
       </div>
     </main>
