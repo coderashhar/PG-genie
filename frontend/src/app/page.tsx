@@ -203,11 +203,32 @@ export default function Home() {
 
       {/* ════════════════════ CTA BANNER ════════════════════ */}
       <section className="py-20 md:py-28 bg-primary relative overflow-hidden" id="cta-section">
-        {/* Decorative shapes */}
-        <div className="absolute top-0 right-0 w-[300px] h-[300px] rounded-full bg-white/[0.03] blur-[80px]" />
-        <div className="absolute bottom-0 left-[10%] w-[200px] h-[200px] rounded-full bg-accent/[0.08] blur-[60px]" />
-        <div className="absolute top-[20%] left-[5%] w-3 h-3 rounded-full bg-accent/40" style={{ animation: 'parallaxSlow 4s ease-in-out infinite' }} />
-        <div className="absolute bottom-[30%] right-[8%] w-2 h-2 rounded-full bg-white/20" style={{ animation: 'parallaxFast 3s ease-in-out infinite' }} />
+        {/* Decorative shapes — solids only */}
+        {/* Large blurred orbs — breathing motion */}
+        <div className="absolute top-0 right-0 w-[350px] h-[350px] rounded-full bg-white/[0.04] blur-[80px]" style={{ animation: 'scalePulse 8s ease-in-out infinite' }} />
+        <div className="absolute bottom-0 left-[10%] w-[280px] h-[280px] rounded-full bg-accent/[0.08] blur-[60px]" style={{ animation: 'scalePulse 10s ease-in-out infinite 2s' }} />
+        <div className="absolute top-[40%] left-[50%] w-[400px] h-[400px] rounded-full bg-white/[0.03] blur-[100px]" style={{ animation: 'driftDiagonal 14s ease-in-out infinite' }} />
+        <div className="absolute -top-[10%] left-[25%] w-[300px] h-[300px] rounded-full bg-accent/[0.06] blur-[90px]" style={{ animation: 'scalePulse 12s ease-in-out infinite 1s' }} />
+        <div className="absolute bottom-[-5%] right-[15%] w-[260px] h-[260px] rounded-full bg-white/[0.03] blur-[70px]" style={{ animation: 'driftX 16s ease-in-out infinite 3s' }} />
+
+        {/* Floating solid dots — varied rich motion */}
+        <div className="absolute top-[20%] left-[5%] w-5 h-5 rounded-full bg-accent/35" style={{ animation: 'driftX 6s ease-in-out infinite' }} />
+        <div className="absolute bottom-[30%] right-[8%] w-4 h-4 rounded-full bg-white/15" style={{ animation: 'orbitSmall 7s linear infinite' }} />
+        <div className="absolute top-[15%] right-[20%] w-3 h-3 rounded-full bg-accent/25" style={{ animation: 'wanderSlow 8s ease-in-out infinite 0.5s' }} />
+        <div className="absolute bottom-[15%] left-[18%] w-4 h-4 rounded-full bg-white/12" style={{ animation: 'driftDiagonal 6s ease-in-out infinite 1s' }} />
+        <div className="absolute top-[60%] right-[30%] w-2.5 h-2.5 rounded-full bg-accent/40" style={{ animation: 'orbitSmall 5s linear infinite 0.3s' }} />
+        <div className="absolute top-[75%] left-[8%] w-3.5 h-3.5 rounded-full bg-white/10" style={{ animation: 'wanderSlow 9s ease-in-out infinite 0.8s' }} />
+        <div className="absolute top-[10%] left-[45%] w-3 h-3 rounded-full bg-accent/20" style={{ animation: 'driftX 7s ease-in-out infinite 1.2s' }} />
+        <div className="absolute top-[45%] left-[3%] w-2 h-2 rounded-full bg-white/20" style={{ animation: 'orbitSmall 6s linear infinite 0.4s' }} />
+        <div className="absolute bottom-[40%] right-[15%] w-3 h-3 rounded-full bg-accent/30" style={{ animation: 'driftDiagonal 5s ease-in-out infinite 0.7s' }} />
+        <div className="absolute top-[85%] right-[40%] w-2.5 h-2.5 rounded-full bg-white/15" style={{ animation: 'wanderSlow 7s ease-in-out infinite 1.5s' }} />
+        <div className="absolute top-[5%] left-[70%] w-4 h-4 rounded-full bg-accent/20" style={{ animation: 'driftX 8s ease-in-out infinite 0.9s' }} />
+
+        {/* Solid diamonds — orbiting & wandering */}
+        <div className="absolute bottom-[25%] right-[22%] w-5 h-5 bg-accent/15 rotate-45" style={{ animation: 'orbitSmall 9s linear infinite 0.6s' }} />
+        <div className="absolute top-[30%] left-[15%] w-4 h-4 bg-white/[0.06] rotate-45" style={{ animation: 'wanderSlow 10s ease-in-out infinite 0.2s' }} />
+        <div className="absolute top-[70%] right-[10%] w-3.5 h-3.5 bg-accent/10 rotate-45" style={{ animation: 'driftDiagonal 7s ease-in-out infinite 1.1s' }} />
+        <div className="absolute top-[12%] left-[32%] w-3 h-3 bg-white/[0.05] rotate-45" style={{ animation: 'orbitSmall 8s linear infinite 0.3s' }} />
 
         <div className="max-w-[1440px] mx-auto px-6 md:px-12 lg:px-20 text-center relative z-10">
           <h2 className="headline-serif text-white text-3xl md:text-5xl lg:text-6xl mb-6">

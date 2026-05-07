@@ -114,6 +114,45 @@ body {
   50%      { transform: translateY(-14px) translateX(-5px); }
 }
 
+/* Wide horizontal drift */
+@keyframes driftX {
+  0%, 100% { transform: translateX(0) translateY(0); }
+  25%      { transform: translateX(20px) translateY(-6px); }
+  50%      { transform: translateX(8px) translateY(-12px); }
+  75%      { transform: translateX(-15px) translateY(-4px); }
+}
+
+/* Elliptical orbit */
+@keyframes orbitSmall {
+  0%   { transform: translate(0, 0) rotate(0deg); }
+  25%  { transform: translate(12px, -8px) rotate(90deg); }
+  50%  { transform: translate(0, -16px) rotate(180deg); }
+  75%  { transform: translate(-12px, -8px) rotate(270deg); }
+  100% { transform: translate(0, 0) rotate(360deg); }
+}
+
+/* Breathing scale pulse */
+@keyframes scalePulse {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50%      { transform: scale(1.5); opacity: 0.15; }
+}
+
+/* Diagonal float */
+@keyframes driftDiagonal {
+  0%, 100% { transform: translate(0, 0); }
+  33%      { transform: translate(18px, -10px); }
+  66%      { transform: translate(-8px, -18px); }
+}
+
+/* Slow complex wander */
+@keyframes wanderSlow {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  20%      { transform: translate(10px, -12px) scale(1.05); }
+  40%      { transform: translate(-6px, -20px) scale(0.95); }
+  60%      { transform: translate(-14px, -8px) scale(1.08); }
+  80%      { transform: translate(8px, -4px) scale(0.97); }
+}
+
 /* Card entrance */
 @keyframes cardSlideUp {
   from { opacity: 0; transform: translateY(60px); }
@@ -350,7 +389,207 @@ body {
   background: rgba(0,77,64,0.3);
 }
 
+/* ───────────────────── Explore Page ───────────────────── */
+
+/* Range Slider (dual-thumb) */
+.range-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--outline);
+  outline: none;
+  transition: background 0.2s;
+}
+.range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--primary);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,77,64,0.2);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.range-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  box-shadow: 0 3px 12px rgba(0,77,64,0.3);
+}
+.range-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,77,64,0.2);
+}
+.range-slider:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 4px rgba(0,77,64,0.12), 0 2px 8px rgba(0,77,64,0.2);
+}
+
+/* M3 Checkbox */
+.m3-checkbox {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--on-surface);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+.m3-checkbox:checked {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+.m3-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 6px;
+  height: 11px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.m3-checkbox:hover {
+  border-color: var(--primary);
+}
+
+/* M3 Segmented Button Group */
+.m3-segment-group {
+  display: flex;
+  border: 1.5px solid var(--outline);
+  border-radius: 20px;
+  overflow: hidden;
+}
+.m3-segment-btn {
+  flex: 1;
+  padding: 8px 0;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  border-right: 1px solid var(--outline);
+  background: transparent;
+  color: var(--on-surface);
+}
+.m3-segment-btn:last-child {
+  border-right: none;
+}
+.m3-segment-btn.active {
+  background: var(--primary);
+  color: white;
+}
+.m3-segment-btn:not(.active):hover {
+  background: rgba(0,77,64,0.05);
+}
+
+/* Filter chip */
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  background: rgba(0,77,64,0.08);
+  color: var(--primary);
+  transition: all 0.2s ease;
+  cursor: default;
+}
+.filter-chip button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,77,64,0.15);
+  color: var(--primary);
+  cursor: pointer;
+  font-size: 10px;
+  line-height: 1;
+  transition: background 0.15s ease;
+}
+.filter-chip button:hover {
+  background: rgba(0,77,64,0.3);
+}
+
+/* Sort dropdown */
+.sort-dropdown {
+  appearance: none;
+  padding: 8px 32px 8px 14px;
+  border: 1.5px solid var(--outline);
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--on-surface);
+  background: white url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%233F4945' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 12px center;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+.sort-dropdown:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0,77,64,0.08);
+}
+
+/* Map container */
+.map-container {
+  background: #E8F5E9;
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.map-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--outline);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* Map pin */
+.map-pin {
+  width: 28px;
+  height: 38px;
+  position: absolute;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.15));
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+.map-pin:hover {
+  transform: scale(1.2) translateY(-4px);
+}
+
+/* Explore property card */
+.explore-card {
+  background: white;
+  border: 1px solid var(--outline);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.22,1,0.36,1);
+}
+.explore-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 48px rgba(0,77,64,0.08), 0 4px 12px rgba(0,0,0,0.03);
+  border-color: transparent;
+}
+
 /* ───────────────────── Responsive Helpers ───────────────────── */
+
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.hide-scrollbar::-webkit-scrollbar { display: none; }
 
 @media (max-width: 768px) {
   .headline-serif {
