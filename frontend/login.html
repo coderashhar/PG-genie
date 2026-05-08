@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PG Genie - Login / Signup</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Playfair+Display:ital,wght@0,600;0,700;1,600&amp;family=Luxurious+Script&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#0b1c30",
+                        "on-error": "#ffffff",
+                        "surface-variant": "#d3e4fe",
+                        "on-primary": "#ffffff",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-surface-variant": "#4a4452",
+                        "error": "#ba1a1a",
+                        "tertiary": "#411d00",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface-container": "#e5eeff",
+                        "secondary-fixed-dim": "#6bd8cb",
+                        "primary": "#340075",
+                        "tertiary-fixed-dim": "#ffb784",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed-dim": "#d3bbff",
+                        "error-container": "#ffdad6",
+                        "background": "#f8f9ff",
+                        "surface-container-low": "#eff4ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "surface-bright": "#f8f9ff",
+                        "on-secondary-fixed-variant": "#005049",
+                        "primary-fixed": "#ebdcff",
+                        "on-primary-fixed-variant": "#572ba0",
+                        "on-tertiary-container": "#e19760",
+                        "secondary-container": "#86f2e4",
+                        "tertiary-fixed": "#ffdcc5",
+                        "on-secondary-container": "#006f66",
+                        "surface": "#f8f9ff",
+                        "primary-container": "#4c1d95",
+                        "surface-container-high": "#dce9ff",
+                        "on-primary-fixed": "#260059",
+                        "on-primary-container": "#b994ff",
+                        "outline": "#7b7483",
+                        "surface-tint": "#6f46b9",
+                        "inverse-surface": "#213145",
+                        "surface-dim": "#cbdbf5",
+                        "secondary": "#006a61",
+                        "on-secondary-fixed": "#00201d",
+                        "on-background": "#0b1c30",
+                        "secondary-fixed": "#89f5e7",
+                        "tertiary-container": "#622f00",
+                        "outline-variant": "#ccc3d4",
+                        "on-tertiary-fixed-variant": "#6e3908",
+                        "on-tertiary-fixed": "#301400",
+                        "inverse-primary": "#d3bbff",
+                        "on-secondary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {},
+                    "fontFamily": {
+                        "headline": ["Playfair Display", "serif"],
+                        "display": ["Plus Jakarta Sans", "sans-serif"],
+                        "body": ["Plus Jakarta Sans", "sans-serif"],
+                        "label": ["Plus Jakarta Sans", "sans-serif"],
+                        "accent": ["Luxurious Script", "cursive"]
+                    },
+                    "fontSize": {}
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body min-h-screen flex items-center justify-center p-4 md:p-8">
+<div class="w-full max-w-6xl bg-surface-container-lowest rounded-xl shadow-xl overflow-hidden flex flex-col lg:flex-row h-full lg:h-[800px]">
+<!-- Left Side: Image & Glassmorphism -->
+<div class="relative w-full lg:w-1/2 h-64 lg:h-full hidden lg:block">
+<img alt="Modern Student Room" class="absolute inset-0 w-full h-full object-cover" data-alt="A cinematic, wide-angle shot of a beautifully organized, modern student dormitory room bathed in soft, natural morning light. The room features a neatly made bed with crisp white linens, a minimalist desk setup with a sleek laptop, and vibrant green indoor plants adding a touch of life. The color palette emphasizes clean whites, warm wood tones, and subtle hints of Genie Purple (#4C1D95) in the decor to align with the brand identity. The mood is peaceful, focused, and aspirational, representing the ideal living space for a student." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAfBu3oMh2nXI0DzLR4ctJnkMWjZDAj2gckjMGyjF2Lg-TJZhPAtvqN9ze-y8Lj0K24EmLhn4YRdIy83WSCT4tqMhzpBsnE6Q26BYPvrh3mlnAJANnskVIZWXFNwT9qm9-qayjI6fgrUPAVXjnF-TmYWvYlbJ9TPfWuqvhUtnQuf8GMgrd1BqOPjFk-lo4AP_3W988honv1PJ4xim7-aJtGmhJk1zZYbFuj1kbWekhrf3nSEKEkrKYWMCYaK3WiuPU4x8C_47L2vq5"/>
+<div class="absolute inset-0 bg-gradient-to-t to-transparent flex items-end p-12 from-black/40">
+<div class="backdrop-blur-md bg-white/10 border border-white/20 p-8 rounded-xl shadow-2xl max-w-md">
+<p class="font-headline text-3xl font-bold text-white leading-tight mb-4">
+                        A home that fuels your <span class="font-accent text-5xl font-normal text-primary-fixed-dim block mt-2">ambition</span>
+</p>
+<p class="font-body text-white/80 text-lg">
+                        Find the perfect space to focus, relax, and thrive in Kothri. Your premium student living experience starts here.
+                    </p>
+</div>
+</div>
+</div>
+<!-- Right Side: Form -->
+<div class="w-full lg:w-1/2 flex flex-col justify-center p-8 md:p-16 h-full overflow-y-auto">
+<!-- Brand -->
+<div class="mb-10 text-center lg:text-left">
+<h1 class="font-display text-3xl font-extrabold text-primary flex items-center justify-center lg:justify-start gap-2">
+<span class="material-symbols-outlined text-4xl" data-icon="auto_awesome" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                    PG Genie
+                </h1>
+<p class="text-on-surface-variant mt-2 font-body">Welcome back to premium student living.</p>
+</div>
+<!-- Tabs -->
+<div class="flex gap-8 border-b border-outline-variant mb-8">
+<button class="pb-3 text-primary font-bold border-b-2 border-primary font-body text-lg transition-colors">Log In</button>
+<button class="pb-3 text-on-surface-variant hover:text-primary transition-colors font-body text-lg">Sign Up</button>
+</div>
+<!-- Form -->
+<form class="space-y-6">
+<div class="space-y-2">
+<label class="font-label text-sm font-semibold tracking-wider text-on-surface uppercase" for="phone">Phone Number</label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="phone_iphone">phone_iphone</span>
+</span>
+<input class="w-full pl-12 pr-4 py-3 bg-surface-container rounded-lg border-none focus:ring-2 focus:ring-primary text-on-surface font-body outline-none transition-shadow" id="phone" placeholder="+91 98765 43210" required="" type="tel"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label text-sm font-semibold tracking-wider text-on-surface uppercase" for="otp">OTP</label>
+<div class="flex gap-4">
+<div class="relative flex-1">
+<span class="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="password">password</span>
+</span>
+<input class="w-full pl-12 pr-4 py-3 bg-surface-container rounded-lg border-none focus:ring-2 focus:ring-primary text-on-surface font-body outline-none transition-shadow" id="otp" placeholder="Enter 6-digit OTP" type="text"/>
+</div>
+<button class="px-6 py-3 border-[1.5px] border-primary text-primary font-semibold rounded-lg hover:bg-primary/5 transition-colors whitespace-nowrap" type="button">
+                            Send OTP
+                        </button>
+</div>
+</div>
+<button class="w-full bg-secondary text-on-secondary py-4 rounded-lg font-bold text-lg hover:bg-secondary/90 transition-colors shadow-md mt-4" type="submit">
+                    Continue to Dashboard
+                </button>
+</form>
+<div class="mt-8 flex items-center gap-4">
+<div class="h-px bg-outline-variant flex-1"></div>
+<span class="text-on-surface-variant font-body text-sm uppercase tracking-wider">Or continue with</span>
+<div class="h-px bg-outline-variant flex-1"></div>
+</div>
+<div class="mt-6 flex gap-4">
+<button class="flex-1 py-3 px-4 border border-outline-variant rounded-lg flex items-center justify-center gap-2 hover:bg-surface-container transition-colors text-on-surface font-medium">
+<svg class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24"><path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"></path></svg>
+                    Google
+                </button>
+<button class="flex-1 py-3 px-4 border border-outline-variant rounded-lg flex items-center justify-center gap-2 hover:bg-surface-container transition-colors text-on-surface font-medium">
+<svg class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24"><path d="M12,2C6.477,2,2,6.477,2,12c0,4.991,3.657,9.128,8.438,9.878v-6.987h-2.54V12h2.54V9.797c0-2.506,1.492-3.89,3.777-3.89c1.094,0,2.238,0.195,2.238,0.195v2.46h-1.26c-1.243,0-1.63,0.771-1.63,1.562V12h2.773l-0.443,2.89h-2.33v6.988C18.343,21.128,22,16.991,22,12C22,6.477,17.523,2,12,2z"></path></svg>
+                    Facebook
+                </button>
+</div>
+<p class="text-center text-sm text-on-surface-variant mt-8 font-body">
+                By continuing, you agree to our <a class="text-primary underline" href="#">Terms of Service</a> and <a class="text-primary underline" href="#">Privacy Policy</a>.
+            </p>
+</div>
+</div>
+</body></html>

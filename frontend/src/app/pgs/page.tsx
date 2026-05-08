@@ -12,9 +12,9 @@ export default function PgsPage() {
           </Link>
           <div className="hidden md:flex items-center gap-6">
             <Link className="font-body-md text-body-md text-primary dark:text-primary-fixed-dim font-bold border-b-2 border-primary h-16 flex items-center" href="/pgs">Search</Link>
-            <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10 transition-colors h-16 flex items-center px-4 rounded" href="#">Saved</Link>
-            <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10 transition-colors h-16 flex items-center px-4 rounded" href="#">Bookings</Link>
-            <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10 transition-colors h-16 flex items-center px-4 rounded" href="#">Profile</Link>
+            <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10 transition-colors h-16 flex items-center px-4 rounded" href="/dashboard">Saved</Link>
+            <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10 transition-colors h-16 flex items-center px-4 rounded" href="/dashboard">Bookings</Link>
+            <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10 transition-colors h-16 flex items-center px-4 rounded" href="/dashboard">Profile</Link>
           </div>
           <div className="flex items-center gap-4">
             <div className="hidden md:flex bg-surface-container-high rounded-full px-4 py-2 items-center gap-2">
@@ -24,9 +24,9 @@ export default function PgsPage() {
             <button className="p-2 text-primary dark:text-primary-fixed-dim hover:bg-primary-container/10 transition-colors rounded-full cursor-pointer">
               <span className="material-symbols-outlined">notifications</span>
             </button>
-            <button className="p-2 text-primary dark:text-primary-fixed-dim hover:bg-primary-container/10 transition-colors rounded-full cursor-pointer">
+            <Link href="/login" className="p-2 text-primary dark:text-primary-fixed-dim hover:bg-primary-container/10 transition-colors rounded-full cursor-pointer">
               <span className="material-symbols-outlined">account_circle</span>
-            </button>
+            </Link>
           </div>
         </div>
       </header>
@@ -153,7 +153,7 @@ export default function PgsPage() {
           {/* Bento Grid / Asymmetric Grid for Listings */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-stack-md">
             {/* Card 1 */}
-            <Link href="/pgs/sunrise-premium" className="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(76,29,149,0.05)] hover:shadow-[0px_8px_30px_rgba(76,29,149,0.15)] transition-shadow duration-300 border border-outline-variant/20 flex flex-col relative cursor-pointer block">
+            <Link href="/pgs/64a2b3c9" className="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(76,29,149,0.05)] hover:shadow-[0px_8px_30px_rgba(76,29,149,0.15)] transition-shadow duration-300 border border-outline-variant/20 flex flex-col relative cursor-pointer block">
               <div className="absolute top-4 right-4 z-10 bg-secondary text-on-secondary px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1 shadow-md">
                 <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span> Verified
               </div>
@@ -192,7 +192,7 @@ export default function PgsPage() {
             </Link>
 
             {/* Card 2 */}
-            <Link href="/pgs/greenwood-girls" className="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(76,29,149,0.05)] hover:shadow-[0px_8px_30px_rgba(76,29,149,0.15)] transition-shadow duration-300 border border-outline-variant/20 flex flex-col relative cursor-pointer block">
+            <Link href="/pgs/8f7e6d5c" className="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(76,29,149,0.05)] hover:shadow-[0px_8px_30px_rgba(76,29,149,0.15)] transition-shadow duration-300 border border-outline-variant/20 flex flex-col relative cursor-pointer block">
               <div className="absolute top-4 left-4 z-10 bg-error/90 text-on-error px-3 py-1 rounded-full font-label-sm text-label-sm shadow-md">
                 Filling Fast
               </div>
@@ -231,7 +231,7 @@ export default function PgsPage() {
             </Link>
 
             {/* Card 3 */}
-            <Link href="/pgs/elite-coliving" className="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(76,29,149,0.05)] hover:shadow-[0px_8px_30px_rgba(76,29,149,0.15)] transition-shadow duration-300 border border-outline-variant/20 flex flex-col relative lg:col-span-2 cursor-pointer block">
+            <Link href="/pgs/1a2b3c4d" className="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(76,29,149,0.05)] hover:shadow-[0px_8px_30px_rgba(76,29,149,0.15)] transition-shadow duration-300 border border-outline-variant/20 flex flex-col relative lg:col-span-2 cursor-pointer block">
               <div className="flex flex-col md:flex-row h-full">
                 <div className="md:w-2/5 h-56 md:h-auto relative overflow-hidden">
                   <div className="absolute top-4 right-4 z-10 bg-secondary text-on-secondary px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1 shadow-md">
@@ -303,16 +303,16 @@ export default function PgsPage() {
           <span className="material-symbols-outlined">search</span>
           <span className="font-label-sm text-label-sm mt-1">Search</span>
         </Link>
-        <Link className="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim" href="#">
-          <span className="material-symbols-outlined">favorite</span>
+        <Link className="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim cursor-pointer" href="/dashboard">
+          <span className="material-symbols-outlined mb-1">favorite</span>
           <span className="font-label-sm text-label-sm mt-1">Saved</span>
         </Link>
-        <Link className="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim" href="#">
-          <span className="material-symbols-outlined">receipt_long</span>
+        <Link className="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim cursor-pointer" href="/dashboard">
+          <span className="material-symbols-outlined mb-1">receipt_long</span>
           <span className="font-label-sm text-label-sm mt-1">Bookings</span>
         </Link>
-        <Link className="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim" href="#">
-          <span className="material-symbols-outlined">person</span>
+        <Link className="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim cursor-pointer" href="/dashboard">
+          <span className="material-symbols-outlined mb-1">person</span>
           <span className="font-label-sm text-label-sm mt-1">Profile</span>
         </Link>
       </nav>

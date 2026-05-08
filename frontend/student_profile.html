@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PG Genie - Student Profile</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"error-container": "#ffdad6", "on-primary": "#ffffff", "primary-fixed-dim": "#d3bbff", "on-secondary-fixed": "#00201d", "tertiary-fixed-dim": "#ffb784", "tertiary-fixed": "#ffdcc5", "on-secondary-fixed-variant": "#005049", secondary: "#006a61", "inverse-surface": "#213145", "inverse-primary": "#d3bbff", surface: "#f8f9ff", "surface-container": "#e5eeff", "on-error-container": "#93000a", "surface-container-low": "#eff4ff", "inverse-on-surface": "#eaf1ff", "on-tertiary-fixed-variant": "#6e3908", "on-error": "#ffffff", "secondary-fixed-dim": "#6bd8cb", "surface-dim": "#cbdbf5", "on-primary-container": "#b994ff", "on-surface": "#0b1c30", "surface-variant": "#d3e4fe", "surface-container-lowest": "#ffffff", "on-surface-variant": "#4a4452", outline: "#7b7483", "on-tertiary": "#ffffff", "tertiary-container": "#622f00", primary: "#340075", "primary-container": "#4c1d95", "on-background": "#0b1c30", "on-secondary": "#ffffff", tertiary: "#411d00", "on-primary-fixed": "#260059", "surface-bright": "#f8f9ff", error: "#ba1a1a", "secondary-fixed": "#89f5e7", "surface-tint": "#6f46b9", background: "#f8f9ff", "on-secondary-container": "#006f66", "surface-container-high": "#dce9ff", "secondary-container": "#86f2e4", "surface-container-highest": "#d3e4fe", "primary-fixed": "#ebdcff", "on-primary-fixed-variant": "#572ba0", "outline-variant": "#ccc3d4", "on-tertiary-container": "#e19760", "on-tertiary-fixed": "#301400"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {gutter: "24px", "stack-md": "24px", "stack-sm": "12px", "container-max": "1280px", "margin-mobile": "16px", base: "8px", "stack-lg": "48px"}, fontFamily: {"label-sm": ["Plus Jakarta Sans"], h2: ["Plus Jakarta Sans"], h1: ["Plus Jakarta Sans"], display: ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], headline: ["Plus Jakarta Sans"], body: ["Plus Jakarta Sans"], label: ["Plus Jakarta Sans"]}, fontSize: {"label-sm": ["12px", {lineHeight: "1", letterSpacing: "0.05em", fontWeight: "600"}], h2: ["24px", {lineHeight: "1.4", fontWeight: "600"}], h1: ["32px", {lineHeight: "1.3", fontWeight: "700"}], display: ["40px", {lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "800"}], "body-lg": ["18px", {lineHeight: "1.6", fontWeight: "400"}], "body-md": ["16px", {lineHeight: "1.6", fontWeight: "400"}]}}}};</script>
+</head>
+<body class="bg-background text-on-background antialiased min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="w-full sticky top-0 z-40 shadow-sm bg-surface">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-gutter max-w-container-max mx-auto h-16">
+<div class="font-display text-h2 font-extrabold text-primary">PG Genie</div>
+<!-- Mobile nav icons placeholder -->
+<div class="flex items-center gap-4 md:hidden text-primary">
+<span class="material-symbols-outlined hover:bg-primary-container/10 transition-colors p-2 rounded-full cursor-pointer transition-all duration-300">notifications</span>
+<span class="material-symbols-outlined text-primary font-bold border-b-2 border-primary p-2 cursor-pointer transition-all duration-300">account_circle</span>
+</div>
+<!-- Desktop Actions -->
+<div class="hidden md:flex items-center gap-6 text-on-surface-variant">
+<span class="material-symbols-outlined hover:bg-primary-container/10 transition-colors p-2 rounded-full cursor-pointer opacity-80 hover:scale-95 transition-all duration-300">notifications</span>
+<span class="material-symbols-outlined text-primary font-bold border-b-2 border-primary p-2 cursor-pointer transition-all duration-300">account_circle</span>
+</div>
+</div>
+</header>
+<main class="flex-grow w-full px-margin-mobile md:px-gutter max-w-container-max mx-auto py-stack-lg">
+<!-- Profile Header Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-stack-md mb-stack-lg">
+<!-- User Avatar & Identity Card -->
+<div class="col-span-1 md:col-span-1 bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+<div class="relative mb-stack-sm">
+<img alt="Student Avatar" class="w-32 h-32 rounded-full object-cover border-4 border-surface shadow-sm" data-alt="A portrait photography of a confident young male student with short dark hair, wearing a casual light blue button-down shirt. The background is a soft, blurred modern college campus setting with bright, airy lighting. The overall mood is approachable, optimistic, and deeply aligned with a modern digital concierge aesthetic. Colors are warm and natural, fitting within a bright light-mode UI context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXrAjm40r7CI_p5nCOXKe6f7C6Aw1SzjXxlgcqORzwtPPosc_bnkKkgspjRlovZQqlYB5zamWweDm81lNmgIWShPFQNKnTjFDRsU1TPKywmlDnEFOBxja2zyzwvjZ4faB0_c4jUh7KOidKLn2sd6QriFD3pZgxjM8edb-pTg4fe372K0tUdiupeVfqrb0j6hqZIQWsi-5cCksuFZBmusQdIuq9qAAuBRvFY28UaT0sBL1OyViYegXZxxc2Xg8qWDMNeVXlb2eBWKwZ"/>
+<button class="absolute bottom-0 right-0 bg-primary text-on-primary rounded-full p-2 shadow-sm hover:scale-95 transition-transform">
+<span class="material-symbols-outlined" style="font-size: 16px;">edit</span>
+</button>
+</div>
+<h1 class="font-h1 text-h1 text-on-background mb-1">Aarav Sharma</h1>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center justify-center gap-1">
+<span class="material-symbols-outlined" style="font-size: 18px;">school</span>
+                    VIT Bhopal
+                </p>
+<div class="mt-4 inline-block bg-primary-container/10 text-primary rounded-full px-4 py-1 font-label-sm text-label-sm">
+                    Batch of 2026
+                </div>
+</div>
+<!-- Verification Status Card -->
+<div class="col-span-1 md:col-span-2 bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] flex flex-col justify-between">
+<div>
+<h2 class="font-h2 text-h2 text-on-background flex items-center gap-2 mb-stack-sm">
+<span class="material-symbols-outlined text-secondary">verified_user</span>
+                        Document Verification
+                    </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-stack-md">Complete your profile to unlock instant bookings and connect with verified owners.</p>
+</div>
+<div class="space-y-4">
+<!-- Aadhar Status -->
+<div class="flex items-center justify-between bg-surface p-4 rounded-lg border border-surface-variant transition-all duration-300 cursor-pointer hover:bg-surface-container-low hover:border-primary/30">
+<div class="flex items-center gap-4">
+<div class="bg-secondary/10 p-2 rounded-full text-secondary">
+<span class="material-symbols-outlined">credit_card</span>
+</div>
+<div>
+<h3 class="font-body-lg text-body-lg font-bold text-on-background">Aadhar Card</h3>
+<p class="font-label-sm text-label-sm text-secondary">Verified</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-secondary">check_circle</span>
+</div>
+<!-- Student ID Status -->
+<div class="flex items-center justify-between bg-surface p-4 rounded-lg border border-outline-variant transition-all duration-300 cursor-pointer hover:bg-surface-container-low hover:border-primary/30">
+<div class="flex items-center gap-4">
+<div class="bg-surface-variant p-2 rounded-full text-on-surface-variant">
+<span class="material-symbols-outlined">badge</span>
+</div>
+<div>
+<h3 class="font-body-lg text-body-lg font-bold text-on-background">Student ID</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Pending Upload</p>
+</div>
+</div>
+<button class="bg-primary-container/10 text-primary hover:bg-primary-container hover:text-on-primary px-4 py-2 rounded-full font-label-sm text-label-sm transition-colors border border-primary">
+                            Upload Now
+                        </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Preferences Section -->
+<h2 class="font-h2 text-h2 text-on-background mb-stack-md">Accommodation Preferences</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-stack-md">
+<!-- Budget Range -->
+<div class="bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+<div class="flex items-center gap-2 mb-stack-sm text-primary">
+<span class="material-symbols-outlined">payments</span>
+<h3 class="font-body-lg text-body-lg font-bold text-on-background">Monthly Budget</h3>
+</div>
+<div class="mt-stack-sm">
+<div class="flex justify-between font-label-sm text-label-sm text-on-surface-variant mb-2">
+<span>₹4,000</span>
+<span>₹12,000+</span>
+</div>
+<!-- Custom Range Slider Visual (CSS Only) -->
+<div class="relative w-full h-2 bg-surface-variant rounded-full mt-4">
+<div class="absolute top-0 left-1/4 right-1/4 h-full bg-primary rounded-full"></div>
+<div class="absolute top-1/2 left-1/4 w-4 h-4 bg-primary rounded-full shadow border-2 border-surface transform -translate-x-1/2 -translate-y-1/2"></div>
+<div class="absolute top-1/2 right-1/4 w-4 h-4 bg-primary rounded-full shadow border-2 border-surface transform translate-x-1/2 -translate-y-1/2"></div>
+</div>
+<p class="font-body-md text-body-md text-center mt-4 font-bold text-primary">₹6,000 - ₹9,000</p>
+</div>
+</div>
+<!-- Room Type -->
+<div class="bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+<div class="flex items-center gap-2 mb-stack-sm text-primary">
+<span class="material-symbols-outlined">bed</span>
+<h3 class="font-body-lg text-body-lg font-bold text-on-background">Preferred Room Type</h3>
+</div>
+<div class="flex flex-col gap-3 mt-stack-sm">
+<label class="flex items-center justify-between p-3 rounded-lg border border-primary bg-primary-container/5 cursor-pointer">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">person</span>
+<span class="font-body-md text-body-md text-on-background">Single Room</span>
+</div>
+<input checked="" class="text-primary focus:ring-primary h-5 w-5 border-outline-variant" name="room_type" type="radio"/>
+</label>
+<label class="flex items-center justify-between p-3 rounded-lg border border-outline-variant hover:bg-surface cursor-pointer transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">group</span>
+<span class="font-body-md text-body-md text-on-background">Shared Room (2-3)</span>
+</div>
+<input class="text-primary focus:ring-primary h-5 w-5 border-outline-variant" name="room_type" type="radio"/>
+</label>
+</div>
+</div>
+<!-- Dietary Preferences -->
+<div class="bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+<div class="flex items-center gap-2 mb-stack-sm text-primary">
+<span class="material-symbols-outlined">restaurant</span>
+<h3 class="font-body-lg text-body-lg font-bold text-on-background">Dietary Preference</h3>
+</div>
+<div class="flex flex-wrap gap-3 mt-stack-sm">
+<button class="flex items-center gap-2 px-4 py-2 rounded-full border border-secondary bg-secondary/10 text-secondary font-label-sm text-label-sm transition-all duration-300 hover:scale-105 hover:shadow-sm">
+<div class="w-3 h-3 rounded-full bg-secondary"></div>
+                        Veg
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-sm text-label-sm hover:bg-surface transition-colors transition-all duration-300 hover:scale-105 hover:shadow-sm">
+<div class="w-3 h-3 rounded-full bg-error"></div>
+                        Non-Veg
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-sm text-label-sm hover:bg-surface transition-colors transition-all duration-300 hover:scale-105 hover:shadow-sm">
+<div class="w-3 h-3 rounded-full border-2 border-outline-variant"></div>
+                        Any
+                    </button>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-4 text-sm">Helps us recommend PGs with suitable mess facilities.</p>
+</div>
+</div>
+<div class="mt-stack-lg flex justify-end">
+<button class="bg-primary text-on-primary hover:bg-primary-container px-8 py-3 rounded-lg font-body-lg text-body-lg font-bold shadow-md hover:shadow-lg transition-all hover:-translate-y-1 hover:shadow-[0px_8px_30px_rgba(76,29,149,0.2)]">
+                Save Preferences
+            </button>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-stack-lg bg-surface-container-highest border-t border-outline-variant">
+<div class="w-full py-stack-lg px-margin-mobile md:px-gutter max-w-container-max mx-auto flex flex-col md:flex-row justify-between gap-stack-md">
+<div>
+<div class="font-display text-h1 text-primary mb-2">PG Genie</div>
+<p class="font-body-md text-body-md text-on-surface-variant">© 2024 PG Genie. Dedicated to VIT Bhopal Community.</p>
+</div>
+<div class="flex flex-wrap gap-x-6 gap-y-3 items-center">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors transition-all duration-300 hover:translate-x-1" href="#">About Kothri</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors transition-all duration-300 hover:translate-x-1" href="#">Owner Dashboard</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors transition-all duration-300 hover:translate-x-1" href="#">Help Center</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors transition-all duration-300 hover:translate-x-1" href="#">Privacy Policy</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors transition-all duration-300 hover:translate-x-1" href="#">Contact Support</a>
+</div>
+</div>
+</footer>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-surface-container shadow-[0px_-4px_20px_rgba(76,29,149,0.05)] rounded-t-xl md:hidden">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="font-label-sm text-label-sm mt-1">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary" href="#">
+<span class="material-symbols-outlined">favorite</span>
+<span class="font-label-sm text-label-sm mt-1">Saved</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-label-sm text-label-sm mt-1">Bookings</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-1 scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-sm text-label-sm mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

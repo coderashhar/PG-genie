@@ -12,9 +12,9 @@ export default function Home() {
             <button className="hover:opacity-70 transition-opacity">
               <span className="material-symbols-outlined text-[28px]">notifications</span>
             </button>
-            <button className="hover:opacity-70 transition-opacity">
+            <Link href="/login" className="hover:opacity-70 transition-opacity">
               <span className="material-symbols-outlined text-[28px]">account_circle</span>
-            </button>
+            </Link>
           </div>
         </div>
       </nav>
