@@ -153,7 +153,7 @@ export default function PgsPage() {
           {/* Bento Grid / Asymmetric Grid for Listings */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-stack-md">
             {/* Card 1 */}
-            <div className="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(76,29,149,0.05)] hover:shadow-[0px_8px_30px_rgba(76,29,149,0.15)] transition-shadow duration-300 border border-outline-variant/20 flex flex-col relative cursor-pointer">
+            <Link href="/pgs/sunrise-premium" className="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(76,29,149,0.05)] hover:shadow-[0px_8px_30px_rgba(76,29,149,0.15)] transition-shadow duration-300 border border-outline-variant/20 flex flex-col relative cursor-pointer block">
               <div className="absolute top-4 right-4 z-10 bg-secondary text-on-secondary px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1 shadow-md">
                 <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span> Verified
               </div>
@@ -189,10 +189,10 @@ export default function PgsPage() {
                   </button>
                 </div>
               </div>
-            </div>
+            </Link>
 
             {/* Card 2 */}
-            <div className="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(76,29,149,0.05)] hover:shadow-[0px_8px_30px_rgba(76,29,149,0.15)] transition-shadow duration-300 border border-outline-variant/20 flex flex-col relative cursor-pointer">
+            <Link href="/pgs/greenwood-girls" className="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(76,29,149,0.05)] hover:shadow-[0px_8px_30px_rgba(76,29,149,0.15)] transition-shadow duration-300 border border-outline-variant/20 flex flex-col relative cursor-pointer block">
               <div className="absolute top-4 left-4 z-10 bg-error/90 text-on-error px-3 py-1 rounded-full font-label-sm text-label-sm shadow-md">
                 Filling Fast
               </div>
@@ -228,10 +228,10 @@ export default function PgsPage() {
                   </button>
                 </div>
               </div>
-            </div>
+            </Link>
 
             {/* Card 3 */}
-            <div className="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(76,29,149,0.05)] hover:shadow-[0px_8px_30px_rgba(76,29,149,0.15)] transition-shadow duration-300 border border-outline-variant/20 flex flex-col relative lg:col-span-2 cursor-pointer">
+            <Link href="/pgs/elite-coliving" className="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(76,29,149,0.05)] hover:shadow-[0px_8px_30px_rgba(76,29,149,0.15)] transition-shadow duration-300 border border-outline-variant/20 flex flex-col relative lg:col-span-2 cursor-pointer block">
               <div className="flex flex-col md:flex-row h-full">
                 <div className="md:w-2/5 h-56 md:h-auto relative overflow-hidden">
                   <div className="absolute top-4 right-4 z-10 bg-secondary text-on-secondary px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1 shadow-md">
@@ -285,7 +285,7 @@ export default function PgsPage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
           </div>
 
           {/* Load More */}
