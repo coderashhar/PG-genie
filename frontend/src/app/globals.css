@@ -1,0 +1,149 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-error-container: #ffdad6;
+  --color-on-primary: #ffffff;
+  --color-primary-fixed-dim: #d3bbff;
+  --color-on-secondary-fixed: #00201d;
+  --color-tertiary-fixed-dim: #ffb784;
+  --color-tertiary-fixed: #ffdcc5;
+  --color-on-secondary-fixed-variant: #005049;
+  --color-secondary: #006a61;
+  --color-inverse-surface: #213145;
+  --color-inverse-primary: #d3bbff;
+  --color-surface: #f8f9ff;
+  --color-surface-container: #e5eeff;
+  --color-on-error-container: #93000a;
+  --color-surface-container-low: #eff4ff;
+  --color-inverse-on-surface: #eaf1ff;
+  --color-on-tertiary-fixed-variant: #6e3908;
+  --color-on-error: #ffffff;
+  --color-secondary-fixed-dim: #6bd8cb;
+  --color-surface-dim: #cbdbf5;
+  --color-on-primary-container: #b994ff;
+  --color-on-surface: #0b1c30;
+  --color-surface-variant: #d3e4fe;
+  --color-surface-container-lowest: #ffffff;
+  --color-on-surface-variant: #4a4452;
+  --color-outline: #7b7483;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #622f00;
+  --color-primary: #340075;
+  --color-primary-container: #4c1d95;
+  --color-on-background: #0b1c30;
+  --color-on-secondary: #ffffff;
+  --color-tertiary: #411d00;
+  --color-on-primary-fixed: #260059;
+  --color-surface-bright: #f8f9ff;
+  --color-error: #ba1a1a;
+  --color-secondary-fixed: #89f5e7;
+  --color-surface-tint: #6f46b9;
+  --color-background: #f8f9ff;
+  --color-on-secondary-container: #006f66;
+  --color-surface-container-high: #dce9ff;
+  --color-secondary-container: #86f2e4;
+  --color-surface-container-highest: #d3e4fe;
+  --color-primary-fixed: #ebdcff;
+  --color-on-primary-fixed-variant: #572ba0;
+  --color-outline-variant: #ccc3d4;
+  --color-on-tertiary-container: #e19760;
+  --color-on-tertiary-fixed: #301400;
+
+  --spacing-gutter: 24px;
+  --spacing-stack-md: 24px;
+  --spacing-stack-sm: 12px;
+  --spacing-container-max: 1280px;
+  --spacing-margin-mobile: 16px;
+  --spacing-base: 8px;
+  --spacing-stack-lg: 48px;
+  --spacing-stack-xl: 96px;
+
+  --font-display: "Playfair Display", serif;
+  --font-headline: "Playfair Display", serif;
+  --font-body: "Plus Jakarta Sans", sans-serif;
+  --font-label: "Plus Jakarta Sans", sans-serif;
+  --font-caveat: "Caveat", cursive;
+
+  --text-label-sm: 12px;
+  --text-label-sm--line-height: 1;
+  --text-label-sm--letter-spacing: 0.05em;
+  --text-label-sm--font-weight: 600;
+
+  --text-h2: 24px;
+  --text-h2--line-height: 1.4;
+  --text-h2--font-weight: 600;
+
+  --text-h1: 32px;
+  --text-h1--line-height: 1.3;
+  --text-h1--font-weight: 700;
+
+  --text-display: 56px;
+  --text-display--line-height: 1.1;
+  --text-display--letter-spacing: -0.02em;
+  --text-display--font-weight: 500;
+
+  --text-body-lg: 18px;
+  --text-body-lg--line-height: 1.6;
+  --text-body-lg--font-weight: 400;
+
+  --text-body-md: 16px;
+  --text-body-md--line-height: 1.6;
+  --text-body-md--font-weight: 400;
+
+  --animate-float: float 8s ease-in-out infinite;
+  --animate-float-delayed: float 10s ease-in-out infinite 3s;
+  --animate-pulse-slow: pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-reveal: reveal 1.2s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+  --animate-reveal-delayed: reveal 1.2s cubic-bezier(0.77, 0, 0.175, 1) 0.3s forwards;
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-30px); }
+  }
+
+  @keyframes reveal {
+    0% { opacity: 0; transform: translateY(40px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+}
+
+.glass-minimal {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.dark .glass-minimal {
+  background: rgba(11, 28, 48, 0.7);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.img-mask {
+  clip-path: inset(0 0 0 0 round 2rem);
+  transition: clip-path 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.group:hover .img-mask {
+  clip-path: inset(1rem 1rem 1rem 1rem round 1rem);
+}
+
+.hover-lift {
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px -10px rgba(52, 0, 117, 0.15);
+}
+
+.text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
