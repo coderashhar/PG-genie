@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PG Listings - PG Genie</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "error-container": "#ffdad6",
+                      "on-primary": "#ffffff",
+                      "primary-fixed-dim": "#d3bbff",
+                      "on-secondary-fixed": "#00201d",
+                      "tertiary-fixed-dim": "#ffb784",
+                      "tertiary-fixed": "#ffdcc5",
+                      "on-secondary-fixed-variant": "#005049",
+                      "secondary": "#006a61",
+                      "inverse-surface": "#213145",
+                      "inverse-primary": "#d3bbff",
+                      "surface": "#f8f9ff",
+                      "surface-container": "#e5eeff",
+                      "on-error-container": "#93000a",
+                      "surface-container-low": "#eff4ff",
+                      "inverse-on-surface": "#eaf1ff",
+                      "on-tertiary-fixed-variant": "#6e3908",
+                      "on-error": "#ffffff",
+                      "secondary-fixed-dim": "#6bd8cb",
+                      "surface-dim": "#cbdbf5",
+                      "on-primary-container": "#b994ff",
+                      "on-surface": "#0b1c30",
+                      "surface-variant": "#d3e4fe",
+                      "surface-container-lowest": "#ffffff",
+                      "on-surface-variant": "#4a4452",
+                      "outline": "#7b7483",
+                      "on-tertiary": "#ffffff",
+                      "tertiary-container": "#622f00",
+                      "primary": "#340075",
+                      "primary-container": "#4c1d95",
+                      "on-background": "#0b1c30",
+                      "on-secondary": "#ffffff",
+                      "tertiary": "#411d00",
+                      "on-primary-fixed": "#260059",
+                      "surface-bright": "#f8f9ff",
+                      "error": "#ba1a1a",
+                      "secondary-fixed": "#89f5e7",
+                      "surface-tint": "#6f46b9",
+                      "background": "#f8f9ff",
+                      "on-secondary-container": "#006f66",
+                      "surface-container-high": "#dce9ff",
+                      "secondary-container": "#86f2e4",
+                      "surface-container-highest": "#d3e4fe",
+                      "primary-fixed": "#ebdcff",
+                      "on-primary-fixed-variant": "#572ba0",
+                      "outline-variant": "#ccc3d4",
+                      "on-tertiary-container": "#e19760",
+                      "on-tertiary-fixed": "#301400"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "24px",
+                      "stack-md": "24px",
+                      "stack-sm": "12px",
+                      "container-max": "1280px",
+                      "margin-mobile": "16px",
+                      "base": "8px",
+                      "stack-lg": "48px"
+              },
+              "fontFamily": {
+                      "label-sm": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "h2": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "h1": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "display": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "body-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "body-md": [
+                              "Plus Jakarta Sans"
+                      ]
+              },
+              "fontSize": {
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "1",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "h2": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "h1": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display": [
+                              "40px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 1;
+        }
+      </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="w-full sticky top-0 z-40 bg-surface dark:bg-on-background shadow-sm dark:shadow-none">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-gutter max-w-container-max mx-auto h-16">
+<div class="font-display text-h2 font-extrabold text-primary dark:text-primary-fixed-dim">
+                PG Genie
+            </div>
+<div class="hidden md:flex items-center gap-6">
+<!-- Navigation links would go here for desktop if they existed in the JSON for TopNavBar, but it's Search active intent -->
+<a class="font-body-md text-body-md text-primary dark:text-primary-fixed-dim font-bold border-b-2 border-primary h-16 flex items-center" href="#">Search</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10 transition-colors h-16 flex items-center px-4 rounded" href="#">Saved</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10 transition-colors h-16 flex items-center px-4 rounded" href="#">Bookings</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10 transition-colors h-16 flex items-center px-4 rounded" href="#">Profile</a>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex bg-surface-container-high rounded-full px-4 py-2 items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md w-48 text-on-surface" placeholder="Search Kothri..." type="text"/>
+</div>
+<button class="p-2 text-primary dark:text-primary-fixed-dim hover:bg-primary-container/10 transition-colors rounded-full">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-primary dark:text-primary-fixed-dim hover:bg-primary-container/10 transition-colors rounded-full">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-gutter py-stack-lg flex flex-col md:flex-row gap-stack-lg">
+<!-- Left Sidebar: Filters -->
+<aside class="w-full md:w-72 flex-shrink-0 space-y-stack-md hidden md:block">
+<div class="bg-surface-container-low rounded-xl p-6 shadow-sm border border-outline-variant/30">
+<div class="flex justify-between items-center mb-6">
+<h2 class="font-h2 text-h2 text-on-surface">Filters</h2>
+<button class="text-primary font-body-md text-body-md hover:underline">Clear all</button>
+</div>
+<!-- Price Range -->
+<div class="mb-stack-md">
+<h3 class="font-body-lg text-body-lg font-semibold mb-stack-sm text-on-surface">Price Range (Monthly)</h3>
+<div class="flex flex-col gap-3">
+<label class="flex items-center gap-3 cursor-pointer">
+<input class="form-radio text-primary focus:ring-primary h-5 w-5 border-outline" name="price" type="radio"/>
+<span class="font-body-md text-body-md text-on-surface-variant">Under ₹5,000</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer">
+<input checked="" class="form-radio text-primary focus:ring-primary h-5 w-5 border-outline" name="price" type="radio"/>
+<span class="font-body-md text-body-md text-on-surface-variant">₹5,000 - ₹8,000</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer">
+<input class="form-radio text-primary focus:ring-primary h-5 w-5 border-outline" name="price" type="radio"/>
+<span class="font-body-md text-body-md text-on-surface-variant">₹8,000 - ₹12,000</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer">
+<input class="form-radio text-primary focus:ring-primary h-5 w-5 border-outline" name="price" type="radio"/>
+<span class="font-body-md text-body-md text-on-surface-variant">Above ₹12,000</span>
+</label>
+</div>
+</div>
+<hr class="border-outline-variant/50 mb-stack-md"/>
+<!-- Gender -->
+<div class="mb-stack-md">
+<h3 class="font-body-lg text-body-lg font-semibold mb-stack-sm text-on-surface">Gender Focus</h3>
+<div class="flex flex-wrap gap-2">
+<button class="px-4 py-2 rounded-full border border-primary bg-primary-container/10 text-primary font-body-md text-body-md">Boys</button>
+<button class="px-4 py-2 rounded-full border border-outline bg-surface text-on-surface-variant font-body-md text-body-md hover:bg-surface-container-high transition-colors">Girls</button>
+<button class="px-4 py-2 rounded-full border border-outline bg-surface text-on-surface-variant font-body-md text-body-md hover:bg-surface-container-high transition-colors">Co-ed</button>
+</div>
+</div>
+<hr class="border-outline-variant/50 mb-stack-md"/>
+<!-- Facilities -->
+<div class="mb-stack-md">
+<h3 class="font-body-lg text-body-lg font-semibold mb-stack-sm text-on-surface">Facilities</h3>
+<div class="flex flex-col gap-3">
+<label class="flex items-center gap-3 cursor-pointer">
+<input checked="" class="form-checkbox text-primary focus:ring-primary h-5 w-5 border-outline rounded" type="checkbox"/>
+<span class="material-symbols-outlined text-on-surface-variant text-xl">wifi</span>
+<span class="font-body-md text-body-md text-on-surface-variant">High-Speed WiFi</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer">
+<input class="form-checkbox text-primary focus:ring-primary h-5 w-5 border-outline rounded" type="checkbox"/>
+<span class="material-symbols-outlined text-on-surface-variant text-xl">ac_unit</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Air Conditioning</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer">
+<input checked="" class="form-checkbox text-primary focus:ring-primary h-5 w-5 border-outline rounded" type="checkbox"/>
+<span class="material-symbols-outlined text-on-surface-variant text-xl">restaurant</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Meals Included</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer">
+<input class="form-checkbox text-primary focus:ring-primary h-5 w-5 border-outline rounded" type="checkbox"/>
+<span class="material-symbols-outlined text-on-surface-variant text-xl">local_laundry_service</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Laundry</span>
+</label>
+</div>
+</div>
+<hr class="border-outline-variant/50 mb-stack-md"/>
+<!-- Distance from VIT -->
+<div class="mb-stack-md">
+<h3 class="font-body-lg text-body-lg font-semibold mb-stack-sm text-on-surface">Distance from VIT</h3>
+<input class="w-full h-2 bg-surface-container-high rounded-lg appearance-none cursor-pointer accent-primary" max="10" min="0" type="range" value="3"/>
+<div class="flex justify-between mt-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant">0 km</span>
+<span class="font-label-sm text-label-sm text-primary">Up to 3 km</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">10+ km</span>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-3 rounded-lg font-body-lg text-body-lg font-semibold hover:bg-primary-container transition-colors shadow-sm">
+                    Apply Filters
+                </button>
+</div>
+</aside>
+<!-- Right Content Area: Listings -->
+<div class="flex-grow flex flex-col">
+<!-- Mobile Filter Toggle & Sorting Bar -->
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-stack-md gap-4">
+<div>
+<h1 class="font-h1 text-h1 text-on-surface">Available PGs in Kothri</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Showing 24 properties matching your criteria</p>
+</div>
+<div class="flex items-center gap-4 w-full sm:w-auto">
+<button class="md:hidden flex-1 flex items-center justify-center gap-2 px-4 py-2 border border-outline rounded-lg bg-surface text-on-surface-variant font-body-md text-body-md">
+<span class="material-symbols-outlined">tune</span>
+                        Filters
+                    </button>
+<div class="relative flex-1 sm:flex-none">
+<select class="w-full appearance-none bg-surface border border-outline text-on-surface-variant py-2 pl-4 pr-10 rounded-lg font-body-md text-body-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+<option>Sort by: Popularity</option>
+<option>Price: Low to High</option>
+<option>Price: High to Low</option>
+<option>Newest First</option>
+<option>Closest to Campus</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Bento Grid / Asymmetric Grid for Listings -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-stack-md">
+<!-- Card 1 -->
+<div class="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(76,29,149,0.05)] hover:shadow-[0px_8px_30px_rgba(76,29,149,0.15)] transition-shadow duration-300 border border-outline-variant/20 flex flex-col relative">
+<div class="absolute top-4 right-4 z-10 bg-secondary text-on-secondary px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1 shadow-md">
+<span class="material-symbols-outlined text-[14px]">verified</span> Verified
+                    </div>
+<div class="h-56 w-full relative overflow-hidden">
+<img alt="Modern student bedroom with a clean workspace" class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" data-alt="A brightly lit, modern student dormitory room featuring a neatly made bed with white linens and a sleek, wooden study desk. Natural sunlight streams in through a large window, illuminating a minimalist, light-mode aesthetic. The decor is functional yet premium, incorporating soft white walls, warm oak wood textures, and subtle accents of Genie Purple in the soft furnishings. The atmosphere is quiet, organized, and perfectly suited for focused academic study." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4439eyKIteT_JPudz1y3Wn86y_KUM_uHfQRTACJuO1WSjfdzGSnxZUEGsA3J6qicNibZ0yMdTdzf-ERmtX-eUQpoW_i-9ktzlbULGOC_z3BV28ZUI00IQvzVE5ZuZl2H2GnPZG_KiRHZMF6_o-sOei5Q_IMa5dSI1HPG8uOWdOg7DxeQq3E4p5FFm4_411hHiTYCy8U1z0wudbXwn_kAZ0T-KL2ixqUmvhMhqoVEPe6F_XfH4ah-RnCdgLy2WFyQC6Zvxm5yEXM-c"/>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-h2 text-h2 text-on-surface group-hover:text-primary transition-colors">Sunrise Premium Boys Hostel</h3>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-1 mb-stack-sm">
+<span class="material-symbols-outlined text-[18px]">location_on</span>
+                            Near Main Gate, Kothri • 1.2 km from VIT
+                        </p>
+<div class="flex flex-wrap gap-2 mb-stack-md">
+<div class="bg-primary/5 text-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm flex items-center gap-1.5 border border-primary/10">
+<span class="material-symbols-outlined text-[16px]">wifi</span> High-Speed WiFi
+                            </div>
+<div class="bg-primary/5 text-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm flex items-center gap-1.5 border border-primary/10">
+<span class="material-symbols-outlined text-[16px]">restaurant</span> 3 Meals/Day
+                            </div>
+<div class="bg-primary/5 text-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm flex items-center gap-1.5 border border-primary/10">
+<span class="material-symbols-outlined text-[16px]">ac_unit</span> AC Rooms
+                            </div>
+</div>
+<div class="mt-auto pt-4 border-t border-outline-variant/30 flex justify-between items-end">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1">Starting from</p>
+<p class="font-h2 text-h2 text-primary font-bold">₹7,500<span class="font-body-md text-body-md font-normal text-on-surface-variant">/mo</span></p>
+</div>
+<button class="bg-secondary text-on-secondary px-6 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-on-secondary-fixed-variant transition-colors shadow-sm">
+                                View Details
+                            </button>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(76,29,149,0.05)] hover:shadow-[0px_8px_30px_rgba(76,29,149,0.15)] transition-shadow duration-300 border border-outline-variant/20 flex flex-col relative">
+<div class="absolute top-4 left-4 z-10 bg-error/90 text-on-error px-3 py-1 rounded-full font-label-sm text-label-sm shadow-md">
+                        Filling Fast
+                    </div>
+<div class="h-56 w-full relative overflow-hidden">
+<img alt="Cozy shared living space for students" class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" data-alt="A cozy, inviting shared living space in a student accommodation setting. The room features a comfortable contemporary sofa in a light neutral fabric, situated over a clean hardwood floor. The space is brightened by soft, diffused daylight creating a welcoming, light-mode corporate aesthetic. Subtle teal and deep purple accent pillows add pops of brand color to the otherwise clean, modern, and highly organized environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyy8VLRzVey67ryRRNXsVKfieMYQtUqfTzjc-dp8ZyE2aj-ISj8biKOeLHNbYfnSCk1JZ_ydxDrCE97-qR_1cfvwBhWX02rf4Lt2HbmP9ikgj9CyxAS4w9JvbIrNdKOCvy6ejLJM6Ki29FJThw9qBAJ4LjYupUlyjCgl_ay1hNzM7wQ8oRJ9cDVGEP-7SFQL3LCo4HenUOsLh46ZDjRQC95OO9OMyVhUp4KxqKR9a0Q_JoyWzW4DoTMkGBgeUMOJDl_jhuUoHitwHS"/>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-h2 text-h2 text-on-surface group-hover:text-primary transition-colors">Greenwood Girls Enclave</h3>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-1 mb-stack-sm">
+<span class="material-symbols-outlined text-[18px]">location_on</span>
+                            Market Area, Kothri • 2.5 km from VIT
+                        </p>
+<div class="flex flex-wrap gap-2 mb-stack-md">
+<div class="bg-primary/5 text-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm flex items-center gap-1.5 border border-primary/10">
+<span class="material-symbols-outlined text-[16px]">wifi</span> Basic WiFi
+                            </div>
+<div class="bg-primary/5 text-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm flex items-center gap-1.5 border border-primary/10">
+<span class="material-symbols-outlined text-[16px]">local_laundry_service</span> Laundry
+                            </div>
+<div class="bg-primary/5 text-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm flex items-center gap-1.5 border border-primary/10">
+<span class="material-symbols-outlined text-[16px]">directions_bus</span> Shuttle to Campus
+                            </div>
+</div>
+<div class="mt-auto pt-4 border-t border-outline-variant/30 flex justify-between items-end">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1">Starting from</p>
+<p class="font-h2 text-h2 text-primary font-bold">₹6,000<span class="font-body-md text-body-md font-normal text-on-surface-variant">/mo</span></p>
+</div>
+<button class="bg-surface text-primary border border-primary px-6 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-primary/5 transition-colors">
+                                View Details
+                            </button>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(76,29,149,0.05)] hover:shadow-[0px_8px_30px_rgba(76,29,149,0.15)] transition-shadow duration-300 border border-outline-variant/20 flex flex-col relative lg:col-span-2">
+<div class="flex flex-col md:flex-row h-full">
+<div class="md:w-2/5 h-56 md:h-auto relative overflow-hidden">
+<div class="absolute top-4 right-4 z-10 bg-secondary text-on-secondary px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1 shadow-md">
+<span class="material-symbols-outlined text-[14px]">verified</span> Verified
+                            </div>
+<img alt="Spacious modern student room" class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" data-alt="A wide angle view of a premium, spacious student living area designed with a modern corporate aesthetic. The room boasts minimalist white walls, light wood flooring, and large windows bringing in abundant natural light for a bright, airy feel. A sleek workstation with an ergonomic chair sits next to a comfortable bed layered with soft, high-quality linens. Accent lighting in soft teal and deep purple hues gently illuminates the corners, conveying a sense of high-tech accessibility and calm." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAZSDfXtpR0qfXkXu6uWXgFbb4rTlEuU_tVsCBVjvfOLiQiao1RJz8zNXHC1VJMqW-iYpQ-EKnnXtRlvTltQz1tSyqgegBOp3wy4Z1yKIpkCeEPYvKilj7K9ms-rI7uJj4lK_KcRnLjA5rVEwkqyc_AlrwNtI0IJ3hT_elLj2q4CSmUdLUOrrYntyg2ohnV6XvxLuac6uokU_ddtjLCd7-AWtCcsmS0Seq5uXbpeAZn_0Jl32xx8v7AnvTtZx58TxVsC2-hVwvebpk"/>
+</div>
+<div class="p-6 flex flex-col flex-grow md:w-3/5">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h3 class="font-h2 text-h2 text-on-surface group-hover:text-primary transition-colors">Elite Co-living Spaces</h3>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[18px]">location_on</span>
+                                        Premium Sector, Kothri • 0.8 km from VIT
+                                    </p>
+</div>
+<div class="bg-surface-container-high text-primary px-2 py-1 rounded font-label-sm text-label-sm">
+                                    Co-ed
+                                </div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2 mb-stack-md mt-2">
+                                Experience premium student living with state-of-the-art facilities, dedicated study zones, and high-speed internet designed for modern academic needs.
+                            </p>
+<div class="flex flex-wrap gap-2 mb-stack-md">
+<div class="bg-primary/5 text-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm flex items-center gap-1.5 border border-primary/10">
+<span class="material-symbols-outlined text-[16px]">wifi</span> Fiber Internet
+                                </div>
+<div class="bg-primary/5 text-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm flex items-center gap-1.5 border border-primary/10">
+<span class="material-symbols-outlined text-[16px]">restaurant</span> Premium Meals
+                                </div>
+<div class="bg-primary/5 text-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm flex items-center gap-1.5 border border-primary/10">
+<span class="material-symbols-outlined text-[16px]">ac_unit</span> Central AC
+                                </div>
+<div class="bg-primary/5 text-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm flex items-center gap-1.5 border border-primary/10 hidden md:flex">
+<span class="material-symbols-outlined text-[16px]">fitness_center</span> Gym Access
+                                </div>
+</div>
+<div class="mt-auto pt-4 border-t border-outline-variant/30 flex justify-between items-end">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1">Starting from</p>
+<p class="font-h2 text-h2 text-primary font-bold">₹11,000<span class="font-body-md text-body-md font-normal text-on-surface-variant">/mo</span></p>
+</div>
+<div class="flex gap-3">
+<button class="bg-surface text-primary border border-primary px-4 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-primary/5 transition-colors hidden sm:block">
+                                        View Map
+                                    </button>
+<button class="bg-secondary text-on-secondary px-6 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-on-secondary-fixed-variant transition-colors shadow-sm">
+                                        Book Now
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Load More -->
+<div class="mt-stack-lg flex justify-center">
+<button class="px-8 py-3 rounded-full border-2 border-primary text-primary font-body-lg text-body-lg font-semibold hover:bg-primary hover:text-on-primary transition-all shadow-sm hover:shadow-md">
+                    Load More Properties
+                </button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-surface-container dark:bg-surface-container-low shadow-[0px_-4px_20px_rgba(76,29,149,0.05)] rounded-t-xl md:hidden">
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container dark:bg-primary-fixed-dim dark:text-on-primary-fixed rounded-full px-5 py-1 scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="font-label-sm text-label-sm mt-1">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim" href="#">
+<span class="material-symbols-outlined">favorite</span>
+<span class="font-label-sm text-label-sm mt-1">Saved</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-label-sm text-label-sm mt-1">Bookings</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm mt-1">Profile</span>
+</a>
+</nav>
+<!-- Footer -->
+<footer class="w-full mt-stack-lg bg-surface-container-highest dark:bg-on-background border-t border-outline-variant dark:border-outline py-stack-lg px-margin-mobile md:px-gutter pb-24 md:pb-stack-lg">
+<div class="max-w-container-max mx-auto flex flex-col md:flex-row justify-between gap-stack-md">
+<div class="flex flex-col gap-4 max-w-sm">
+<div class="font-display text-h1 text-primary dark:text-primary-fixed-dim">
+                    PG Genie
+                </div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                    Your digital concierge for finding the perfect student accommodation in Kothri. Simple, secure, and magical.
+                </p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-4">
+                    © 2024 PG Genie. Dedicated to VIT Bhopal Community.
+                </p>
+</div>
+<div class="flex flex-col gap-3">
+<h4 class="font-h2 text-h2 text-on-surface mb-2">Quick Links</h4>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">About Kothri</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Owner Dashboard</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Help Center</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Privacy Policy</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Contact Support</a>
+</div>
+</div>
+</footer>
+</body></html>

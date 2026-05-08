@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
     <>
@@ -72,11 +74,11 @@ export default function Home() {
                     <option>Up to ₹15,000</option>
                   </select>
                 </div>
-                <button className="bg-primary hover:bg-primary-container text-white font-body-md font-semibold px-8 py-5 rounded-2xl transition-all duration-300 flex items-center justify-center w-full mt-2 group relative overflow-hidden cursor-pointer">
+                <Link href="/pgs" className="bg-primary hover:bg-primary-container text-white font-body-md font-semibold px-8 py-5 rounded-2xl transition-all duration-300 flex items-center justify-center w-full mt-2 group relative overflow-hidden cursor-pointer">
                   <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1s_infinite]"></span>
                   <span className="material-symbols-outlined mr-3 text-xl transition-transform group-hover:rotate-90">arrow_forward</span>
                   Explore Properties
-                </button>
+                </Link>
               </div>
               
               <div className="grid grid-cols-3 gap-4 w-full">
@@ -105,9 +107,9 @@ export default function Home() {
                 Curated Spaces <br/><span className="italic text-on-surface-variant font-light">for student living</span>
               </h2>
             </div>
-            <button className="hidden md:flex text-on-surface font-body-md font-medium items-center hover:text-primary transition-colors group cursor-pointer">
+            <Link href="/pgs" className="hidden md:flex text-on-surface font-body-md font-medium items-center hover:text-primary transition-colors group cursor-pointer">
               View collection <span className="material-symbols-outlined ml-2 transition-transform group-hover:translate-x-1">trending_flat</span>
-            </button>
+            </Link>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-start">
