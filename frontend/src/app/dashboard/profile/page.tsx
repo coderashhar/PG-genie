@@ -135,6 +135,34 @@ export default function StudentProfilePage() {
               </label>
             </div>
           </div>
+          {/* Dietary Preferences */}
+          <div className="bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+            <div className="flex items-center gap-2 mb-stack-sm text-primary">
+              <span className="material-symbols-outlined">restaurant</span>
+              <h3 className="font-body-lg text-body-lg font-bold text-on-background">Dietary Preference</h3>
+            </div>
+            <div className="flex flex-wrap gap-3 mt-stack-sm">
+              <button className="flex items-center gap-2 px-4 py-2 rounded-full border border-secondary bg-secondary/10 text-secondary font-label-sm text-label-sm transition-all duration-300 hover:scale-105 hover:shadow-sm cursor-pointer">
+                <div className="w-3 h-3 rounded-full bg-secondary"></div>
+                Veg
+              </button>
+              <button className="flex items-center gap-2 px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-sm text-label-sm hover:bg-surface transition-all duration-300 hover:scale-105 hover:shadow-sm cursor-pointer">
+                <div className="w-3 h-3 rounded-full bg-error"></div>
+                Non-Veg
+              </button>
+              <button className="flex items-center gap-2 px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-sm text-label-sm hover:bg-surface transition-all duration-300 hover:scale-105 hover:shadow-sm cursor-pointer">
+                <div className="w-3 h-3 rounded-full border-2 border-outline-variant"></div>
+                Any
+              </button>
+            </div>
+            <p className="font-body-md text-body-md text-on-surface-variant mt-4 text-sm">Helps us recommend PGs with suitable mess facilities.</p>
+          </div>
+        </div>
+
+        <div className="mt-stack-lg flex justify-end">
+          <button className="bg-primary text-on-primary hover:bg-primary-container px-8 py-3 rounded-lg font-body-lg text-body-lg font-bold shadow-md hover:shadow-lg transition-all hover:-translate-y-1 hover:shadow-[0px_8px_30px_rgba(76,29,149,0.2)] cursor-pointer">
+            Save Preferences
+          </button>
         </div>
       </main>
 
