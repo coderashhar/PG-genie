@@ -272,7 +272,7 @@ export default function StudentDashboardPage() {
           <span className="material-symbols-outlined mb-1">receipt_long</span>
           <span className="font-label-sm text-label-sm">Bookings</span>
         </Link>
-        <Link className="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary group transition-all duration-200 cursor-pointer" href="#">
+        <Link className="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary group transition-all duration-200 cursor-pointer" href="/dashboard/profile">
           <span className="material-symbols-outlined mb-1">person</span>
           <span className="font-label-sm text-label-sm">Profile</span>
         </Link>
