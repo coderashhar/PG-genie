@@ -25,8 +25,68 @@ export default function StudentProfilePage() {
       </header>
 
       <main className="flex-grow w-full px-margin-mobile md:px-gutter max-w-container-max mx-auto py-stack-lg">
-        {/* We will add profile content here */}
-        <h1 className="font-display text-display mb-stack-md text-primary">Profile</h1>
+        {/* Profile Header Bento Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-stack-md mb-stack-lg">
+          {/* User Avatar & Identity Card */}
+          <div className="col-span-1 md:col-span-1 bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+            <div className="relative mb-stack-sm">
+              <img alt="Student Avatar" className="w-32 h-32 rounded-full object-cover border-4 border-surface shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXrAjm40r7CI_p5nCOXKe6f7C6Aw1SzjXxlgcqORzwtPPosc_bnkKkgspjRlovZQqlYB5zamWweDm81lNmgIWShPFQNKnTjFDRsU1TPKywmlDnEFOBxja2zyzwvjZ4faB0_c4jUh7KOidKLn2sd6QriFD3pZgxjM8edb-pTg4fe372K0tUdiupeVfqrb0j6hqZIQWsi-5cCksuFZBmusQdIuq9qAAuBRvFY28UaT0sBL1OyViYegXZxxc2Xg8qWDMNeVXlb2eBWKwZ"/>
+              <button className="absolute bottom-0 right-0 bg-primary text-on-primary rounded-full p-2 shadow-sm hover:scale-95 transition-transform cursor-pointer">
+                <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>edit</span>
+              </button>
+            </div>
+            <h1 className="font-h1 text-h1 text-on-background mb-1">Aarav Sharma</h1>
+            <p className="font-body-md text-body-md text-on-surface-variant flex items-center justify-center gap-1">
+              <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>school</span>
+              VIT Bhopal
+            </p>
+            <div className="mt-4 inline-block bg-primary-container/10 text-primary rounded-full px-4 py-1 font-label-sm text-label-sm">
+              Batch of 2026
+            </div>
+          </div>
+
+          {/* Verification Status Card */}
+          <div className="col-span-1 md:col-span-2 bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] flex flex-col justify-between">
+            <div>
+              <h2 className="font-h2 text-h2 text-on-background flex items-center gap-2 mb-stack-sm">
+                <span className="material-symbols-outlined text-secondary">verified_user</span>
+                Document Verification
+              </h2>
+              <p className="font-body-md text-body-md text-on-surface-variant mb-stack-md">Complete your profile to unlock instant bookings and connect with verified owners.</p>
+            </div>
+            <div className="space-y-4">
+              {/* Aadhar Status */}
+              <div className="flex items-center justify-between bg-surface p-4 rounded-lg border border-surface-variant transition-all duration-300 cursor-pointer hover:bg-surface-container-low hover:border-primary/30">
+                <div className="flex items-center gap-4">
+                  <div className="bg-secondary/10 p-2 rounded-full text-secondary flex items-center justify-center">
+                    <span className="material-symbols-outlined">credit_card</span>
+                  </div>
+                  <div>
+                    <h3 className="font-body-lg text-body-lg font-bold text-on-background">Aadhar Card</h3>
+                    <p className="font-label-sm text-label-sm text-secondary">Verified</p>
+                  </div>
+                </div>
+                <span className="material-symbols-outlined text-secondary">check_circle</span>
+              </div>
+              
+              {/* Student ID Status */}
+              <div className="flex items-center justify-between bg-surface p-4 rounded-lg border border-outline-variant transition-all duration-300 cursor-pointer hover:bg-surface-container-low hover:border-primary/30">
+                <div className="flex items-center gap-4">
+                  <div className="bg-surface-variant p-2 rounded-full text-on-surface-variant flex items-center justify-center">
+                    <span className="material-symbols-outlined">badge</span>
+                  </div>
+                  <div>
+                    <h3 className="font-body-lg text-body-lg font-bold text-on-background">Student ID</h3>
+                    <p className="font-label-sm text-label-sm text-on-surface-variant">Pending Upload</p>
+                  </div>
+                </div>
+                <button className="bg-primary-container/10 text-primary hover:bg-primary-container hover:text-on-primary px-4 py-2 rounded-full font-label-sm text-label-sm transition-colors border border-primary cursor-pointer">
+                  Upload Now
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
 
       {/* Footer */}
