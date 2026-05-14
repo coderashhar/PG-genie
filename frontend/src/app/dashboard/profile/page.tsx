@@ -87,6 +87,55 @@ export default function StudentProfilePage() {
             </div>
           </div>
         </div>
+
+        {/* Preferences Section */}
+        <h2 className="font-h2 text-h2 text-on-background mb-stack-md">Accommodation Preferences</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-stack-md">
+          {/* Budget Range */}
+          <div className="bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+            <div className="flex items-center gap-2 mb-stack-sm text-primary">
+              <span className="material-symbols-outlined">payments</span>
+              <h3 className="font-body-lg text-body-lg font-bold text-on-background">Monthly Budget</h3>
+            </div>
+            <div className="mt-stack-sm">
+              <div className="flex justify-between font-label-sm text-label-sm text-on-surface-variant mb-2">
+                <span>₹4,000</span>
+                <span>₹12,000+</span>
+              </div>
+              {/* Custom Range Slider Visual */}
+              <div className="relative w-full h-2 bg-surface-variant rounded-full mt-4">
+                <div className="absolute top-0 left-1/4 right-1/4 h-full bg-primary rounded-full"></div>
+                <div className="absolute top-1/2 left-1/4 w-4 h-4 bg-primary rounded-full shadow border-2 border-surface transform -translate-x-1/2 -translate-y-1/2"></div>
+                <div className="absolute top-1/2 right-1/4 w-4 h-4 bg-primary rounded-full shadow border-2 border-surface transform translate-x-1/2 -translate-y-1/2"></div>
+              </div>
+              <p className="font-body-md text-body-md text-center mt-4 font-bold text-primary">₹6,000 - ₹9,000</p>
+            </div>
+          </div>
+
+          {/* Room Type */}
+          <div className="bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+            <div className="flex items-center gap-2 mb-stack-sm text-primary">
+              <span className="material-symbols-outlined">bed</span>
+              <h3 className="font-body-lg text-body-lg font-bold text-on-background">Preferred Room Type</h3>
+            </div>
+            <div className="flex flex-col gap-3 mt-stack-sm">
+              <label className="flex items-center justify-between p-3 rounded-lg border border-primary bg-primary-container/5 cursor-pointer">
+                <div className="flex items-center gap-3">
+                  <span className="material-symbols-outlined text-primary">person</span>
+                  <span className="font-body-md text-body-md text-on-background">Single Room</span>
+                </div>
+                <input defaultChecked className="text-primary focus:ring-primary h-5 w-5 border-outline-variant" name="room_type" type="radio" />
+              </label>
+              <label className="flex items-center justify-between p-3 rounded-lg border border-outline-variant hover:bg-surface cursor-pointer transition-colors">
+                <div className="flex items-center gap-3">
+                  <span className="material-symbols-outlined text-on-surface-variant">group</span>
+                  <span className="font-body-md text-body-md text-on-background">Shared Room (2-3)</span>
+                </div>
+                <input className="text-primary focus:ring-primary h-5 w-5 border-outline-variant" name="room_type" type="radio" />
+              </label>
+            </div>
+          </div>
+        </div>
       </main>
 
       {/* Footer */}
