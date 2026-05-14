@@ -30,9 +30,58 @@ export default function OwnerProfilePage({ params }: { params: { id: string } })
           {/* Left Column: Owner Hero & Stats (Sticky on Desktop) */}
           <div className="md:col-span-4 flex flex-col gap-stack-md">
             <div className="sticky top-[88px] flex flex-col gap-stack-md">
-              {/* Owner Hero Card Placeholder */}
+              {/* Owner Hero Card */}
+              <div className="bg-surface-container-low rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] border border-surface-variant flex flex-col items-center text-center relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-primary-container/20 rounded-full blur-3xl -mr-16 -mt-16"></div>
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-secondary-container/30 rounded-full blur-2xl -ml-12 -mb-12"></div>
+                <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-surface shadow-sm mb-4">
+                  <img alt="Owner Portrait" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCF0RP1jRlDbx4gTPKxEWSDtNVZk7bZRqtLLyxqHWp3dd-pYRJL6yb3YvflKrmR6F8xZ3U1lQRHZHmrH6Y1vgcl2CyFWDHodALiSRBdJY3qvdPTvmQ2BUNBO9lFfy_cUHtPECowDtVMPq19lwX_jNMmA5TaVagjYYMyXN7UidNTtBdN852kATEdaqcgWje_IjvaIJ5l6oGaZToE75Jaga5Lj4PgoCbPahbEnNsLR3EirHkAkGUtLpzaw1X2NxFBeNeB-VMe2XhfCvU9" />
+                </div>
+                <h1 className="font-h1 text-h1 text-on-surface mb-1">Ramesh Sharma</h1>
+                <div className="flex items-center gap-2 mb-4 transition-transform duration-300 hover:scale-105 cursor-default">
+                  <span className="material-symbols-outlined text-secondary text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
+                  <span className="font-body-md text-body-md text-secondary font-semibold">Verified Partner</span>
+                </div>
+                <p className="font-body-md text-body-md text-on-surface-variant mb-6 text-sm">Providing safe and comfortable homes in Kothri for VIT students since 2018.</p>
+                <button className="w-full bg-secondary text-on-secondary font-label-sm text-label-sm py-3 px-4 rounded-lg shadow-sm hover:bg-secondary/90 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer">
+                  <span className="material-symbols-outlined text-lg">chat</span>
+                  Contact Owner
+                </button>
+              </div>
               
-              {/* Stats Card Placeholder */}
+              {/* Stats Card */}
+              <div className="bg-surface-container-low rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] border border-surface-variant">
+                <h2 className="font-h2 text-h2 text-on-surface mb-4">Trust Metrics</h2>
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center justify-between p-3 bg-surface rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-primary-container/10 flex items-center justify-center text-primary">
+                        <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                      </div>
+                      <span className="font-body-md text-body-md text-on-surface">Average Rating</span>
+                    </div>
+                    <span className="font-h2 text-h2 text-primary">4.8<span className="text-sm text-on-surface-variant">/5</span></span>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-surface rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-secondary-container/20 flex items-center justify-center text-secondary">
+                        <span className="material-symbols-outlined">group</span>
+                      </div>
+                      <span className="font-body-md text-body-md text-on-surface">Students Hosted</span>
+                    </div>
+                    <span className="font-h2 text-h2 text-secondary">120+</span>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-surface rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant">
+                        <span className="material-symbols-outlined">calendar_month</span>
+                      </div>
+                      <span className="font-body-md text-body-md text-on-surface">Years on Platform</span>
+                    </div>
+                    <span className="font-h2 text-h2 text-on-surface">6</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
