@@ -87,8 +87,83 @@ export default function OwnerProfilePage({ params }: { params: { id: string } })
 
           {/* Right Column: Listings & Reviews */}
           <div className="md:col-span-8 flex flex-col gap-stack-lg">
-            {/* Owner's Listings Section Placeholder */}
-            
+            {/* Owner's Listings Section */}
+            <section>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="font-h1 text-h1 text-on-surface">Properties in Kothri</h2>
+                <span className="bg-primary-container/10 text-primary font-label-sm text-label-sm px-3 py-1 rounded-full">3 Active Listings</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-stack-md">
+                {/* Listing Card 1 */}
+                <Link href="/pgs/123" className="bg-surface rounded-xl overflow-hidden shadow-sm border border-surface-variant group flex flex-col transition-all duration-500 ease-in-out hover:-translate-y-2 hover:shadow-2xl hover:border-primary/20 block cursor-pointer">
+                  <div className="relative h-48 w-full overflow-hidden">
+                    <img alt="PG Room Interior" className="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_2ZKtJydO2X9yH875coYl82RujkBEKFMRYHQetVk2kSmg4YPZKn-fwh_nhHwbELfCF8aMy837usO2nGlBs6ccUtFBQDlSIdvkX7AC72VUu43PoIpldI55x7NAgOagg2d79D0J17GHsqy9Ir5wfE4q-yNAvbAXPfx3VRrHBeDkMAbNfgbw61PPexem2CDozq6Ve8uGO-pWmCwDfthgc54cuLUluB-vhYdmPNkJW0St6RIYbLMSYjn_V4Ku9HQlEIdB-ozWahfB_5W1" />
+                    <div className="absolute top-3 right-3 bg-secondary text-on-secondary font-label-sm text-label-sm px-2 py-1 rounded-md flex items-center gap-1 shadow-sm cursor-default">
+                      <span className="w-2 h-2 rounded-full bg-on-secondary animate-pulse"></span>
+                      Rooms Available
+                    </div>
+                  </div>
+                  <div className="p-gutter flex flex-col flex-grow">
+                    <h3 className="font-h2 text-h2 text-on-surface mb-1">Sharma Boys Residency</h3>
+                    <p className="font-body-md text-body-md text-on-surface-variant text-sm mb-4 flex items-center gap-1">
+                      <span className="material-symbols-outlined text-sm">location_on</span>
+                      Near VIT Main Gate, Kothri
+                    </p>
+                    <div className="flex flex-wrap gap-2 mb-stack-md">
+                      <span className="bg-primary/5 text-primary font-label-sm text-label-sm px-2 py-1 rounded-md flex items-center gap-1">
+                        <span className="material-symbols-outlined text-[14px]">wifi</span> Free WiFi
+                      </span>
+                      <span className="bg-primary/5 text-primary font-label-sm text-label-sm px-2 py-1 rounded-md flex items-center gap-1">
+                        <span className="material-symbols-outlined text-[14px]">restaurant</span> Mess Included
+                      </span>
+                    </div>
+                    <div className="mt-auto pt-4 border-t border-surface-variant flex items-center justify-between">
+                      <div>
+                        <span className="font-h2 text-h2 text-primary">₹6,500</span>
+                        <span className="font-body-md text-body-md text-on-surface-variant text-xs">/month</span>
+                      </div>
+                      <button className="border-[1.5px] border-primary text-primary font-label-sm text-label-sm px-4 py-2 rounded-lg transition-colors duration-300">
+                        View Details
+                      </button>
+                    </div>
+                  </div>
+                </Link>
+                {/* Listing Card 2 */}
+                <Link href="/pgs/456" className="bg-surface rounded-xl overflow-hidden shadow-sm border border-surface-variant group flex flex-col transition-all duration-500 ease-in-out hover:-translate-y-2 hover:shadow-2xl hover:border-primary/20 block cursor-pointer">
+                  <div className="relative h-48 w-full overflow-hidden">
+                    <img alt="PG Room Interior" className="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYSImn85Ir3URWTcPTkHgj3UU1Ks0tG1DJgL3vmsiDmUzqNbesmY1B28bCuwp75gpJas4WlKeSeGX0ev0kGQjL1sSBqbzrodE6D4TgK58cPiM1KavuEEdnVy7SNix6xVRMOQ3QS65ExfzO5idyCSnwda7rnrOoC-VehE_ZuR8iohzg7JDmq_vgfK603Fm1rB2hPTSWAkqYq86HdiRJhTseexyM6YkHVFy8WXXxkLnhNBQrgc_g47_cKCDsqXCztl6GAc3fo2pmLKIk" />
+                    <div className="absolute top-3 right-3 bg-tertiary text-on-tertiary font-label-sm text-label-sm px-2 py-1 rounded-md flex items-center gap-1 shadow-sm cursor-default">
+                      <span className="w-2 h-2 rounded-full bg-on-tertiary"></span>
+                      Filling Fast
+                    </div>
+                  </div>
+                  <div className="p-gutter flex flex-col flex-grow">
+                    <h3 className="font-h2 text-h2 text-on-surface mb-1">Sharma Premium Block</h3>
+                    <p className="font-body-md text-body-md text-on-surface-variant text-sm mb-4 flex items-center gap-1">
+                      <span className="material-symbols-outlined text-sm">location_on</span>
+                      Market Road, Kothri
+                    </p>
+                    <div className="flex flex-wrap gap-2 mb-stack-md">
+                      <span className="bg-primary/5 text-primary font-label-sm text-label-sm px-2 py-1 rounded-md flex items-center gap-1">
+                        <span className="material-symbols-outlined text-[14px]">ac_unit</span> AC Rooms
+                      </span>
+                      <span className="bg-primary/5 text-primary font-label-sm text-label-sm px-2 py-1 rounded-md flex items-center gap-1">
+                        <span className="material-symbols-outlined text-[14px]">local_laundry_service</span> Laundry
+                      </span>
+                    </div>
+                    <div className="mt-auto pt-4 border-t border-surface-variant flex items-center justify-between">
+                      <div>
+                        <span className="font-h2 text-h2 text-primary">₹8,000</span>
+                        <span className="font-body-md text-body-md text-on-surface-variant text-xs">/month</span>
+                      </div>
+                      <button className="border-[1.5px] border-primary text-primary font-label-sm text-label-sm px-4 py-2 rounded-lg transition-colors duration-300">
+                        View Details
+                      </button>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            </section>
             {/* Reviews Section Placeholder */}
           </div>
         </div>
