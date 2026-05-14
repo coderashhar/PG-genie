@@ -164,7 +164,61 @@ export default function OwnerProfilePage({ params }: { params: { id: string } })
                 </Link>
               </div>
             </section>
-            {/* Reviews Section Placeholder */}
+            {/* Reviews Section */}
+            <section>
+              <h2 className="font-h1 text-h1 text-on-surface mb-6">Student Testimonials</h2>
+              <div className="flex flex-col gap-4">
+                {/* Review Card 1 */}
+                <div className="bg-surface rounded-xl p-6 shadow-[0px_4px_20px_rgba(76,29,149,0.05)] border border-surface-variant relative overflow-hidden transition-all duration-300 hover:border-primary/30 hover:bg-surface-container-low">
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-primary-container/10 rounded-bl-full z-0"></div>
+                  <div className="relative z-10">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-tertiary-container text-on-tertiary-container flex items-center justify-center font-h2 text-h2">A</div>
+                        <div>
+                          <h4 className="font-body-md text-body-md font-semibold text-on-surface">Aditya Verma</h4>
+                          <p className="font-label-sm text-label-sm text-on-surface-variant">CSE, 3rd Year • Stayed 2 years</p>
+                        </div>
+                      </div>
+                      <div className="flex text-primary">
+                        <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                        <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                        <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                        <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                        <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                      </div>
+                    </div>
+                    <p className="font-body-md text-body-md text-on-surface-variant">&quot;Ramesh uncle is very cooperative. The mess food is actually good compared to other places in Kothri. Any maintenance issue is resolved within a day. Highly recommend the main gate residency.&quot;</p>
+                  </div>
+                </div>
+                {/* Review Card 2 */}
+                <div className="bg-surface rounded-xl p-6 shadow-[0px_4px_20px_rgba(76,29,149,0.05)] border border-surface-variant relative overflow-hidden transition-all duration-300 hover:border-primary/30 hover:bg-surface-container-low">
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-primary-container/10 rounded-bl-full z-0"></div>
+                  <div className="relative z-10">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-h2 text-h2">R</div>
+                        <div>
+                          <h4 className="font-body-md text-body-md font-semibold text-on-surface">Rahul K.</h4>
+                          <p className="font-label-sm text-label-sm text-on-surface-variant">ECE, 2nd Year • Current Resident</p>
+                        </div>
+                      </div>
+                      <div className="flex text-primary">
+                        <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                        <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                        <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                        <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                        <span className="material-symbols-outlined text-sm">star_half</span>
+                      </div>
+                    </div>
+                    <p className="font-body-md text-body-md text-on-surface-variant">&quot;The premium block is very peaceful for studying. WiFi speed is decent most of the time. Owner is strict about timings which is good for security but sometimes slightly inconvenient.&quot;</p>
+                  </div>
+                </div>
+              </div>
+              <button className="mt-6 text-primary font-label-sm text-label-sm hover:underline flex items-center gap-1 mx-auto cursor-pointer">
+                View All 42 Reviews <span className="material-symbols-outlined text-sm">arrow_forward</span>
+              </button>
+            </section>
           </div>
         </div>
       </main>
