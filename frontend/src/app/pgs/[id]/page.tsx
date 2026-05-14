@@ -142,15 +142,15 @@ export default function PgDetailPage({ params }: { params: { id: string } }) {
                 <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed mb-6">
                   The owner, Mr. Sharma, lives on the ground floor and is available 24/7 for any emergencies. We serve hygienic, home-style meals tailored for students, with special menus during exam times.
                 </p>
-                <div className="flex items-center gap-4 bg-surface-container-low p-4 rounded-lg">
-                  <div className="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-h2 text-h2">
+                <Link href={`/owners/sharma`} className="flex items-center gap-4 bg-surface-container-low p-4 rounded-lg hover:bg-surface-container transition-colors group cursor-pointer w-full sm:w-fit pr-10">
+                  <div className="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-h2 text-h2 group-hover:scale-105 transition-transform">
                     S
                   </div>
                   <div>
                     <p className="font-label-sm text-label-sm text-on-surface mb-1">Managed by</p>
-                    <p className="font-body-md text-body-md font-semibold text-on-surface">Mr. R.K. Sharma</p>
+                    <p className="font-body-md text-body-md font-semibold text-on-surface group-hover:text-primary transition-colors flex items-center gap-1">Mr. R.K. Sharma <span className="material-symbols-outlined text-[16px] opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span></p>
                   </div>
-                </div>
+                </Link>
               </div>
             </div>
 
