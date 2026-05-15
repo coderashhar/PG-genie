@@ -5,9 +5,9 @@ export default function Home() {
     <>
       <nav className="w-full fixed top-0 z-50 mix-blend-difference text-white transition-all duration-300 py-6">
         <div className="flex justify-between items-center w-full px-margin-mobile md:px-gutter max-w-container-max mx-auto">
-          <div className="font-display text-[28px] font-semibold tracking-tight">
+          <Link href="/" className="font-display text-[28px] font-semibold tracking-tight cursor-pointer">
             PG Genie
-          </div>
+          </Link>
           <div className="flex items-center gap-6">
             <button className="hover:opacity-70 transition-opacity">
               <span className="material-symbols-outlined text-[28px]">notifications</span>
@@ -250,9 +250,9 @@ export default function Home() {
           <div className="grid grid-cols-2 gap-12 md:gap-24">
             <div className="flex flex-col gap-4">
               <span className="font-label-sm uppercase tracking-widest text-surface-variant/40 mb-2">Platform</span>
-              <a className="font-body-md text-surface-variant hover:text-white transition-colors" href="#">Curated Listings</a>
-              <a className="font-body-md text-surface-variant hover:text-white transition-colors" href="#">Owner Portal</a>
-              <a className="font-body-md text-surface-variant hover:text-white transition-colors" href="#">About Kothri</a>
+              <Link className="font-body-md text-surface-variant hover:text-white transition-colors" href="/pgs">Curated Listings</Link>
+              <Link className="font-body-md text-surface-variant hover:text-white transition-colors" href="/owner/dashboard">Owner Portal</Link>
+              <Link className="font-body-md text-surface-variant hover:text-white transition-colors" href="#">About Kothri</Link>
             </div>
             <div className="flex flex-col gap-4">
               <span className="font-label-sm uppercase tracking-widest text-surface-variant/40 mb-2">Legal &amp; Help</span>
