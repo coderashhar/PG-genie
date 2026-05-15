@@ -8,6 +8,7 @@ export default function OwnerDashboardPage() {
     <div className="bg-background text-on-background font-body-md min-h-screen flex">
       {/* SideNavBar */}
       <aside className="hidden md:flex flex-col h-full w-72 left-0 top-0 fixed z-50 bg-surface dark:bg-on-background shadow-xl p-gutter">
+        <Link href="/" className="font-display text-h2 text-primary mb-6 block cursor-pointer hover:opacity-80 transition-opacity">PG Genie</Link>
         <div className="flex items-center gap-4 mb-stack-lg">
           <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 border-2 border-primary-container/20">
             <img 
@@ -53,7 +54,7 @@ export default function OwnerDashboardPage() {
       <main className="flex-1 md:ml-72 flex flex-col min-h-screen">
         {/* Mobile Header (Visible only on mobile) */}
         <header className="md:hidden sticky top-0 z-40 bg-surface shadow-sm px-margin-mobile h-16 flex items-center justify-between">
-          <div className="font-display text-h2 font-extrabold text-primary">PG Genie</div>
+          <Link href="/" className="font-display text-h2 font-extrabold text-primary">PG Genie</Link>
           <div className="flex gap-4">
             <button className="text-on-surface-variant hover:bg-primary-container/10 p-2 rounded-full transition-colors cursor-pointer"><span className="material-symbols-outlined">notifications</span></button>
             <button className="text-on-surface-variant hover:bg-primary-container/10 p-2 rounded-full transition-colors cursor-pointer"><span className="material-symbols-outlined">account_circle</span></button>
