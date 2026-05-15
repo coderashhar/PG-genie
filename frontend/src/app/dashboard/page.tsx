@@ -7,10 +7,10 @@ export default function StudentDashboardPage() {
     <div className="bg-background text-on-background font-body-md text-body-md antialiased md:flex min-h-screen">
       {/* TopNavBar (Mobile Only) */}
       <header className="md:hidden w-full sticky top-0 z-40 shadow-sm bg-surface flex justify-between items-center px-margin-mobile h-16">
-        <div className="font-display text-h2 font-extrabold text-primary">PG Genie</div>
+        <Link href="/" className="font-display text-h2 font-extrabold text-primary">PG Genie</Link>
         <div className="flex gap-4">
           <span className="material-symbols-outlined text-primary hover:bg-primary-container/10 transition-colors p-2 rounded-full cursor-pointer">notifications</span>
-          <span className="material-symbols-outlined text-primary hover:bg-primary-container/10 transition-colors p-2 rounded-full cursor-pointer">account_circle</span>
+          <Link href="/dashboard/profile" className="material-symbols-outlined text-primary hover:bg-primary-container/10 transition-colors p-2 rounded-full cursor-pointer">account_circle</Link>
         </div>
       </header>
 
@@ -18,13 +18,13 @@ export default function StudentDashboardPage() {
       <aside className="hidden md:flex h-full w-72 left-0 top-0 fixed z-50 bg-surface shadow-xl flex-col p-gutter">
         <div className="mb-stack-lg">
           <Link href="/" className="font-display text-h2 text-primary mb-2 block cursor-pointer">PG Genie</Link>
-          <div className="flex items-center gap-4 mt-stack-md p-4 bg-surface-container rounded-lg">
-            <div className="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-h2">A</div>
+          <Link href="/dashboard/profile" className="flex items-center gap-4 mt-stack-md p-4 bg-surface-container rounded-lg hover:bg-surface-container-high transition-colors cursor-pointer group">
+            <div className="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-h2 group-hover:scale-105 transition-transform">A</div>
             <div>
-              <h2 className="font-h2 text-h2 text-on-surface">Student Portal</h2>
+              <h2 className="font-h2 text-h2 text-on-surface group-hover:text-primary transition-colors">Student Portal</h2>
               <p className="font-body-md text-body-md text-on-surface-variant">VIT Bhopal student</p>
             </div>
-          </div>
+          </Link>
         </div>
         <nav className="flex-1 flex flex-col gap-2">
           <Link className="flex items-center gap-4 p-3 bg-primary-container text-on-primary-container font-semibold rounded-lg group cursor-pointer" href="/dashboard">

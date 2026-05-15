@@ -8,7 +8,7 @@ export default function StudentProfilePage() {
       {/* TopNavBar */}
       <header className="w-full sticky top-0 z-40 shadow-sm bg-surface">
         <div className="flex justify-between items-center w-full px-margin-mobile md:px-gutter max-w-container-max mx-auto h-16">
-          <div className="font-display text-h2 font-extrabold text-primary">PG Genie</div>
+          <Link href="/" className="font-display text-h2 font-extrabold text-primary">PG Genie</Link>
           
           {/* Mobile nav icons placeholder */}
           <div className="flex items-center gap-4 md:hidden text-primary">
@@ -25,6 +25,12 @@ export default function StudentProfilePage() {
       </header>
 
       <main className="flex-grow w-full px-margin-mobile md:px-gutter max-w-container-max mx-auto py-stack-lg">
+        {/* Back Button */}
+        <Link href="/dashboard" className="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors mb-6 font-label-sm md:hidden">
+          <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+          Back to Dashboard
+        </Link>
+        
         {/* Profile Header Bento Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-stack-md mb-stack-lg">
           {/* User Avatar & Identity Card */}
