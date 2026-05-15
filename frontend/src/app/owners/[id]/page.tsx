@@ -16,15 +16,20 @@ export default function OwnerProfilePage({ params }: { params: { id: string } })
             <button className="hover:bg-primary-container/10 transition-colors p-2 rounded-full cursor-pointer">
               <span className="material-symbols-outlined">notifications</span>
             </button>
-            <button className="hover:bg-primary-container/10 transition-colors p-2 rounded-full cursor-pointer">
+            <Link href="/dashboard/profile" className="hover:bg-primary-container/10 transition-colors p-2 rounded-full cursor-pointer flex items-center justify-center">
               <span className="material-symbols-outlined">account_circle</span>
-            </button>
+            </Link>
           </div>
         </div>
       </nav>
 
       {/* Main Content Canvas */}
       <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-gutter py-stack-lg">
+        {/* Back Button */}
+        <Link href="/pgs" className="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors mb-6 font-label-sm">
+          <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+          Back to Search
+        </Link>
         {/* Bento Grid Layout for Owner Profile */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-stack-md">
           {/* Left Column: Owner Hero & Stats (Sticky on Desktop) */}
