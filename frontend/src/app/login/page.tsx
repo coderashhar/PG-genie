@@ -28,10 +28,15 @@ export default function LoginPage() {
         </div>
         
         {/* Right Side: Form */}
-        <div className="w-full lg:w-1/2 flex flex-col justify-center p-8 md:p-16 h-full overflow-y-auto">
+        <div className="w-full lg:w-1/2 flex flex-col justify-center p-8 md:p-16 h-full overflow-y-auto relative">
+          
+          {/* Back Button */}
+          <Link href="/" className="absolute top-4 md:top-8 left-4 md:left-8 text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2 font-label-sm text-sm">
+            <span className="material-symbols-outlined text-lg">arrow_back</span> Back to Home
+          </Link>
           
           {/* Brand */}
-          <div className="mb-10 text-center lg:text-left">
+          <div className="mb-10 text-center lg:text-left mt-8 md:mt-0">
             <Link href="/" className="inline-block font-display text-3xl font-extrabold text-primary flex items-center justify-center lg:justify-start gap-2">
               <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
               PG Genie
