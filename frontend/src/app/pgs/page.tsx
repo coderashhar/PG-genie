@@ -14,7 +14,7 @@ export default function PgsPage() {
             <Link className="font-body-md text-body-md text-primary dark:text-primary-fixed-dim font-bold border-b-2 border-primary h-16 flex items-center" href="/pgs">Search</Link>
             <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10 transition-colors h-16 flex items-center px-4 rounded" href="/dashboard">Saved</Link>
             <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10 transition-colors h-16 flex items-center px-4 rounded" href="/dashboard">Bookings</Link>
-            <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10 transition-colors h-16 flex items-center px-4 rounded" href="/dashboard">Profile</Link>
+            <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10 transition-colors h-16 flex items-center px-4 rounded" href="/dashboard/profile">Profile</Link>
           </div>
           <div className="flex items-center gap-4">
             <div className="hidden md:flex bg-surface-container-high rounded-full px-4 py-2 items-center gap-2">
@@ -311,7 +311,7 @@ export default function PgsPage() {
           <span className="material-symbols-outlined mb-1">receipt_long</span>
           <span className="font-label-sm text-label-sm mt-1">Bookings</span>
         </Link>
-        <Link className="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim cursor-pointer" href="/dashboard">
+        <Link className="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim cursor-pointer" href="/dashboard/profile">
           <span className="material-symbols-outlined mb-1">person</span>
           <span className="font-label-sm text-label-sm mt-1">Profile</span>
         </Link>
@@ -334,7 +334,7 @@ export default function PgsPage() {
           <div className="flex flex-col gap-3">
             <h4 className="font-h2 text-h2 text-on-surface mb-2">Quick Links</h4>
             <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">About Kothri</Link>
-            <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Owner Dashboard</Link>
+            <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="/owner/dashboard">Owner Dashboard</Link>
             <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Help Center</Link>
             <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Privacy Policy</Link>
             <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Contact Support</Link>

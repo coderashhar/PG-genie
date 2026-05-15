@@ -18,9 +18,9 @@ export default function PgDetailPage({ params }: { params: { id: string } }) {
             <button aria-label="notifications" className="p-2 rounded-full hover:bg-primary-container/10 transition-colors text-on-surface-variant flex items-center justify-center group cursor-pointer">
               <span className="material-symbols-outlined group-active:opacity-80 group-active:scale-95 transition-transform">notifications</span>
             </button>
-            <button aria-label="account_circle" className="p-2 rounded-full hover:bg-primary-container/10 transition-colors text-on-surface-variant flex items-center justify-center group cursor-pointer">
+            <Link href="/dashboard/profile" aria-label="account_circle" className="p-2 rounded-full hover:bg-primary-container/10 transition-colors text-on-surface-variant flex items-center justify-center group cursor-pointer">
               <span className="material-symbols-outlined group-active:opacity-80 group-active:scale-95 transition-transform">account_circle</span>
-            </button>
+            </Link>
           </div>
         </div>
       </nav>
@@ -224,7 +224,7 @@ export default function PgDetailPage({ params }: { params: { id: string } }) {
           </div>
           <div className="flex flex-wrap gap-4 md:gap-8">
             <Link className="text-on-surface-variant hover:text-secondary transition-colors font-body-md text-body-md" href="#">About Kothri</Link>
-            <Link className="text-on-surface-variant hover:text-secondary transition-colors font-body-md text-body-md" href="#">Owner Dashboard</Link>
+            <Link className="text-on-surface-variant hover:text-secondary transition-colors font-body-md text-body-md" href="/owner/dashboard">Owner Dashboard</Link>
             <Link className="text-on-surface-variant hover:text-secondary transition-colors font-body-md text-body-md" href="#">Help Center</Link>
             <Link className="text-on-surface-variant hover:text-secondary transition-colors font-body-md text-body-md" href="#">Privacy Policy</Link>
             <Link className="text-on-surface-variant hover:text-secondary transition-colors font-body-md text-body-md" href="#">Contact Support</Link>
