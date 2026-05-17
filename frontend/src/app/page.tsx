@@ -1,23 +1,10 @@
 import Link from "next/link";
+import Navbar from "@/components/Navbar";
 
 export default function Home() {
   return (
     <>
-      <nav className="w-full fixed top-0 z-50 mix-blend-difference text-white transition-all duration-300 py-6">
-        <div className="flex justify-between items-center w-full px-margin-mobile md:px-gutter max-w-container-max mx-auto">
-          <Link href="/" className="font-display text-[28px] font-semibold tracking-tight cursor-pointer">
-            PG Genie
-          </Link>
-          <div className="flex items-center gap-6">
-            <button className="hover:opacity-70 transition-opacity">
-              <span className="material-symbols-outlined text-[28px]">notifications</span>
-            </button>
-            <Link href="/login" className="hover:opacity-70 transition-opacity">
-              <span className="material-symbols-outlined text-[28px]">account_circle</span>
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       <main>
         {/* Hero Section */}
