@@ -6,8 +6,6 @@ import Navbar from '@/components/Navbar';
 export default function StudentDashboardPage() {
   return (
     <div className="bg-background text-on-background font-body-md text-body-md antialiased md:flex min-h-screen">
-      {/* TopNavBar (Mobile Only) */}
-      <Navbar className="md:hidden sticky top-0 z-40 shadow-sm bg-surface text-primary" />
 
 
       {/* SideNavBar (Web Only) */}
@@ -51,6 +49,9 @@ export default function StudentDashboardPage() {
 
       {/* Main Content Canvas */}
       <main className="flex-1 md:ml-72 flex flex-col min-h-screen">
+        {/* TopNavBar */}
+        <Navbar className="sticky top-0 z-40 shadow-sm bg-surface text-primary" />
+        
         <div className="flex-1 w-full px-margin-mobile md:px-gutter max-w-container-max mx-auto py-stack-md md:py-stack-lg">
           {/* Header Section */}
           <header className="mb-stack-lg">

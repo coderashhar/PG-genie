@@ -14,6 +14,12 @@ export default function Navbar({ className, hideHome }: { className?: string, hi
               Home
             </Link>
           )}
+          <Link href="/pgs" className="hover:opacity-70 transition-opacity font-body-md font-medium hidden md:block">
+            Search
+          </Link>
+          <Link href="/dashboard" className="hover:opacity-70 transition-opacity font-body-md font-medium hidden md:block">
+            Saved
+          </Link>
           <button className="hover:opacity-70 transition-opacity">
             <span className="material-symbols-outlined text-[28px]">notifications</span>
           </button>
