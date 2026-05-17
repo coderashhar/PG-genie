@@ -1,28 +1,13 @@
 "use client";
 import React, from 'react';
 import Link from 'next/link';
+import Navbar from '@/components/Navbar';
 
 export default function StudentProfilePage() {
   return (
     <div className="bg-background text-on-background font-body-md text-body-md antialiased min-h-screen flex flex-col">
       {/* TopNavBar */}
-      <header className="w-full sticky top-0 z-40 shadow-sm bg-surface">
-        <div className="flex justify-between items-center w-full px-margin-mobile md:px-gutter max-w-container-max mx-auto h-16">
-          <span className="font-display text-h2 font-extrabold text-primary cursor-default">PG Genie</span>
-          
-          {/* Mobile nav icons placeholder */}
-          <div className="flex items-center gap-4 md:hidden text-primary">
-            <span className="material-symbols-outlined hover:bg-primary-container/10 transition-colors p-2 rounded-full cursor-pointer transition-all duration-300">notifications</span>
-            <span className="material-symbols-outlined text-primary font-bold border-b-2 border-primary p-2 cursor-pointer transition-all duration-300">account_circle</span>
-          </div>
-          
-          {/* Desktop Actions */}
-          <div className="hidden md:flex items-center gap-6 text-on-surface-variant">
-            <span className="material-symbols-outlined hover:bg-primary-container/10 transition-colors p-2 rounded-full cursor-pointer opacity-80 hover:scale-95 transition-all duration-300">notifications</span>
-            <span className="material-symbols-outlined text-primary font-bold border-b-2 border-primary p-2 cursor-pointer transition-all duration-300">account_circle</span>
-          </div>
-        </div>
-      </header>
+      <Navbar className="sticky top-0 z-40 shadow-sm bg-surface text-primary" />
 
       <main className="flex-grow w-full px-margin-mobile md:px-gutter max-w-container-max mx-auto py-stack-lg">
         {/* Back Button */}

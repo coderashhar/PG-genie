@@ -57,8 +57,8 @@ export default function OwnerDashboardPage() {
       
       {/* Main Content Canvas */}
       <main className="flex-1 md:ml-72 flex flex-col min-h-screen">
-        {/* Mobile Header (Visible only on mobile) */}
-        <Navbar className="md:hidden sticky top-0 bg-surface shadow-sm text-primary" />
+        {/* TopNavBar */}
+        <Navbar className="sticky top-0 z-40 bg-surface shadow-sm text-primary" />
         
         <div className="flex-1 p-margin-mobile md:p-gutter max-w-container-max mx-auto w-full space-y-stack-lg">
           {/* Dashboard Header */}
