@@ -1,23 +1,19 @@
 "use client";
 import React from 'react';
 import Link from 'next/link';
+import Navbar from '@/components/Navbar';
 
 export default function StudentDashboardPage() {
   return (
     <div className="bg-background text-on-background font-body-md text-body-md antialiased md:flex min-h-screen">
       {/* TopNavBar (Mobile Only) */}
-      <header className="md:hidden w-full sticky top-0 z-40 shadow-sm bg-surface flex justify-between items-center px-margin-mobile h-16">
-        <Link href="/" className="font-display text-h2 font-extrabold text-primary">PG Genie</Link>
-        <div className="flex gap-4">
-          <span className="material-symbols-outlined text-primary hover:bg-primary-container/10 transition-colors p-2 rounded-full cursor-pointer">notifications</span>
-          <Link href="/dashboard/profile" className="material-symbols-outlined text-primary hover:bg-primary-container/10 transition-colors p-2 rounded-full cursor-pointer">account_circle</Link>
-        </div>
-      </header>
+      <Navbar className="md:hidden sticky top-0 z-40 shadow-sm bg-surface text-primary" />
+
 
       {/* SideNavBar (Web Only) */}
       <aside className="hidden md:flex h-full w-72 left-0 top-0 fixed z-50 bg-surface shadow-xl flex-col p-gutter">
         <div className="mb-stack-lg">
-          <Link href="/" className="font-display text-h2 text-primary mb-2 block cursor-pointer">PG Genie</Link>
+          <span className="font-display text-h2 text-primary mb-2 block cursor-default">PG Genie</span>
           <Link href="/dashboard/profile" className="flex items-center gap-4 mt-stack-md p-4 bg-surface-container rounded-lg hover:bg-surface-container-high transition-colors cursor-pointer group">
             <div className="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-h2 group-hover:scale-105 transition-transform">A</div>
             <div>
@@ -28,8 +24,12 @@ export default function StudentDashboardPage() {
         </div>
         <nav className="flex-1 flex flex-col gap-2">
           <Link className="flex items-center gap-4 p-3 bg-primary-container text-on-primary-container font-semibold rounded-lg group cursor-pointer" href="/dashboard">
-            <span className="material-symbols-outlined">home</span>
-            <span>Home</span>
+            <span className="material-symbols-outlined">dashboard</span>
+            <span>Dashboard</span>
+          </Link>
+          <Link className="flex items-center gap-4 p-3 text-on-surface-variant hover:bg-surface-container-high transition-all rounded-lg group cursor-pointer" href="/">
+            <span className="material-symbols-outlined">public</span>
+            <span>Home Page</span>
           </Link>
           <Link className="flex items-center gap-4 p-3 text-on-surface-variant hover:bg-surface-container-high transition-all rounded-lg group cursor-pointer" href="#">
             <span className="material-symbols-outlined">list_alt</span>
