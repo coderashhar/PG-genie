@@ -7,10 +7,11 @@ export default function PgsPage() {
       {/* TopNavBar */}
       <header className="w-full sticky top-0 z-40 bg-surface dark:bg-on-background shadow-sm dark:shadow-none">
         <div className="flex justify-between items-center w-full px-margin-mobile md:px-gutter max-w-container-max mx-auto h-16">
-          <Link href="/" className="font-display text-h2 font-extrabold text-primary dark:text-primary-fixed-dim">
+          <span className="font-display text-h2 font-extrabold text-primary dark:text-primary-fixed-dim cursor-default">
             PG Genie
-          </Link>
+          </span>
           <div className="hidden md:flex items-center gap-6">
+            <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10 transition-colors h-16 flex items-center px-4 rounded" href="/">Home</Link>
             <Link className="font-body-md text-body-md text-primary dark:text-primary-fixed-dim font-bold border-b-2 border-primary h-16 flex items-center" href="/pgs">Search</Link>
             <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10 transition-colors h-16 flex items-center px-4 rounded" href="/dashboard">Saved</Link>
             <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10 transition-colors h-16 flex items-center px-4 rounded" href="/dashboard">Bookings</Link>
