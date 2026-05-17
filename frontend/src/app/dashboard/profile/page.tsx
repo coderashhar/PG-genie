@@ -8,7 +8,7 @@ export default function StudentProfilePage() {
       {/* TopNavBar */}
       <header className="w-full sticky top-0 z-40 shadow-sm bg-surface">
         <div className="flex justify-between items-center w-full px-margin-mobile md:px-gutter max-w-container-max mx-auto h-16">
-          <Link href="/" className="font-display text-h2 font-extrabold text-primary">PG Genie</Link>
+          <span className="font-display text-h2 font-extrabold text-primary cursor-default">PG Genie</span>
           
           {/* Mobile nav icons placeholder */}
           <div className="flex items-center gap-4 md:hidden text-primary">

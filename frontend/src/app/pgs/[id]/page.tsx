@@ -7,7 +7,7 @@ export default function PgDetailPage({ params }: { params: { id: string } }) {
       {/* TopNavBar */}
       <nav className="w-full sticky top-0 z-40 shadow-sm bg-surface">
         <div className="flex justify-between items-center w-full px-margin-mobile md:px-gutter max-w-container-max mx-auto h-16">
-          <Link className="font-display text-h2 font-extrabold text-primary" href="/">PG Genie</Link>
+          <span className="font-display text-h2 font-extrabold text-primary cursor-default">PG Genie</span>
           <div className="hidden md:flex flex-1 justify-center max-w-md px-gutter">
             <div className="w-full relative group">
               <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors">search</span>

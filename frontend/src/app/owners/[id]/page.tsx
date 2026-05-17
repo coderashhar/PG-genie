@@ -7,7 +7,7 @@ export default function OwnerProfilePage({ params }: { params: { id: string } })
       {/* TopNavBar */}
       <nav className="w-full sticky top-0 z-40 bg-surface shadow-sm">
         <div className="flex justify-between items-center w-full px-margin-mobile md:px-gutter max-w-container-max mx-auto h-16">
-          <Link className="font-display text-h2 font-extrabold text-primary transition-colors duration-300" href="/">PG Genie</Link>
+          <span className="font-display text-h2 font-extrabold text-primary transition-colors duration-300 cursor-default">PG Genie</span>
           <div className="hidden md:flex items-center gap-6">
             <Link className="font-body-md text-body-md text-primary font-bold border-b-2 border-primary pb-1 transition-colors duration-300 cursor-pointer" href="/pgs">Explore</Link>
             <Link className="font-body-md text-body-md text-on-surface-variant hover:bg-primary-container/10 px-3 py-2 rounded-lg transition-colors duration-300 hover:text-primary cursor-pointer" href="#">Saved</Link>
