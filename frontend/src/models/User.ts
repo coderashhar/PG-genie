@@ -1,0 +1,61 @@
+import mongoose, { Document, Model, Schema } from 'mongoose';
+
+export interface IUser extends Document {
+  name: string;
+  email: string;
+  password?: string; // Optional if using OAuth
+  image?: string;
+  role: 'student' | 'owner';
+  phone?: string;
+  savedPgs: mongoose.Types.ObjectId[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const UserSchema: Schema<IUser> = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, 'Please provide a name'],
+    },
+    email: {
+      type: String,
+      required: [true, 'Please provide an email'],
+      unique: true,
+      lowercase: true,
+      match: [
+        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+        'Please provide a valid email',
+      ],
+    },
+    password: {
+      type: String,
+      select: false, // Don't return password by default
+    },
+    image: {
+      type: String,
+    },
+    role: {
+      type: String,
+      enum: ['student', 'owner'],
+      default: 'student',
+    },
+    phone: {
+      type: String,
+    },
+    savedPgs: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Property',
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
+);
+
+// Prevent re-compiling model in development
+const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
+
+export default User;
