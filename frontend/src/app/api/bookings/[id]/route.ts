@@ -22,18 +22,23 @@ export async function PUT(
       return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
     }
 
+    if ((session.user as any).role !== 'owner') {
+      return NextResponse.json({ error: 'Only owners can update booking status' }, { status: 403 });
+    }
+
     await connectToDatabase();
 
-    // Just testing the structure. The real logic for ownership check comes next.
-    const updatedBooking = await Booking.findByIdAndUpdate(
-      id,
-      { status },
-      { new: true }
-    );
-
-    if (!updatedBooking) {
+    const booking = await Booking.findById(id);
+    if (!booking) {
       return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
     }
+
+    if (booking.ownerId.toString() !== (session.user as any).id) {
+      return NextResponse.json({ error: 'Not authorized to update this booking' }, { status: 403 });
+    }
+
+    booking.status = status;
+    const updatedBooking = await booking.save();
 
     return NextResponse.json({ message: 'Booking updated successfully', booking: updatedBooking }, { status: 200 });
   } catch (error: any) {
