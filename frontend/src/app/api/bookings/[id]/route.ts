@@ -46,3 +46,40 @@ export async function PUT(
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { id } = params;
+    await connectToDatabase();
+
+    const booking = await Booking.findById(id);
+    if (!booking) {
+      return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
+    }
+
+    // Only the student who created the booking can delete/cancel it
+    if (booking.studentId.toString() !== (session.user as any).id) {
+      return NextResponse.json({ error: 'Not authorized to delete this booking' }, { status: 403 });
+    }
+
+    // Only allow deletion if status is still pending (optional business logic, but good practice)
+    if (booking.status !== 'pending') {
+      return NextResponse.json({ error: 'Cannot cancel an application that is already processed' }, { status: 400 });
+    }
+
+    await Booking.findByIdAndDelete(id);
+
+    return NextResponse.json({ message: 'Booking cancelled successfully' }, { status: 200 });
+  } catch (error: any) {
+    console.error('Error deleting booking:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
