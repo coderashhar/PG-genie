@@ -13,8 +13,17 @@ export async function GET(req: NextRequest) {
 
     await connectToDatabase();
     
-    // Basic fetch: assuming student fetching their bookings
-    const bookings = await Booking.find({ studentId: (session.user as any).id });
+    const userRole = (session.user as any).role;
+    const userId = (session.user as any).id;
+    
+    let query = {};
+    if (userRole === 'owner') {
+      query = { ownerId: userId };
+    } else {
+      query = { studentId: userId };
+    }
+
+    const bookings = await Booking.find(query).sort({ createdAt: -1 });
 
     return NextResponse.json({ bookings }, { status: 200 });
   } catch (error: any) {
