@@ -17,14 +17,17 @@ export async function GET(req: NextRequest) {
     const userRole = (session.user as any).role;
     const userId = (session.user as any).id;
     
-    let query = {};
+    let bookings = [];
     if (userRole === 'owner') {
-      query = { ownerId: userId };
+      bookings = await Booking.find({ ownerId: userId })
+        .populate('studentId', 'name email')
+        .populate('pgId', 'title')
+        .sort({ createdAt: -1 });
     } else {
-      query = { studentId: userId };
+      bookings = await Booking.find({ studentId: userId })
+        .populate('pgId', 'title location images')
+        .sort({ createdAt: -1 });
     }
-
-    const bookings = await Booking.find(query).sort({ createdAt: -1 });
 
     return NextResponse.json({ bookings }, { status: 200 });
   } catch (error: any) {
