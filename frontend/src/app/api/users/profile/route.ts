@@ -64,10 +64,11 @@ export async function PUT(req: NextRequest) {
     await connectToDatabase();
 
     const userId = (session.user as any).id;
+    const userRole = (session.user as any).role || 'student';
     const body = await req.json();
 
-    // Validate and sanitize input fields
-    const { data: updateData, errors } = validateProfileUpdate(body);
+    // Validate and sanitize input fields (role-aware)
+    const { data: updateData, errors } = validateProfileUpdate(body, userRole);
 
     if (errors.length > 0) {
       return NextResponse.json(

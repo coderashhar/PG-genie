@@ -10,6 +10,8 @@ export interface IUser extends Document {
   university?: string; // Student-specific: university name
   bio?: string; // Short user biography
   address?: string; // User's current address
+  businessName?: string; // Owner-specific: business/PG name
+  businessAddress?: string; // Owner-specific: business address
   savedPgs: mongoose.Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
@@ -56,6 +58,14 @@ const UserSchema: Schema<IUser> = new mongoose.Schema(
       trim: true,
     },
     address: {
+      type: String,
+      trim: true,
+    },
+    businessName: {
+      type: String,
+      trim: true,
+    },
+    businessAddress: {
       type: String,
       trim: true,
     },
