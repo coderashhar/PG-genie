@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import connectToDatabase from '@/lib/db';
 import User from '@/models/User';
+import { validateProfileUpdate } from '@/lib/validation';
 
 /**
  * GET /api/users/profile
@@ -65,14 +66,14 @@ export async function PUT(req: NextRequest) {
     const userId = (session.user as any).id;
     const body = await req.json();
 
-    // Whitelist of allowed fields to update
-    const allowedFields = ['name', 'phone', 'image', 'university', 'bio', 'address'];
-    const updateData: Record<string, any> = {};
+    // Validate and sanitize input fields
+    const { data: updateData, errors } = validateProfileUpdate(body);
 
-    for (const field of allowedFields) {
-      if (body[field] !== undefined) {
-        updateData[field] = body[field];
-      }
+    if (errors.length > 0) {
+      return NextResponse.json(
+        { error: 'Validation failed', details: errors },
+        { status: 400 }
+      );
     }
 
     if (Object.keys(updateData).length === 0) {
