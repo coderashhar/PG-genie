@@ -3,6 +3,56 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import connectToDatabase from '@/lib/db';
 import User from '@/models/User';
+import Property from '@/models/Property'; // Required for populate
+
+/**
+ * GET /api/users/favorites
+ * Returns the authenticated user's saved PGs with populated property details.
+ */
+export async function GET(req: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session || !session.user) {
+      return NextResponse.json(
+        { error: 'Unauthorized. Please log in.' },
+        { status: 401 }
+      );
+    }
+
+    await connectToDatabase();
+
+    const userId = (session.user as any).id;
+
+    // Ensure the Property model is registered before populate
+    // (the import above handles this)
+    const user = await User.findById(userId)
+      .select('savedPgs')
+      .populate({
+        path: 'savedPgs',
+        model: Property,
+        select: 'title description location price images status roomTypes amenities',
+      });
+
+    if (!user) {
+      return NextResponse.json(
+        { error: 'User not found' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(
+      { favorites: user.savedPgs },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    console.error('Error fetching favorites:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
 
 /**
  * POST /api/users/favorites
