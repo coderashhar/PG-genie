@@ -7,6 +7,9 @@ export interface IUser extends Document {
   image?: string;
   role: 'student' | 'owner';
   phone?: string;
+  university?: string; // Student-specific: university name
+  bio?: string; // Short user biography
+  address?: string; // User's current address
   savedPgs: mongoose.Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
@@ -43,6 +46,19 @@ const UserSchema: Schema<IUser> = new mongoose.Schema(
     phone: {
       type: String,
     },
+    university: {
+      type: String,
+      trim: true,
+    },
+    bio: {
+      type: String,
+      maxlength: [500, 'Bio cannot exceed 500 characters'],
+      trim: true,
+    },
+    address: {
+      type: String,
+      trim: true,
+    },
     savedPgs: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -59,3 +75,4 @@ const UserSchema: Schema<IUser> = new mongoose.Schema(
 const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
 
 export default User;
+
