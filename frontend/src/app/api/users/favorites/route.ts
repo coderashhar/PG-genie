@@ -59,3 +59,60 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
+/**
+ * DELETE /api/users/favorites
+ * Removes a PG property from the authenticated student's savedPgs list.
+ * Body: { pgId: string }
+ */
+export async function DELETE(req: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session || !session.user) {
+      return NextResponse.json(
+        { error: 'Unauthorized. Please log in.' },
+        { status: 401 }
+      );
+    }
+
+    await connectToDatabase();
+
+    const userId = (session.user as any).id;
+    const body = await req.json();
+    const { pgId } = body;
+
+    if (!pgId) {
+      return NextResponse.json(
+        { error: 'Property ID (pgId) is required' },
+        { status: 400 }
+      );
+    }
+
+    // Remove from savedPgs using $pull
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { savedPgs: pgId } },
+      { new: true }
+    ).select('savedPgs');
+
+    if (!updatedUser) {
+      return NextResponse.json(
+        { error: 'User not found' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(
+      { message: 'PG removed from favorites', savedPgs: updatedUser.savedPgs },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    console.error('Error removing favorite:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+
