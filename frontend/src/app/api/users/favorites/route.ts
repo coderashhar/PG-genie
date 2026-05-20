@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth';
 import connectToDatabase from '@/lib/db';
 import User from '@/models/User';
 import Property from '@/models/Property'; // Required for populate
+import mongoose from 'mongoose';
 
 /**
  * GET /api/users/favorites
@@ -83,6 +84,32 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Validate ObjectId format
+    if (!mongoose.Types.ObjectId.isValid(pgId)) {
+      return NextResponse.json(
+        { error: 'Invalid property ID format' },
+        { status: 400 }
+      );
+    }
+
+    // Verify the property exists before saving
+    const propertyExists = await Property.findById(pgId).select('_id');
+    if (!propertyExists) {
+      return NextResponse.json(
+        { error: 'Property not found. Cannot save a non-existent PG.' },
+        { status: 404 }
+      );
+    }
+
+    // Check if already in favorites
+    const currentUser = await User.findById(userId).select('savedPgs');
+    if (currentUser && currentUser.savedPgs.some((id: any) => id.toString() === pgId)) {
+      return NextResponse.json(
+        { message: 'PG is already in your favorites', savedPgs: currentUser.savedPgs },
+        { status: 200 }
+      );
+    }
+
     // Add to savedPgs using $addToSet to prevent duplicates
     const updatedUser = await User.findByIdAndUpdate(
       userId,
@@ -135,6 +162,23 @@ export async function DELETE(req: NextRequest) {
     if (!pgId) {
       return NextResponse.json(
         { error: 'Property ID (pgId) is required' },
+        { status: 400 }
+      );
+    }
+
+    // Validate ObjectId format
+    if (!mongoose.Types.ObjectId.isValid(pgId)) {
+      return NextResponse.json(
+        { error: 'Invalid property ID format' },
+        { status: 400 }
+      );
+    }
+
+    // Check if the PG is actually in favorites before trying to remove
+    const currentUser = await User.findById(userId).select('savedPgs');
+    if (currentUser && !currentUser.savedPgs.some((id: any) => id.toString() === pgId)) {
+      return NextResponse.json(
+        { error: 'This PG is not in your favorites' },
         { status: 400 }
       );
     }
