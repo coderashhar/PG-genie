@@ -7,6 +7,7 @@ export interface IBooking extends Document {
   status: 'pending' | 'accepted' | 'rejected';
   message?: string;
   visitDate?: Date;
+  visitTime?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -38,6 +39,9 @@ const BookingSchema: Schema<IBooking> = new mongoose.Schema(
     },
     visitDate: {
       type: Date,
+    },
+    visitTime: {
+      type: String,
     },
   },
   {

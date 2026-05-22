@@ -15,6 +15,8 @@ export interface IProperty extends Document {
   amenities: string[];
   images: string[];
   status: 'active' | 'inactive';
+  views: number;
+  monthlyViews: { month: number; year: number; count: number }[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -64,6 +66,17 @@ const PropertySchema: Schema<IProperty> = new mongoose.Schema(
       enum: ['active', 'inactive'],
       default: 'active',
     },
+    views: {
+      type: Number,
+      default: 0,
+    },
+    monthlyViews: [
+      {
+        month: { type: Number, required: true },
+        year: { type: Number, required: true },
+        count: { type: Number, default: 0 },
+      },
+    ],
   },
   {
     timestamps: true,
