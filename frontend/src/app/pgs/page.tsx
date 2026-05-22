@@ -1,7 +1,95 @@
-import React from 'react';
+"use client";
+
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 
+// --- Types ---
+interface PropertyLocation {
+  address: string;
+  city: string;
+  state: string;
+}
+
+interface PropertyData {
+  _id: string;
+  title: string;
+  description: string;
+  location: PropertyLocation;
+  price: number;
+  images: string[];
+  status: string;
+  amenities: string[];
+  roomTypes: string[];
+  views: number;
+}
+
+// --- Amenity icon map ---
+const amenityIconMap: Record<string, string> = {
+  WiFi: 'wifi',
+  'High-Speed WiFi': 'wifi',
+  'Fiber Internet': 'wifi',
+  'Basic WiFi': 'wifi',
+  AC: 'ac_unit',
+  'Central AC': 'ac_unit',
+  Laundry: 'local_laundry_service',
+  Meals: 'restaurant',
+  'Premium Meals': 'restaurant',
+  '3 Meals/Day': 'restaurant',
+  Gym: 'fitness_center',
+  'Gym Access': 'fitness_center',
+  Garden: 'park',
+  'Power Backup': 'bolt',
+  CCTV: 'videocam',
+  'Study Room': 'menu_book',
+  'Study Zone': 'menu_book',
+  Parking: 'local_parking',
+  'Shuttle to Campus': 'directions_bus',
+};
+
+// --- Skeleton ---
+function PropertyCardSkeleton({ wide = false }: { wide?: boolean }) {
+  return (
+    <div className={`rounded-xl overflow-hidden bg-surface-container-lowest border border-outline-variant/20 animate-pulse ${wide ? 'lg:col-span-2 flex flex-col md:flex-row' : 'flex flex-col'}`}>
+      <div className={`${wide ? 'md:w-2/5 h-56 md:h-auto' : 'h-56 w-full'} bg-surface-container`} />
+      <div className="p-6 flex-1 space-y-4">
+        <div className="h-6 w-3/4 bg-surface-container rounded" />
+        <div className="h-4 w-1/2 bg-surface-container rounded" />
+        <div className="flex gap-2">
+          <div className="h-8 w-28 bg-surface-container rounded-lg" />
+          <div className="h-8 w-28 bg-surface-container rounded-lg" />
+        </div>
+        <div className="h-10 w-full bg-surface-container rounded mt-auto" />
+      </div>
+    </div>
+  );
+}
+
 export default function PgsPage() {
+  const [properties, setProperties] = useState<PropertyData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchProperties() {
+      try {
+        const res = await fetch('/api/properties');
+        if (!res.ok) throw new Error('Failed to fetch properties');
+        const data = await res.json();
+        setProperties(data.properties || []);
+      } catch (err: any) {
+        setError(err.message || 'Something went wrong');
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchProperties();
+  }, []);
+
+  // Track view when a property card is clicked
+  const trackView = (propertyId: string) => {
+    fetch(`/api/properties/${propertyId}/view`, { method: 'POST' }).catch(() => {});
+  };
+
   return (
     <div className="bg-background text-on-background font-body-md min-h-screen flex flex-col">
       {/* TopNavBar */}
@@ -130,7 +218,9 @@ export default function PgsPage() {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-stack-md gap-4">
             <div>
               <h1 className="font-h1 text-h1 text-on-surface">Available PGs in Kothri</h1>
-              <p className="font-body-md text-body-md text-on-surface-variant mt-1">Showing 24 properties matching your criteria</p>
+              <p className="font-body-md text-body-md text-on-surface-variant mt-1">
+                {loading ? 'Loading properties...' : `Showing ${properties.length} properties`}
+              </p>
             </div>
             <div className="flex items-center gap-4 w-full sm:w-auto">
               <button className="md:hidden flex-1 flex items-center justify-center gap-2 px-4 py-2 border border-outline rounded-lg bg-surface text-on-surface-variant font-body-md text-body-md cursor-pointer">
@@ -150,150 +240,161 @@ export default function PgsPage() {
             </div>
           </div>
 
-          {/* Bento Grid / Asymmetric Grid for Listings */}
+          {/* Error State */}
+          {error && (
+            <div className="bg-error-container text-on-error-container p-6 rounded-xl mb-stack-md flex items-center gap-3">
+              <span className="material-symbols-outlined">error</span>
+              <p>{error}</p>
+            </div>
+          )}
+
+          {/* Property Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-stack-md">
-            {/* Card 1 */}
-            <Link href="/pgs/64a2b3c9" className="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(76,29,149,0.05)] hover:shadow-[0px_8px_30px_rgba(76,29,149,0.15)] transition-shadow duration-300 border border-outline-variant/20 flex flex-col relative cursor-pointer block">
-              <div className="absolute top-4 right-4 z-10 bg-secondary text-on-secondary px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1 shadow-md">
-                <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span> Verified
-              </div>
-              <div className="h-56 w-full relative overflow-hidden">
-                <img alt="Modern student bedroom" className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4439eyKIteT_JPudz1y3Wn86y_KUM_uHfQRTACJuO1WSjfdzGSnxZUEGsA3J6qicNibZ0yMdTdzf-ERmtX-eUQpoW_i-9ktzlbULGOC_z3BV28ZUI00IQvzVE5ZuZl2H2GnPZG_KiRHZMF6_o-sOei5Q_IMa5dSI1HPG8uOWdOg7DxeQq3E4p5FFm4_411hHiTYCy8U1z0wudbXwn_kAZ0T-KL2ixqUmvhMhqoVEPe6F_XfH4ah-RnCdgLy2WFyQC6Zvxm5yEXM-c" />
-              </div>
-              <div className="p-6 flex flex-col flex-grow">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-h2 text-h2 text-on-surface group-hover:text-primary transition-colors">Sunrise Premium Boys Hostel</h3>
-                </div>
-                <p className="font-body-md text-body-md text-on-surface-variant flex items-center gap-1 mb-stack-sm">
-                  <span className="material-symbols-outlined text-[18px]">location_on</span>
-                  Near Main Gate, Kothri • 1.2 km from VIT
-                </p>
-                <div className="flex flex-wrap gap-2 mb-stack-md">
-                  <div className="bg-primary/5 text-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm flex items-center gap-1.5 border border-primary/10">
-                    <span className="material-symbols-outlined text-[16px]">wifi</span> High-Speed WiFi
-                  </div>
-                  <div className="bg-primary/5 text-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm flex items-center gap-1.5 border border-primary/10">
-                    <span className="material-symbols-outlined text-[16px]">restaurant</span> 3 Meals/Day
-                  </div>
-                  <div className="bg-primary/5 text-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm flex items-center gap-1.5 border border-primary/10">
-                    <span className="material-symbols-outlined text-[16px]">ac_unit</span> AC Rooms
-                  </div>
-                </div>
-                <div className="mt-auto pt-4 border-t border-outline-variant/30 flex justify-between items-end">
-                  <div>
-                    <p className="font-label-sm text-label-sm text-on-surface-variant mb-1">Starting from</p>
-                    <p className="font-h2 text-h2 text-primary font-bold">₹7,500<span className="font-body-md text-body-md font-normal text-on-surface-variant">/mo</span></p>
-                  </div>
-                  <button className="bg-secondary text-on-secondary px-6 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-on-secondary-fixed-variant transition-colors shadow-sm cursor-pointer">
-                    View Details
-                  </button>
-                </div>
-              </div>
-            </Link>
+            {loading ? (
+              <>
+                <PropertyCardSkeleton />
+                <PropertyCardSkeleton />
+                <PropertyCardSkeleton wide />
+              </>
+            ) : properties.length > 0 ? (
+              properties.map((property, index) => {
+                // Make every 3rd card a wide card (like the original design)
+                const isWide = index > 0 && (index + 1) % 3 === 0;
 
-            {/* Card 2 */}
-            <Link href="/pgs/8f7e6d5c" className="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(76,29,149,0.05)] hover:shadow-[0px_8px_30px_rgba(76,29,149,0.15)] transition-shadow duration-300 border border-outline-variant/20 flex flex-col relative cursor-pointer block">
-              <div className="absolute top-4 left-4 z-10 bg-error/90 text-on-error px-3 py-1 rounded-full font-label-sm text-label-sm shadow-md">
-                Filling Fast
-              </div>
-              <div className="h-56 w-full relative overflow-hidden">
-                <img alt="Cozy shared living space for students" className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyy8VLRzVey67ryRRNXsVKfieMYQtUqfTzjc-dp8ZyE2aj-ISj8biKOeLHNbYfnSCk1JZ_ydxDrCE97-qR_1cfvwBhWX02rf4Lt2HbmP9ikgj9CyxAS4w9JvbIrNdKOCvy6ejLJM6Ki29FJThw9qBAJ4LjYupUlyjCgl_ay1hNzM7wQ8oRJ9cDVGEP-7SFQL3LCo4HenUOsLh46ZDjRQC95OO9OMyVhUp4KxqKR9a0Q_JoyWzW4DoTMkGBgeUMOJDl_jhuUoHitwHS" />
-              </div>
-              <div className="p-6 flex flex-col flex-grow">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-h2 text-h2 text-on-surface group-hover:text-primary transition-colors">Greenwood Girls Enclave</h3>
-                </div>
-                <p className="font-body-md text-body-md text-on-surface-variant flex items-center gap-1 mb-stack-sm">
-                  <span className="material-symbols-outlined text-[18px]">location_on</span>
-                  Market Area, Kothri • 2.5 km from VIT
-                </p>
-                <div className="flex flex-wrap gap-2 mb-stack-md">
-                  <div className="bg-primary/5 text-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm flex items-center gap-1.5 border border-primary/10">
-                    <span className="material-symbols-outlined text-[16px]">wifi</span> Basic WiFi
-                  </div>
-                  <div className="bg-primary/5 text-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm flex items-center gap-1.5 border border-primary/10">
-                    <span className="material-symbols-outlined text-[16px]">local_laundry_service</span> Laundry
-                  </div>
-                  <div className="bg-primary/5 text-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm flex items-center gap-1.5 border border-primary/10">
-                    <span className="material-symbols-outlined text-[16px]">directions_bus</span> Shuttle to Campus
-                  </div>
-                </div>
-                <div className="mt-auto pt-4 border-t border-outline-variant/30 flex justify-between items-end">
-                  <div>
-                    <p className="font-label-sm text-label-sm text-on-surface-variant mb-1">Starting from</p>
-                    <p className="font-h2 text-h2 text-primary font-bold">₹6,000<span className="font-body-md text-body-md font-normal text-on-surface-variant">/mo</span></p>
-                  </div>
-                  <button className="bg-surface text-primary border border-primary px-6 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-primary/5 transition-colors cursor-pointer">
-                    View Details
-                  </button>
-                </div>
-              </div>
-            </Link>
+                if (isWide) {
+                  return (
+                    <Link
+                      key={property._id}
+                      href={`/pgs/${property._id}`}
+                      onClick={() => trackView(property._id)}
+                      className="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(76,29,149,0.05)] hover:shadow-[0px_8px_30px_rgba(76,29,149,0.15)] transition-shadow duration-300 border border-outline-variant/20 flex flex-col relative lg:col-span-2 cursor-pointer block"
+                    >
+                      <div className="flex flex-col md:flex-row h-full">
+                        <div className="md:w-2/5 h-56 md:h-auto relative overflow-hidden">
+                          <div className="absolute top-4 right-4 z-10 bg-secondary text-on-secondary px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1 shadow-md">
+                            <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span> Verified
+                          </div>
+                          <img
+                            alt={property.title}
+                            className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+                            src={property.images?.[0] || '/placeholder.jpg'}
+                          />
+                        </div>
+                        <div className="p-6 flex flex-col flex-grow md:w-3/5">
+                          <div className="flex justify-between items-start mb-2">
+                            <div>
+                              <h3 className="font-h2 text-h2 text-on-surface group-hover:text-primary transition-colors">{property.title}</h3>
+                              <p className="font-body-md text-body-md text-on-surface-variant flex items-center gap-1 mt-1">
+                                <span className="material-symbols-outlined text-[18px]">location_on</span>
+                                {property.location?.address}
+                              </p>
+                            </div>
+                            {property.roomTypes?.length > 0 && (
+                              <div className="bg-surface-container-high text-primary px-2 py-1 rounded font-label-sm text-label-sm">
+                                {property.roomTypes[0]}
+                              </div>
+                            )}
+                          </div>
+                          <p className="font-body-md text-body-md text-on-surface-variant line-clamp-2 mb-stack-md mt-2">
+                            {property.description}
+                          </p>
+                          <div className="flex flex-wrap gap-2 mb-stack-md">
+                            {property.amenities?.slice(0, 4).map((amenity) => (
+                              <div key={amenity} className="bg-primary/5 text-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm flex items-center gap-1.5 border border-primary/10">
+                                <span className="material-symbols-outlined text-[16px]">{amenityIconMap[amenity] || 'check_circle'}</span>
+                                {amenity}
+                              </div>
+                            ))}
+                          </div>
+                          <div className="mt-auto pt-4 border-t border-outline-variant/30 flex justify-between items-end">
+                            <div>
+                              <p className="font-label-sm text-label-sm text-on-surface-variant mb-1">Starting from</p>
+                              <p className="font-h2 text-h2 text-primary font-bold">
+                                ₹{property.price?.toLocaleString('en-IN')}
+                                <span className="font-body-md text-body-md font-normal text-on-surface-variant">/mo</span>
+                              </p>
+                            </div>
+                            <div className="flex gap-3">
+                              <button className="bg-surface text-primary border border-primary px-4 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-primary/5 transition-colors hidden sm:block cursor-pointer" onClick={(e) => e.preventDefault()}>
+                                View Map
+                              </button>
+                              <button className="bg-secondary text-on-secondary px-6 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-on-secondary-fixed-variant transition-colors shadow-sm cursor-pointer" onClick={(e) => e.preventDefault()}>
+                                Book Now
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                }
 
-            {/* Card 3 */}
-            <Link href="/pgs/1a2b3c4d" className="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(76,29,149,0.05)] hover:shadow-[0px_8px_30px_rgba(76,29,149,0.15)] transition-shadow duration-300 border border-outline-variant/20 flex flex-col relative lg:col-span-2 cursor-pointer block">
-              <div className="flex flex-col md:flex-row h-full">
-                <div className="md:w-2/5 h-56 md:h-auto relative overflow-hidden">
-                  <div className="absolute top-4 right-4 z-10 bg-secondary text-on-secondary px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1 shadow-md">
-                    <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span> Verified
-                  </div>
-                  <img alt="Spacious modern student room" className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAZSDfXtpR0qfXkXu6uWXgFbb4rTlEuU_tVsCBVjvfOLiQiao1RJz8zNXHC1VJMqW-iYpQ-EKnnXtRlvTltQz1tSyqgegBOp3wy4Z1yKIpkCeEPYvKilj7K9ms-rI7uJj4lK_KcRnLjA5rVEwkqyc_AlrwNtI0IJ3hT_elLj2q4CSmUdLUOrrYntyg2ohnV6XvxLuac6uokU_ddtjLCd7-AWtCcsmS0Seq5uXbpeAZn_0Jl32xx8v7AnvTtZx58TxVsC2-hVwvebpk" />
-                </div>
-                <div className="p-6 flex flex-col flex-grow md:w-3/5">
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <h3 className="font-h2 text-h2 text-on-surface group-hover:text-primary transition-colors">Elite Co-living Spaces</h3>
-                      <p className="font-body-md text-body-md text-on-surface-variant flex items-center gap-1 mt-1">
+                return (
+                  <Link
+                    key={property._id}
+                    href={`/pgs/${property._id}`}
+                    onClick={() => trackView(property._id)}
+                    className="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(76,29,149,0.05)] hover:shadow-[0px_8px_30px_rgba(76,29,149,0.15)] transition-shadow duration-300 border border-outline-variant/20 flex flex-col relative cursor-pointer block"
+                  >
+                    <div className="absolute top-4 right-4 z-10 bg-secondary text-on-secondary px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1 shadow-md">
+                      <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span> Verified
+                    </div>
+                    <div className="h-56 w-full relative overflow-hidden">
+                      <img
+                        alt={property.title}
+                        className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+                        src={property.images?.[0] || '/placeholder.jpg'}
+                      />
+                    </div>
+                    <div className="p-6 flex flex-col flex-grow">
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="font-h2 text-h2 text-on-surface group-hover:text-primary transition-colors">{property.title}</h3>
+                      </div>
+                      <p className="font-body-md text-body-md text-on-surface-variant flex items-center gap-1 mb-stack-sm">
                         <span className="material-symbols-outlined text-[18px]">location_on</span>
-                        Premium Sector, Kothri • 0.8 km from VIT
+                        {property.location?.address}
                       </p>
+                      <div className="flex flex-wrap gap-2 mb-stack-md">
+                        {property.amenities?.slice(0, 3).map((amenity) => (
+                          <div key={amenity} className="bg-primary/5 text-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm flex items-center gap-1.5 border border-primary/10">
+                            <span className="material-symbols-outlined text-[16px]">{amenityIconMap[amenity] || 'check_circle'}</span>
+                            {amenity}
+                          </div>
+                        ))}
+                      </div>
+                      <div className="mt-auto pt-4 border-t border-outline-variant/30 flex justify-between items-end">
+                        <div>
+                          <p className="font-label-sm text-label-sm text-on-surface-variant mb-1">Starting from</p>
+                          <p className="font-h2 text-h2 text-primary font-bold">
+                            ₹{property.price?.toLocaleString('en-IN')}
+                            <span className="font-body-md text-body-md font-normal text-on-surface-variant">/mo</span>
+                          </p>
+                        </div>
+                        <button className="bg-secondary text-on-secondary px-6 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-on-secondary-fixed-variant transition-colors shadow-sm cursor-pointer" onClick={(e) => e.preventDefault()}>
+                          View Details
+                        </button>
+                      </div>
                     </div>
-                    <div className="bg-surface-container-high text-primary px-2 py-1 rounded font-label-sm text-label-sm">
-                      Co-ed
-                    </div>
-                  </div>
-                  <p className="font-body-md text-body-md text-on-surface-variant line-clamp-2 mb-stack-md mt-2">
-                    Experience premium student living with state-of-the-art facilities, dedicated study zones, and high-speed internet designed for modern academic needs.
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-stack-md">
-                    <div className="bg-primary/5 text-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm flex items-center gap-1.5 border border-primary/10">
-                      <span className="material-symbols-outlined text-[16px]">wifi</span> Fiber Internet
-                    </div>
-                    <div className="bg-primary/5 text-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm flex items-center gap-1.5 border border-primary/10">
-                      <span className="material-symbols-outlined text-[16px]">restaurant</span> Premium Meals
-                    </div>
-                    <div className="bg-primary/5 text-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm flex items-center gap-1.5 border border-primary/10">
-                      <span className="material-symbols-outlined text-[16px]">ac_unit</span> Central AC
-                    </div>
-                    <div className="bg-primary/5 text-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm items-center gap-1.5 border border-primary/10 hidden md:flex">
-                      <span className="material-symbols-outlined text-[16px]">fitness_center</span> Gym Access
-                    </div>
-                  </div>
-                  <div className="mt-auto pt-4 border-t border-outline-variant/30 flex justify-between items-end">
-                    <div>
-                      <p className="font-label-sm text-label-sm text-on-surface-variant mb-1">Starting from</p>
-                      <p className="font-h2 text-h2 text-primary font-bold">₹11,000<span className="font-body-md text-body-md font-normal text-on-surface-variant">/mo</span></p>
-                    </div>
-                    <div className="flex gap-3">
-                      <button className="bg-surface text-primary border border-primary px-4 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-primary/5 transition-colors hidden sm:block cursor-pointer">
-                        View Map
-                      </button>
-                      <button className="bg-secondary text-on-secondary px-6 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-on-secondary-fixed-variant transition-colors shadow-sm cursor-pointer">
-                        Book Now
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                  </Link>
+                );
+              })
+            ) : (
+              <div className="md:col-span-2 bg-surface-container rounded-xl p-12 text-center">
+                <span className="material-symbols-outlined text-5xl text-on-surface-variant mb-4 block">search_off</span>
+                <h3 className="font-h2 text-h2 text-on-surface mb-2">No properties found</h3>
+                <p className="font-body-lg text-on-surface-variant">Try adjusting your filters or check back later.</p>
               </div>
-            </Link>
+            )}
           </div>
 
           {/* Load More */}
-          <div className="mt-stack-lg flex justify-center">
-            <button className="px-8 py-3 rounded-full border-2 border-primary text-primary font-body-lg text-body-lg font-semibold hover:bg-primary hover:text-on-primary transition-all shadow-sm hover:shadow-md cursor-pointer">
-              Load More Properties
-            </button>
-          </div>
+          {!loading && properties.length > 0 && (
+            <div className="mt-stack-lg flex justify-center">
+              <button className="px-8 py-3 rounded-full border-2 border-primary text-primary font-body-lg text-body-lg font-semibold hover:bg-primary hover:text-on-primary transition-all shadow-sm hover:shadow-md cursor-pointer">
+                Load More Properties
+              </button>
+            </div>
+          )}
         </div>
       </main>
 
