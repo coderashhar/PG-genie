@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import mongoose from 'mongoose';
 import connectToDatabase from '@/lib/db';
 import Property from '@/models/Property';
 import { getServerSession } from 'next-auth/next';
@@ -12,6 +13,10 @@ export async function GET(
     await connectToDatabase();
     
     const { id } = params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json({ error: 'Invalid property ID format' }, { status: 400 });
+    }
     
     // Fetch property by ID and populate owner details
     const property = await Property.findById(id).populate('ownerId', 'name email phone image');
