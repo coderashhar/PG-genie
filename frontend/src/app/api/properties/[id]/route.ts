@@ -5,6 +5,11 @@ import Property from '@/models/Property';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 
+/**
+ * GET /api/properties/[id]
+ * Fetches the complete details of a single property.
+ * Includes populated owner details.
+ */
 export async function GET(
   req: NextRequest,
   { params }: { params: { id: string } }
@@ -47,6 +52,11 @@ export async function GET(
   }
 }
 
+/**
+ * PUT /api/properties/[id]
+ * Allows owners to edit property details (price, amenities, etc.).
+ * Requires authentication and ownership verification.
+ */
 export async function PUT(
   req: NextRequest,
   { params }: { params: { id: string } }
@@ -99,6 +109,11 @@ export async function PUT(
   }
 }
 
+/**
+ * DELETE /api/properties/[id]
+ * Removes a property listing if it is no longer available.
+ * Requires authentication and ownership verification.
+ */
 export async function DELETE(
   req: NextRequest,
   { params }: { params: { id: string } }
