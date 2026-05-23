@@ -12,7 +12,7 @@ import { authOptions } from '@/lib/auth';
  */
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectToDatabase();
@@ -36,7 +36,7 @@ export async function GET(
 
     return NextResponse.json({ property }, { status: 200 });
   } catch (error: any) {
-    console.error(`Error fetching property ${params.id}:`, error);
+    console.error(`Error fetching property:`, error);
     
     // Check if it's a cast error (invalid ObjectId)
     if (error.name === 'CastError') {
@@ -60,7 +60,7 @@ export async function GET(
  */
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -103,7 +103,7 @@ export async function PUT(
 
     return NextResponse.json({ message: 'Property updated successfully', property: updatedProperty }, { status: 200 });
   } catch (error: any) {
-    console.error(`Error updating property ${params.id}:`, error);
+    console.error(`Error updating property:`, error);
     return NextResponse.json(
       { error: error.message || 'Internal server error' },
       { status: 500 }
@@ -118,7 +118,7 @@ export async function PUT(
  */
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -150,7 +150,7 @@ export async function DELETE(
 
     return NextResponse.json({ message: 'Property deleted successfully' }, { status: 200 });
   } catch (error: any) {
-    console.error(`Error deleting property ${params.id}:`, error);
+    console.error(`Error deleting property:`, error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

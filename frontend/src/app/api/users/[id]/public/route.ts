@@ -11,10 +11,11 @@ import mongoose from 'mongoose';
  */
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const resolvedParams = await params;
+    const { id } = resolvedParams;
 
     // Validate ObjectId format
     if (!mongoose.Types.ObjectId.isValid(id)) {

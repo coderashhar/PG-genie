@@ -1,7 +1,74 @@
-import React from 'react';
+"use client";
+
+import React, { useEffect, useState, use } from 'react';
 import Link from 'next/link';
 
-export default function PgDetailPage({ params }: { params: { id: string } }) {
+// --- Amenity icon map ---
+const amenityIconMap: Record<string, string> = {
+  WiFi: 'wifi',
+  'High-Speed WiFi': 'wifi',
+  'Fiber Internet': 'wifi',
+  'Basic WiFi': 'wifi',
+  AC: 'ac_unit',
+  'Central AC': 'ac_unit',
+  Laundry: 'local_laundry_service',
+  Meals: 'restaurant',
+  'Premium Meals': 'restaurant',
+  '3 Meals/Day': 'restaurant',
+  Gym: 'fitness_center',
+  'Gym Access': 'fitness_center',
+  Garden: 'park',
+  'Power Backup': 'battery_charging_full',
+  CCTV: 'security',
+  'Study Room': 'menu_book',
+  'Study Zone': 'menu_book',
+  Parking: 'local_parking',
+  'Shuttle to Campus': 'directions_bus',
+  'Daily Cleaning': 'cleaning_services',
+};
+
+export default function PgDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
+  const [property, setProperty] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchProperty() {
+      try {
+        const res = await fetch(`/api/properties/${id}`);
+        if (!res.ok) throw new Error('Failed to fetch property details');
+        const data = await res.json();
+        setProperty(data.property);
+      } catch (err: any) {
+        setError(err.message || 'Something went wrong');
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchProperty();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="bg-background min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (error || !property) {
+    return (
+      <div className="bg-background min-h-screen flex items-center justify-center flex-col gap-4">
+        <div className="bg-error-container text-on-error-container p-6 rounded-xl flex items-center gap-3">
+          <span className="material-symbols-outlined">error</span>
+          <p>{error || 'Property not found'}</p>
+        </div>
+        <Link href="/pgs" className="text-primary hover:underline">Go Back to Search</Link>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-background text-on-background font-body-md antialiased min-h-screen flex flex-col">
       {/* TopNavBar */}
@@ -37,23 +104,23 @@ export default function PgDetailPage({ params }: { params: { id: string } }) {
         {/* Bento Grid Gallery */}
         <section className="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-base h-[400px] md:h-[500px] rounded-xl overflow-hidden mb-stack-lg">
           <div className="md:col-span-2 md:row-span-2 relative group cursor-pointer overflow-hidden">
-            <img alt="Main PG Bedroom" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNJt2uzAb2e9tBxRFwgvHZtFejTRJSiUAuFtn2VSUqeuqKZCGBj1V422BnPdLudz2Lwpn27XxNFiL9fZNBdtPNYU4JG4q-Dv3sigY-BcxI20-Lqal4-4Goxb8DtWTZsl5887GzPMm5ykrtrllpM8hjWnJFXThH28IeqaO0g7jsRJ5JzT-5Nqq1bFfQxEkSJ9urpAORzXCHqogikT9i-RCiqV7LNuEZJaQhw8nNc-RLdtv8VJcMomhaDE-q10WkYF-k5T-ivfFlLTmV" />
+            <img alt="Main PG Image" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={property.images?.[0] || "https://lh3.googleusercontent.com/aida-public/AB6AXuBNJt2uzAb2e9tBxRFwgvHZtFejTRJSiUAuFtn2VSUqeuqKZCGBj1V422BnPdLudz2Lwpn27XxNFiL9fZNBdtPNYU4JG4q-Dv3sigY-BcxI20-Lqal4-4Goxb8DtWTZsl5887GzPMm5ykrtrllpM8hjWnJFXThH28IeqaO0g7jsRJ5JzT-5Nqq1bFfQxEkSJ9urpAORzXCHqogikT9i-RCiqV7LNuEZJaQhw8nNc-RLdtv8VJcMomhaDE-q10WkYF-k5T-ivfFlLTmV"} />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
           </div>
           <div className="hidden md:block relative group cursor-pointer overflow-hidden">
-            <img alt="PG Study Area" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCl1lswi8ICMhIHXxmXnRn0sUG_Tqg_l_xPyXKrBDKBj3-fPmW4hc8EgR1qIFzvILmWXXjpkBrCloexbogKv0aMF18w1hUoUE0Db-Nh4nSXToFIqH22r8oR9gOGDCrEuZVDNaN_2NrCfN3B3ovxtekrJ5LyxQmuJYj_0LyrUehgLZ_KZJZc0ks_RiToWW_xiJYKnutBkJvovTA0uIJEnO_udkguXEs1Rv8GwrORMwGLw9FSV0cLoXEChC3aP2s5buMQiZC8Y4kq2w_b" />
+            <img alt="PG Image 2" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={property.images?.[1] || "https://lh3.googleusercontent.com/aida-public/AB6AXuCl1lswi8ICMhIHXxmXnRn0sUG_Tqg_l_xPyXKrBDKBj3-fPmW4hc8EgR1qIFzvILmWXXjpkBrCloexbogKv0aMF18w1hUoUE0Db-Nh4nSXToFIqH22r8oR9gOGDCrEuZVDNaN_2NrCfN3B3ovxtekrJ5LyxQmuJYj_0LyrUehgLZ_KZJZc0ks_RiToWW_xiJYKnutBkJvovTA0uIJEnO_udkguXEs1Rv8GwrORMwGLw9FSV0cLoXEChC3aP2s5buMQiZC8Y4kq2w_b"} />
           </div>
           <div className="hidden md:block relative group cursor-pointer overflow-hidden">
-            <img alt="PG Dining Area" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAOunk0Y-Egi9aBLTxES0XJEAaeuSTkmO4pP02sDj8vuGbf7T11vOoA7qdP1sQHic0iK6QCaGVPMgLMg0llJaRNLb-aNs_U5-TGKWjvrOY0DSyi0VgJLctdaUvavNetNuN6dlqJe7aqiilf64HwebqGH6dBp0qpLyzl10EzU6cXG7dsabhQ7C6GATYh3d7xrSb2uAXi_sy1yUB65AdYuJhT1aiE1wSgsYWYO1TZtIohEHsFy-ocCnD_CRLV12uxpxgM4aWgyT_WBMN" />
+            <img alt="PG Image 3" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={property.images?.[2] || "https://lh3.googleusercontent.com/aida-public/AB6AXuCAOunk0Y-Egi9aBLTxES0XJEAaeuSTkmO4pP02sDj8vuGbf7T11vOoA7qdP1sQHic0iK6QCaGVPMgLMg0llJaRNLb-aNs_U5-TGKWjvrOY0DSyi0VgJLctdaUvavNetNuN6dlqJe7aqiilf64HwebqGH6dBp0qpLyzl10EzU6cXG7dsabhQ7C6GATYh3d7xrSb2uAXi_sy1yUB65AdYuJhT1aiE1wSgsYWYO1TZtIohEHsFy-ocCnD_CRLV12uxpxgM4aWgyT_WBMN"} />
           </div>
           <div className="hidden md:block relative group cursor-pointer overflow-hidden">
-            <img alt="PG Bathroom" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYKs9n1WctuPFe1w3au1cUX33G2gv2CrITYP-kxOApiFfQmgDGvlXFJ2zJE86LC0XeSIX9uFpSYNf2V4ZlQZHZc6YEdPHRMpkbZ6rbfHv3NsJC_mLmmTuLkBJ1Hme26Mo_pOLIC14I7I8fWxN5SzBDh2Anl0l7Y9lACVsNHpA8TFyvziAIthHkVD2laWnh0KveTCydI_yLmAMyyLv01qYaoBeJPKZ4xteguOGWGoQBv6cUjF5vwiSRFXlism-T1Gn81SpsiLaID0nq" />
+            <img alt="PG Image 4" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={property.images?.[3] || "https://lh3.googleusercontent.com/aida-public/AB6AXuAYKs9n1WctuPFe1w3au1cUX33G2gv2CrITYP-kxOApiFfQmgDGvlXFJ2zJE86LC0XeSIX9uFpSYNf2V4ZlQZHZc6YEdPHRMpkbZ6rbfHv3NsJC_mLmmTuLkBJ1Hme26Mo_pOLIC14I7I8fWxN5SzBDh2Anl0l7Y9lACVsNHpA8TFyvziAIthHkVD2laWnh0KveTCydI_yLmAMyyLv01qYaoBeJPKZ4xteguOGWGoQBv6cUjF5vwiSRFXlism-T1Gn81SpsiLaID0nq"} />
           </div>
           <div className="hidden md:block relative group cursor-pointer overflow-hidden">
-            <img alt="PG Exterior" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_KBotTORFoshxZV5vwMG6m5f1YwgPGb5jNuSEazmEN2oAE7sCOagzWaYFzZ9xXHvwu8ljMN6yvClo5pW1ILEgPk44Q_10RiA8I0focJpdDqpZgLvegu8TnrNMP7v7P8PObkmQkUtGgM387ydS9-hMh-OMmwpdByLvZxivsEN79vn2JjqJk2aurYcQbf8gLWFV2UwPRsInWahmTTDtfqMpG4IPEq4_4mjaHSAvO84WgFVHeLfk_9w_V7UMLsfgwKVv08fN_MlC5azc" />
+            <img alt="PG Image 5" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={property.images?.[4] || "https://lh3.googleusercontent.com/aida-public/AB6AXuC_KBotTORFoshxZV5vwMG6m5f1YwgPGb5jNuSEazmEN2oAE7sCOagzWaYFzZ9xXHvwu8ljMN6yvClo5pW1ILEgPk44Q_10RiA8I0focJpdDqpZgLvegu8TnrNMP7v7P8PObkmQkUtGgM387ydS9-hMh-OMmwpdByLvZxivsEN79vn2JjqJk2aurYcQbf8gLWFV2UwPRsInWahmTTDtfqMpG4IPEq4_4mjaHSAvO84WgFVHeLfk_9w_V7UMLsfgwKVv08fN_MlC5azc"} />
             <div className="absolute inset-0 bg-black/40 flex items-center justify-center transition-colors group-hover:bg-black/50">
               <span className="text-on-primary font-h2 text-h2 flex items-center gap-2">
-                <span className="material-symbols-outlined">photo_library</span> +8 Photos
+                <span className="material-symbols-outlined">photo_library</span> {property.images?.length > 5 ? `+${property.images.length - 5} Photos` : 'View Gallery'}
               </span>
             </div>
           </div>
@@ -71,15 +138,14 @@ export default function PgDetailPage({ params }: { params: { id: string } }) {
                     <span className="bg-secondary-container text-on-secondary-container px-2 py-1 rounded font-label-sm text-label-sm flex items-center gap-1">
                       <span className="material-symbols-outlined text-[14px]">verified</span> Verified Partner
                     </span>
-                    <span className="bg-surface-container-high text-on-surface px-2 py-1 rounded font-label-sm text-label-sm">Boys PG</span>
                   </div>
-                  <h1 className="font-h1 text-h1 text-on-surface">Kothri Comforts</h1>
+                  <h1 className="font-h1 text-h1 text-on-surface">{property.title}</h1>
                   <p className="font-body-md text-body-md text-on-surface-variant flex items-center gap-1 mt-1">
-                    <span className="material-symbols-outlined text-[18px]">location_on</span> Near VIT Bhopal Main Gate, Kothri (1.2 km away)
+                    <span className="material-symbols-outlined text-[18px]">location_on</span> {property.location?.address}, {property.location?.city}
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="font-display text-h1 text-primary">₹6,500<span className="font-body-sm text-body-sm text-on-surface-variant font-normal">/mo</span></p>
+                  <p className="font-display text-h1 text-primary">₹{property.price?.toLocaleString('en-IN')}<span className="font-body-sm text-body-sm text-on-surface-variant font-normal">/mo</span></p>
                   <p className="font-label-sm text-label-sm text-secondary flex items-center justify-end gap-1 mt-1">
                     <span className="material-symbols-outlined text-[14px] fill-current" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span> Filling Fast
                   </p>
@@ -94,38 +160,12 @@ export default function PgDetailPage({ params }: { params: { id: string } }) {
             <div>
               <h2 className="font-h2 text-h2 text-on-surface mb-stack-sm">Premium Facilities</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="flex flex-col items-center justify-center p-4 rounded-xl bg-primary/5 border border-primary/10 hover:shadow-md hover:border-primary/30 transition-all text-center gap-2">
-                  <span className="material-symbols-outlined text-[32px] text-primary">wifi</span>
-                  <span className="font-label-sm text-label-sm text-on-surface">High-Speed WiFi</span>
-                </div>
-                <div className="flex flex-col items-center justify-center p-4 rounded-xl bg-primary/5 border border-primary/10 hover:shadow-md hover:border-primary/30 transition-all text-center gap-2">
-                  <span className="material-symbols-outlined text-[32px] text-primary">battery_charging_full</span>
-                  <span className="font-label-sm text-label-sm text-on-surface">24/7 Power Backup</span>
-                </div>
-                <div className="flex flex-col items-center justify-center p-4 rounded-xl bg-primary/5 border border-primary/10 hover:shadow-md hover:border-primary/30 transition-all text-center gap-2">
-                  <span className="material-symbols-outlined text-[32px] text-primary">restaurant</span>
-                  <span className="font-label-sm text-label-sm text-on-surface">3 Meals / Day</span>
-                </div>
-                <div className="flex flex-col items-center justify-center p-4 rounded-xl bg-primary/5 border border-primary/10 hover:shadow-md hover:border-primary/30 transition-all text-center gap-2">
-                  <span className="material-symbols-outlined text-[32px] text-primary">local_laundry_service</span>
-                  <span className="font-label-sm text-label-sm text-on-surface">Laundry Service</span>
-                </div>
-                <div className="flex flex-col items-center justify-center p-4 rounded-xl bg-primary/5 border border-primary/10 hover:shadow-md hover:border-primary/30 transition-all text-center gap-2">
-                  <span className="material-symbols-outlined text-[32px] text-primary">security</span>
-                  <span className="font-label-sm text-label-sm text-on-surface">CCTV Security</span>
-                </div>
-                <div className="flex flex-col items-center justify-center p-4 rounded-xl bg-primary/5 border border-primary/10 hover:shadow-md hover:border-primary/30 transition-all text-center gap-2">
-                  <span className="material-symbols-outlined text-[32px] text-primary">cleaning_services</span>
-                  <span className="font-label-sm text-label-sm text-on-surface">Daily Cleaning</span>
-                </div>
-                <div className="flex flex-col items-center justify-center p-4 rounded-xl bg-primary/5 border border-primary/10 hover:shadow-md hover:border-primary/30 transition-all text-center gap-2">
-                  <span className="material-symbols-outlined text-[32px] text-primary">ac_unit</span>
-                  <span className="font-label-sm text-label-sm text-on-surface">AC Rooms Available</span>
-                </div>
-                <div className="flex flex-col items-center justify-center p-4 rounded-xl bg-primary/5 border border-primary/10 hover:shadow-md hover:border-primary/30 transition-all text-center gap-2">
-                  <span className="material-symbols-outlined text-[32px] text-primary">directions_bus</span>
-                  <span className="font-label-sm text-label-sm text-on-surface">Transport to VIT</span>
-                </div>
+                {property.amenities?.map((amenity: string, idx: number) => (
+                  <div key={idx} className="flex flex-col items-center justify-center p-4 rounded-xl bg-primary/5 border border-primary/10 hover:shadow-md hover:border-primary/30 transition-all text-center gap-2">
+                    <span className="material-symbols-outlined text-[32px] text-primary">{amenityIconMap[amenity] || 'check_circle'}</span>
+                    <span className="font-label-sm text-label-sm text-on-surface">{amenity}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -136,19 +176,16 @@ export default function PgDetailPage({ params }: { params: { id: string } }) {
             <div>
               <h2 className="font-h2 text-h2 text-on-surface mb-stack-sm">About the Property</h2>
               <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm">
-                <p className="font-body-md text-body-md text-on-surface-variant mb-4 leading-relaxed">
-                  Kothri Comforts is a premium, newly constructed boys&apos; accommodation located just a 5-minute drive from the VIT Bhopal main gate. We prioritize student comfort and safety, providing a quiet environment ideal for studying. Our rooms are spacious, well-ventilated, and come fully furnished with modern study tables and ergonomic chairs.
+                <p className="font-body-md text-body-md text-on-surface-variant mb-4 leading-relaxed whitespace-pre-line">
+                  {property.description}
                 </p>
-                <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed mb-6">
-                  The owner, Mr. Sharma, lives on the ground floor and is available 24/7 for any emergencies. We serve hygienic, home-style meals tailored for students, with special menus during exam times.
-                </p>
-                <Link href={`/owners/sharma`} className="flex items-center gap-4 bg-surface-container-low p-4 rounded-lg hover:bg-surface-container transition-colors group cursor-pointer w-full sm:w-fit pr-10">
+                <Link href={`/owner/profile`} className="flex items-center gap-4 bg-surface-container-low p-4 rounded-lg hover:bg-surface-container transition-colors group cursor-pointer w-full sm:w-fit pr-10 mt-6">
                   <div className="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-h2 text-h2 group-hover:scale-105 transition-transform">
-                    S
+                    {property.ownerId?.name?.charAt(0) || 'O'}
                   </div>
                   <div>
                     <p className="font-label-sm text-label-sm text-on-surface mb-1">Managed by</p>
-                    <p className="font-body-md text-body-md font-semibold text-on-surface group-hover:text-primary transition-colors flex items-center gap-1">Mr. R.K. Sharma <span className="material-symbols-outlined text-[16px] opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span></p>
+                    <p className="font-body-md text-body-md font-semibold text-on-surface group-hover:text-primary transition-colors flex items-center gap-1">{property.ownerId?.name || 'Owner'} <span className="material-symbols-outlined text-[16px] opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span></p>
                   </div>
                 </Link>
               </div>
@@ -166,7 +203,7 @@ export default function PgDetailPage({ params }: { params: { id: string } }) {
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <div className="bg-surface/90 backdrop-blur-sm p-4 rounded-lg shadow-lg text-center pointer-events-auto border border-outline-variant">
                     <span className="material-symbols-outlined text-[32px] text-primary mb-2">map</span>
-                    <p className="font-label-sm text-label-sm text-on-surface">Interactive Map Area</p>
+                    <p className="font-label-sm text-label-sm text-on-surface">{property.location?.city}</p>
                     <button className="mt-2 text-primary font-label-sm text-label-sm hover:underline cursor-pointer">View on Google Maps</button>
                   </div>
                 </div>
@@ -180,7 +217,7 @@ export default function PgDetailPage({ params }: { params: { id: string } }) {
               <div className="mb-6">
                 <p className="font-body-md text-body-md text-on-surface-variant mb-1">Starting from</p>
                 <div className="flex items-end gap-2">
-                  <span className="font-display text-h1 text-primary">₹6,500</span>
+                  <span className="font-display text-h1 text-primary">₹{property.price?.toLocaleString('en-IN')}</span>
                   <span className="font-body-md text-body-md text-on-surface-variant mb-1">/ month</span>
                 </div>
               </div>
@@ -197,14 +234,12 @@ export default function PgDetailPage({ params }: { params: { id: string } }) {
               <div className="mt-6 bg-surface-container-low p-4 rounded-lg">
                 <h3 className="font-label-sm text-label-sm text-on-surface mb-2">Available Room Types</h3>
                 <ul className="flex flex-col gap-2">
-                  <li className="flex justify-between items-center font-body-md text-body-md text-on-surface-variant">
-                    <span>Double Sharing</span>
-                    <span className="font-semibold text-on-surface">₹6,500</span>
-                  </li>
-                  <li className="flex justify-between items-center font-body-md text-body-md text-on-surface-variant">
-                    <span>Single Room</span>
-                    <span className="font-semibold text-on-surface">₹9,000</span>
-                  </li>
+                  {property.roomTypes?.map((rt: string, idx: number) => (
+                    <li key={idx} className="flex justify-between items-center font-body-md text-body-md text-on-surface-variant">
+                      <span>{rt}</span>
+                      <span className="font-semibold text-on-surface">Available</span>
+                    </li>
+                  ))}
                 </ul>
               </div>
               <p className="mt-4 font-label-sm text-label-sm text-center text-outline flex items-center justify-center gap-1">
