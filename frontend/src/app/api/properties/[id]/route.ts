@@ -17,7 +17,8 @@ export async function GET(
   try {
     await connectToDatabase();
     
-    const { id } = params;
+    const resolvedParams = await params;
+    const { id } = resolvedParams;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json({ error: 'Invalid property ID format' }, { status: 400 });
@@ -69,7 +70,8 @@ export async function PUT(
     }
 
     await connectToDatabase();
-    const { id } = params;
+    const resolvedParams = await params;
+    const { id } = resolvedParams;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json({ error: 'Invalid property ID format' }, { status: 400 });
@@ -126,7 +128,8 @@ export async function DELETE(
     }
 
     await connectToDatabase();
-    const { id } = params;
+    const resolvedParams = await params;
+    const { id } = resolvedParams;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json({ error: 'Invalid property ID format' }, { status: 400 });

@@ -315,10 +315,10 @@ export default function PgsPage() {
                               </p>
                             </div>
                             <div className="flex gap-3">
-                              <button className="bg-surface text-primary border border-primary px-4 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-primary/5 transition-colors hidden sm:block cursor-pointer" onClick={(e) => e.preventDefault()}>
+                              <button className="bg-surface text-primary border border-primary px-4 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-primary/5 transition-colors hidden sm:block cursor-pointer">
                                 View Map
                               </button>
-                              <button className="bg-secondary text-on-secondary px-6 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-on-secondary-fixed-variant transition-colors shadow-sm cursor-pointer" onClick={(e) => e.preventDefault()}>
+                              <button className="bg-secondary text-on-secondary px-6 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-on-secondary-fixed-variant transition-colors shadow-sm cursor-pointer">
                                 Book Now
                               </button>
                             </div>
@@ -370,7 +370,7 @@ export default function PgsPage() {
                             <span className="font-body-md text-body-md font-normal text-on-surface-variant">/mo</span>
                           </p>
                         </div>
-                        <button className="bg-secondary text-on-secondary px-6 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-on-secondary-fixed-variant transition-colors shadow-sm cursor-pointer" onClick={(e) => e.preventDefault()}>
+                        <button className="bg-secondary text-on-secondary px-6 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-on-secondary-fixed-variant transition-colors shadow-sm cursor-pointer">
                           View Details
                         </button>
                       </div>
