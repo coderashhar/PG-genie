@@ -110,6 +110,10 @@ export async function DELETE(
     await connectToDatabase();
     const { id } = params;
 
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json({ error: 'Invalid property ID format' }, { status: 400 });
+    }
+
     const property = await Property.findById(id);
 
     if (!property) {
