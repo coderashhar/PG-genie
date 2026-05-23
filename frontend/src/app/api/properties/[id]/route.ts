@@ -60,6 +60,11 @@ export async function PUT(
 
     await connectToDatabase();
     const { id } = params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json({ error: 'Invalid property ID format' }, { status: 400 });
+    }
+
     const body = await req.json();
 
     const property = await Property.findById(id);
