@@ -78,8 +78,11 @@ export async function PUT(
       return NextResponse.json({ error: 'Forbidden: You do not own this property' }, { status: 403 });
     }
 
-    // Don't allow changing ownerId
+    // Prevent updating reserved fields
     delete body.ownerId;
+    delete body._id;
+    delete body.createdAt;
+    delete body.updatedAt;
 
     const updatedProperty = await Property.findByIdAndUpdate(id, body, {
       new: true,
