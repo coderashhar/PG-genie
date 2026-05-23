@@ -7,6 +7,10 @@
 
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
+import * as dotenv from 'dotenv';
+
+// Load environment variables from .env.local
+dotenv.config({ path: '.env.local' });
 
 // --- Inline model definitions to avoid Next.js import issues ---
 
@@ -76,8 +80,13 @@ const Booking = mongoose.models.Booking || mongoose.model('Booking', BookingSche
 
 // --- Seed Data ---
 
-const MONGODB_URI =
-  'mongodb+srv://ashharkhan:e652PTfPIFFUqKKd@pggenie.ciimwiz.mongodb.net/PGgenieDB?retryWrites=true&w=majority&appName=PGgenie';
+const MONGODB_URI = process.env.MONGODB_URI as string;
+
+if (!MONGODB_URI) {
+  throw new Error(
+    'Please define the MONGODB_URI environment variable inside .env.local'
+  );
+}
 
 const PG_IMAGES = [
   'https://lh3.googleusercontent.com/aida-public/AB6AXuAwRCscT_RSHrWh37dWQgDImnpm4gqzEA8vb6OP6nWaX6lrifReLCpTTGwDdbrwI0dUSBatLL03qx_Dxe_xUzrrGQ0Hg65bgdahXprFX-2X6Pn-kChn7DpLyDJeOuYNnsW-TYkFngLpmP-UVQxcPHmszejrBtDF2U6KUHITpzEjhraY6aw6vWljTj_hpQWh2R5UtDXFBpIZ2q5uZeRj5UlXuZA8ordx-0TtOXXTZhDbbMNNTX6XAbzLOZIi7hyTKU_TgA8i24akBzVc',
