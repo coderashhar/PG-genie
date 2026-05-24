@@ -13,7 +13,7 @@ export default function Home() {
             <img 
               alt="Modern architectural student housing" 
               className="w-full h-full object-cover scale-105 transform origin-center opacity-90" 
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIRdUUPV1bMcy8zCXF806JxoTNsfzGlB2cUjQQ-rRjJGZYJz38qr8_7wUkMlTGTHrhi8tH2Bh2E7oWyPlCpIptcMI_9W9oAZjxQEs5srU59Iu98zkTt9VbnJ85Bxp185RilpuspnJNiBTZTz86zdjVtDOX4ZRzHnFdjrehKwpgvNIM-BlsuorIu9bC49sPE9lXIWdWiOLqSRAMhmuHeAv1bNrATPTK5iJ_QNcVl4VEOgp7rHDzuikj3xMIBLAHngwJ-GOWEN1NlfW3"
+              src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=1600&q=80"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent"></div>
           </div>
@@ -105,7 +105,7 @@ export default function Home() {
                 <img 
                   alt="Premium student accommodation" 
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuByVkVx27_KvRpC9vRL68trMQABjayPufRpfE6GLOEfIw7tg4LvZTTa1I27qtWKLM8VgNU3NlmHZNMXTEmBXtr_PcvAxgvO88WAbVffaN2RXZOWKdvJw9nucV4oJPr5JcSaN65mfbUOY2Ac-LuICS-XWccawbZqtaI2ZsiOWiIF1InzSu6YlcM6bnb0AYkyF0Mo_3z3p1r84C_cuSHcdqFPOLnqf0g43p2IbD_Tqj-sKj4cY2uDRKL0WRXnsRnjwEvTwrB93s6VAoFG" 
+                  src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80" 
                 />
                 <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full flex items-center shadow-lg">
                   <span className="material-symbols-outlined text-secondary text-sm mr-2" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
@@ -135,7 +135,7 @@ export default function Home() {
                 <img 
                   alt="Student PG interior" 
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDM8cCDbppp0BmoIJNt3Zm7f1qSTitePgv2l-SpSYCe7gAtCv8Ezn9XChflZ543gNFzcG2vXt-hK2iktkaQOA4PxupRd5RcNLlryYcAaqPNB_cmrPyKkfOdXQhIbBeyuPXmWVGGlow57FXBayCj2WoaZZO0Dr5bPA4_k7AB4h9cY3MW-a5306M1zltW5cGgj3JsIwYxPNwewQEbPYSxrSe7f1FKtibJw6NfxFOl9ASNHHE5FgFXSbfethgWW7be29Cc5CbF2Vvk7qay" 
+                  src="https://images.unsplash.com/photo-1502672260266-1c1de2d9d00c?w=800&q=80" 
                 />
                 <div className="absolute top-6 left-6 bg-primary text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg tracking-wider uppercase">
                   New

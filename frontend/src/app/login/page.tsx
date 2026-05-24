@@ -13,7 +13,7 @@ export default function LoginPage() {
           <img 
             alt="Modern Student Room" 
             className="absolute inset-0 w-full h-full object-cover" 
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAfBu3oMh2nXI0DzLR4ctJnkMWjZDAj2gckjMGyjF2Lg-TJZhPAtvqN9ze-y8Lj0K24EmLhn4YRdIy83WSCT4tqMhzpBsnE6Q26BYPvrh3mlnAJANnskVIZWXFNwT9qm9-qayjI6fgrUPAVXjnF-TmYWvYlbJ9TPfWuqvhUtnQuf8GMgrd1BqOPjFk-lo4AP_3W988honv1PJ4xim7-aJtGmhJk1zZYbFuj1kbWekhrf3nSEKEkrKYWMCYaK3WiuPU4x8C_47L2vq5"
+            src="https://images.unsplash.com/photo-1540518614846-7eded433c457?w=1000&q=80"
           />
           <div className="absolute inset-0 bg-gradient-to-t to-transparent flex items-end p-12 from-black/40">
             <div className="backdrop-blur-md bg-white/10 border border-white/20 p-8 rounded-xl shadow-2xl max-w-md">

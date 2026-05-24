@@ -104,20 +104,20 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
         {/* Bento Grid Gallery */}
         <section className="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-base h-[400px] md:h-[500px] rounded-xl overflow-hidden mb-stack-lg">
           <div className="md:col-span-2 md:row-span-2 relative group cursor-pointer overflow-hidden">
-            <img alt="Main PG Image" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={property.images?.[0] || "https://lh3.googleusercontent.com/aida-public/AB6AXuBNJt2uzAb2e9tBxRFwgvHZtFejTRJSiUAuFtn2VSUqeuqKZCGBj1V422BnPdLudz2Lwpn27XxNFiL9fZNBdtPNYU4JG4q-Dv3sigY-BcxI20-Lqal4-4Goxb8DtWTZsl5887GzPMm5ykrtrllpM8hjWnJFXThH28IeqaO0g7jsRJ5JzT-5Nqq1bFfQxEkSJ9urpAORzXCHqogikT9i-RCiqV7LNuEZJaQhw8nNc-RLdtv8VJcMomhaDE-q10WkYF-k5T-ivfFlLTmV"} />
+            <img alt="Main PG Image" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={property.images?.[0] || "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80"} />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
           </div>
           <div className="hidden md:block relative group cursor-pointer overflow-hidden">
-            <img alt="PG Image 2" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={property.images?.[1] || "https://lh3.googleusercontent.com/aida-public/AB6AXuCl1lswi8ICMhIHXxmXnRn0sUG_Tqg_l_xPyXKrBDKBj3-fPmW4hc8EgR1qIFzvILmWXXjpkBrCloexbogKv0aMF18w1hUoUE0Db-Nh4nSXToFIqH22r8oR9gOGDCrEuZVDNaN_2NrCfN3B3ovxtekrJ5LyxQmuJYj_0LyrUehgLZ_KZJZc0ks_RiToWW_xiJYKnutBkJvovTA0uIJEnO_udkguXEs1Rv8GwrORMwGLw9FSV0cLoXEChC3aP2s5buMQiZC8Y4kq2w_b"} />
+            <img alt="PG Image 2" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={property.images?.[1] || "https://images.unsplash.com/photo-1502672260266-1c1de2d9d00c?w=800&q=80"} />
           </div>
           <div className="hidden md:block relative group cursor-pointer overflow-hidden">
-            <img alt="PG Image 3" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={property.images?.[2] || "https://lh3.googleusercontent.com/aida-public/AB6AXuCAOunk0Y-Egi9aBLTxES0XJEAaeuSTkmO4pP02sDj8vuGbf7T11vOoA7qdP1sQHic0iK6QCaGVPMgLMg0llJaRNLb-aNs_U5-TGKWjvrOY0DSyi0VgJLctdaUvavNetNuN6dlqJe7aqiilf64HwebqGH6dBp0qpLyzl10EzU6cXG7dsabhQ7C6GATYh3d7xrSb2uAXi_sy1yUB65AdYuJhT1aiE1wSgsYWYO1TZtIohEHsFy-ocCnD_CRLV12uxpxgM4aWgyT_WBMN"} />
+            <img alt="PG Image 3" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={property.images?.[2] || "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80"} />
           </div>
           <div className="hidden md:block relative group cursor-pointer overflow-hidden">
-            <img alt="PG Image 4" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={property.images?.[3] || "https://lh3.googleusercontent.com/aida-public/AB6AXuAYKs9n1WctuPFe1w3au1cUX33G2gv2CrITYP-kxOApiFfQmgDGvlXFJ2zJE86LC0XeSIX9uFpSYNf2V4ZlQZHZc6YEdPHRMpkbZ6rbfHv3NsJC_mLmmTuLkBJ1Hme26Mo_pOLIC14I7I8fWxN5SzBDh2Anl0l7Y9lACVsNHpA8TFyvziAIthHkVD2laWnh0KveTCydI_yLmAMyyLv01qYaoBeJPKZ4xteguOGWGoQBv6cUjF5vwiSRFXlism-T1Gn81SpsiLaID0nq"} />
+            <img alt="PG Image 4" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={property.images?.[3] || "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80"} />
           </div>
           <div className="hidden md:block relative group cursor-pointer overflow-hidden">
-            <img alt="PG Image 5" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={property.images?.[4] || "https://lh3.googleusercontent.com/aida-public/AB6AXuC_KBotTORFoshxZV5vwMG6m5f1YwgPGb5jNuSEazmEN2oAE7sCOagzWaYFzZ9xXHvwu8ljMN6yvClo5pW1ILEgPk44Q_10RiA8I0focJpdDqpZgLvegu8TnrNMP7v7P8PObkmQkUtGgM387ydS9-hMh-OMmwpdByLvZxivsEN79vn2JjqJk2aurYcQbf8gLWFV2UwPRsInWahmTTDtfqMpG4IPEq4_4mjaHSAvO84WgFVHeLfk_9w_V7UMLsfgwKVv08fN_MlC5azc"} />
+            <img alt="PG Image 5" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={property.images?.[4] || "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&q=80"} />
             <div className="absolute inset-0 bg-black/40 flex items-center justify-center transition-colors group-hover:bg-black/50">
               <span className="text-on-primary font-h2 text-h2 flex items-center gap-2">
                 <span className="material-symbols-outlined">photo_library</span> {property.images?.length > 5 ? `+${property.images.length - 5} Photos` : 'View Gallery'}
@@ -199,7 +199,7 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
               <h2 className="font-h2 text-h2 text-on-surface mb-stack-sm">Location</h2>
               <div className="rounded-xl overflow-hidden border border-outline-variant shadow-sm h-[300px] relative bg-surface-container">
                 {/* Placeholder for Map */}
-                <img alt="Map View" className="w-full h-full object-cover opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3-V-dHDql6dbwaImnrlFEDWrOLiKA6fGAkS4w0FHvVVbeo4p25IHlpKFZtPu-HOQ6_Bw9W_wjAsyN_Ies31zmhXky5q9uGyTP-jQStT_hqPHps5g51yNWd6PDG2HxfoaN9IUEp4c4gnOtMti2E_xG3hQ0od7JUI4Hf3azcKc-Hei-2JI9dfT9NdD6BSbxi9XWuZRPKB1fhomhAbKr9UBmgxvK4jsX3o7SMw3IpgvyckBheGhgRm3y9DhKZqMqvLSsScTgGkInHVzv" />
+                <img alt="Map View" className="w-full h-full object-cover opacity-80" src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&q=80" />
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <div className="bg-surface/90 backdrop-blur-sm p-4 rounded-lg shadow-lg text-center pointer-events-auto border border-outline-variant">
                     <span className="material-symbols-outlined text-[32px] text-primary mb-2">map</span>
