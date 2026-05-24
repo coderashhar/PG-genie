@@ -1,5 +1,7 @@
+"use client";
 import React from 'react';
 import Link from 'next/link';
+import ImageUpload from '@/components/ImageUpload';
 
 export default function OwnerProfilePage({ params }: { params: { id: string } }) {
   return (
@@ -39,8 +41,13 @@ export default function OwnerProfilePage({ params }: { params: { id: string } })
               <div className="bg-surface-container-low rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] border border-surface-variant flex flex-col items-center text-center relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary-container/20 rounded-full blur-3xl -mr-16 -mt-16"></div>
                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-secondary-container/30 rounded-full blur-2xl -ml-12 -mb-12"></div>
-                <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-surface shadow-sm mb-4">
-                  <img alt="Owner Portrait" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCF0RP1jRlDbx4gTPKxEWSDtNVZk7bZRqtLLyxqHWp3dd-pYRJL6yb3YvflKrmR6F8xZ3U1lQRHZHmrH6Y1vgcl2CyFWDHodALiSRBdJY3qvdPTvmQ2BUNBO9lFfy_cUHtPECowDtVMPq19lwX_jNMmA5TaVagjYYMyXN7UidNTtBdN852kATEdaqcgWje_IjvaIJ5l6oGaZToE75Jaga5Lj4PgoCbPahbEnNsLR3EirHkAkGUtLpzaw1X2NxFBeNeB-VMe2XhfCvU9" />
+                <div className="relative mb-4">
+                  <ImageUpload
+                    shape="circle"
+                    defaultImage="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop"
+                    onUploadSuccess={(url) => console.log("Owner avatar uploaded:", url)}
+                    label="Avatar"
+                  />
                 </div>
                 <h1 className="font-h1 text-h1 text-on-surface mb-1">Ramesh Sharma</h1>
                 <div className="flex items-center gap-2 mb-4 transition-transform duration-300 hover:scale-105 cursor-default">
@@ -102,8 +109,12 @@ export default function OwnerProfilePage({ params }: { params: { id: string } })
                 {/* Listing Card 1 */}
                 <Link href="/pgs/123" className="bg-surface rounded-xl overflow-hidden shadow-sm border border-surface-variant group flex flex-col transition-all duration-500 ease-in-out hover:-translate-y-2 hover:shadow-2xl hover:border-primary/20 block cursor-pointer">
                   <div className="relative h-48 w-full overflow-hidden">
-                    <img alt="PG Room Interior" className="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_2ZKtJydO2X9yH875coYl82RujkBEKFMRYHQetVk2kSmg4YPZKn-fwh_nhHwbELfCF8aMy837usO2nGlBs6ccUtFBQDlSIdvkX7AC72VUu43PoIpldI55x7NAgOagg2d79D0J17GHsqy9Ir5wfE4q-yNAvbAXPfx3VRrHBeDkMAbNfgbw61PPexem2CDozq6Ve8uGO-pWmCwDfthgc54cuLUluB-vhYdmPNkJW0St6RIYbLMSYjn_V4Ku9HQlEIdB-ozWahfB_5W1" />
-                    <div className="absolute top-3 right-3 bg-secondary text-on-secondary font-label-sm text-label-sm px-2 py-1 rounded-md flex items-center gap-1 shadow-sm cursor-default">
+                    <ImageUpload
+                      defaultImage="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80"
+                      onUploadSuccess={(url) => console.log('Property 1 image uploaded:', url)}
+                      className="w-full h-full"
+                    />
+                    <div className="absolute top-3 right-3 bg-secondary text-on-secondary font-label-sm text-label-sm px-2 py-1 rounded-md flex items-center gap-1 shadow-sm cursor-default pointer-events-none">
                       <span className="w-2 h-2 rounded-full bg-on-secondary animate-pulse"></span>
                       Rooms Available
                     </div>
@@ -136,8 +147,12 @@ export default function OwnerProfilePage({ params }: { params: { id: string } })
                 {/* Listing Card 2 */}
                 <Link href="/pgs/456" className="bg-surface rounded-xl overflow-hidden shadow-sm border border-surface-variant group flex flex-col transition-all duration-500 ease-in-out hover:-translate-y-2 hover:shadow-2xl hover:border-primary/20 block cursor-pointer">
                   <div className="relative h-48 w-full overflow-hidden">
-                    <img alt="PG Room Interior" className="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYSImn85Ir3URWTcPTkHgj3UU1Ks0tG1DJgL3vmsiDmUzqNbesmY1B28bCuwp75gpJas4WlKeSeGX0ev0kGQjL1sSBqbzrodE6D4TgK58cPiM1KavuEEdnVy7SNix6xVRMOQ3QS65ExfzO5idyCSnwda7rnrOoC-VehE_ZuR8iohzg7JDmq_vgfK603Fm1rB2hPTSWAkqYq86HdiRJhTseexyM6YkHVFy8WXXxkLnhNBQrgc_g47_cKCDsqXCztl6GAc3fo2pmLKIk" />
-                    <div className="absolute top-3 right-3 bg-tertiary text-on-tertiary font-label-sm text-label-sm px-2 py-1 rounded-md flex items-center gap-1 shadow-sm cursor-default">
+                    <ImageUpload
+                      defaultImage="https://images.unsplash.com/photo-1502672260266-1c1de2d9d00c?w=800&q=80"
+                      onUploadSuccess={(url) => console.log('Property 2 image uploaded:', url)}
+                      className="w-full h-full"
+                    />
+                    <div className="absolute top-3 right-3 bg-tertiary text-on-tertiary font-label-sm text-label-sm px-2 py-1 rounded-md flex items-center gap-1 shadow-sm cursor-default pointer-events-none">
                       <span className="w-2 h-2 rounded-full bg-on-tertiary"></span>
                       Filling Fast
                     </div>
