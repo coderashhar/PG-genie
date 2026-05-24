@@ -3,8 +3,50 @@ import React from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import ImageUpload from '@/components/ImageUpload';
+import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
 
 export default function StudentProfilePage() {
+  const { data: session, update } = useSession();
+  const [profile, setProfile] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadProfile() {
+      try {
+        const res = await fetch('/api/users/profile');
+        if (res.ok) {
+          const data = await res.json();
+          setProfile(data.user);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadProfile();
+  }, []);
+
+  const handleImageUpload = async (url: string) => {
+    try {
+      const res = await fetch('/api/users/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: url }),
+      });
+      if (res.ok) {
+        setProfile((prev: any) => ({ ...prev, image: url }));
+        update({ image: url }); // Update next-auth session locally
+      }
+    } catch (err) {
+      console.error('Failed to update profile image', err);
+    }
+  };
+
+  const displayName = profile?.name || session?.user?.name || 'Loading...';
+  const displayImage = profile?.image || session?.user?.image || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop';
+
   return (
     <div className="bg-background text-on-background font-body-md text-body-md antialiased min-h-screen flex flex-col">
       {/* TopNavBar */}
@@ -22,14 +64,16 @@ export default function StudentProfilePage() {
           {/* User Avatar & Identity Card */}
           <div className="col-span-1 md:col-span-1 bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
             <div className="relative mb-stack-sm w-32 h-32">
-              <ImageUpload
-                shape="circle"
-                defaultImage="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop"
-                onUploadSuccess={(url) => console.log("Profile updated with URL:", url)}
-                label="Avatar"
-              />
+              {!loading && (
+                <ImageUpload
+                  shape="circle"
+                  defaultImage={displayImage}
+                  onUploadSuccess={handleImageUpload}
+                  label="Avatar"
+                />
+              )}
             </div>
-            <h1 className="font-h1 text-h1 text-on-background mb-1">Aarav Sharma</h1>
+            <h1 className="font-h1 text-h1 text-on-background mb-1">{displayName}</h1>
             <p className="font-body-md text-body-md text-on-surface-variant flex items-center justify-center gap-1">
               <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>school</span>
               VIT Bhopal
