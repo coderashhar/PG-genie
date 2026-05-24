@@ -89,19 +89,19 @@ if (!MONGODB_URI) {
 }
 
 const PG_IMAGES = [
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuAwRCscT_RSHrWh37dWQgDImnpm4gqzEA8vb6OP6nWaX6lrifReLCpTTGwDdbrwI0dUSBatLL03qx_Dxe_xUzrrGQ0Hg65bgdahXprFX-2X6Pn-kChn7DpLyDJeOuYNnsW-TYkFngLpmP-UVQxcPHmszejrBtDF2U6KUHITpzEjhraY6aw6vWljTj_hpQWh2R5UtDXFBpIZ2q5uZeRj5UlXuZA8ordx-0TtOXXTZhDbbMNNTX6XAbzLOZIi7hyTKU_TgA8i24akBzVc',
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuD7vNiqW4BascszDw9GIhPJsqgINESp787lbHCZgrmMxdBwHbXIymSqvwSgklKRjsbFqHkzi7xr7AN_FKH9AfWavz79urmqHLqBj1ppj3vaS_q0bIzig29J8wAWSxb4xXL18OwDEIf7VLY3va7d-dr5WVwpnUmULYXv6B9uKu4g3-6sCJQkcNEI0crOp2xavKAnxOe0HLhiUL9KylgwfEpcYU-HdtAQ71gLeQ7yYUy_WIBMVENFKr-PLohycnRv24uoWTw4aQI7M5aJ',
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuCR6jZKxmsR55IQXDw4gtdv9rwAWdT8xnDWPHLhTy3kI8LLHJ_Yfg5hINAYpqoUY8_4upKiV9MLsch2vKFHPcnFxFyEZ_qc1MWrqpzlmjQ7dr2v0xsVbNMb47rZ7kUkt4Sof6_XeEVIFJQCUSUQ354m7_QT7Hmkz7Vvfn1ULCjfh0-M9eBEMTs4hFX8xZx3xHU2n22Ex0IKd9iiO1leoaes8uSbwF1hjj1Z2WI4snXiRefszrOmIKseYI5d4hJnucP2RT9KR_zFMfYW',
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuD9PDDOpUrPDk5UhB4RPpt-kmlZUoeRYzSRLUc0TUKV8kL2QvcF7SO8A0v1EuUdOa8EtrkXkVJED3Hi1HqZwB1JQQl9B04KNXTHQGF2eNaYscGlrNlxZCyYsNRg-FXzkK5sJg2RLCpaBH0smEBMt0fmqN7D97vbZ3sTkKq1aCFIVr54hncPZ45vGQlwUHwKqhyK5RjTTHXToFvHylTkfVrtV3d-rT9kF4M7M3Y4e4ZgvSEVryQKOndaypjmoda9svAkVCj7O3ODEViG',
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuD4439eyKIteT_JPudz1y3Wn86y_KUM_uHfQRTACJuO1WSjfdzGSnxZUEGsA3J6qicNibZ0yMdTdzf-ERmtX-eUQpoW_i-9ktzlbULGOC_z3BV28ZUI00IQvzVE5ZuZl2H2GnPZG_KiRHZMF6_o-sOei5Q_IMa5dSI1HPG8uOWdOg7DxeQq3E4p5FFm4_411hHiTYCy8U1z0wudbXwn_kAZ0T-KL2ixqUmvhMhqoVEPe6F_XfH4ah-RnCdgLy2WFyQC6Zvxm5yEXM-c',
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuAyy8VLRzVey67ryRRNXsVKfieMYQtUqfTzjc-dp8ZyE2aj-ISj8biKOeLHNbYfnSCk1JZ_ydxDrCE97-qR_1cfvwBhWX02rf4Lt2HbmP9ikgj9CyxAS4w9JvbIrNdKOCvy6ejLJM6Ki29FJThw9qBAJ4LjYupUlyjCgl_ay1hNzM7wQ8oRJ9cDVGEP-7SFQL3LCo4HenUOsLh46ZDjRQC95OO9OMyVhUp4KxqKR9a0Q_JoyWzW4DoTMkGBgeUMOJDl_jhuUoHitwHS',
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuDAZSDfXtpR0qfXkXu6uWXgFbb4rTlEuU_tVsCBVjvfOLiQiao1RJz8zNXHC1VJMqW-iYpQ-EKnnXtRlvTltQz1tSyqgegBOp3wy4Z1yKIpkCeEPYvKilj7K9ms-rI7uJj4lK_KcRnLjA5rVEwkqyc_AlrwNtI0IJ3hT_elLj2q4CSmUdLUOrrYntyg2ohnV6XvxLuac6uokU_ddtjLCd7-AWtCcsmS0Seq5uXbpeAZn_0Jl32xx8v7AnvTtZx58TxVsC2-hVwvebpk',
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuAzSJDZocQb0gKZVkHa20kfARAWN6ECs4m3RoxBT9Rx0FSXwIYD4WPtPL4yVC3KYXHdZw77dWUkWnFRbVvlkjyGtdpuvKIsoWuuAi-NbOjCKNzxgSiMOu1LFSBhl-FD2jtxPn9V9ngzROO23Ps9vasT__5f3qT3Ht4lO5lU5UNwQ1H0C3jhZGdRppAhwtKMe7M-TMVzZKRR4efJId_dcPCAqIDzUB7yW4puIhMXvMSHlet8vUfscdFf40KQKKUBgZTtjGvhGRvMDqya',
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuBOeQFEooVMV8xujdFXABWPVqGkKhAcXOQILSUTQIYMAiTF7iVMcsFiuwWEvfXMeqqkqYfN6b61ZhBPMLaLCpMzvZAifhUn9OuA-p9ARK1UUATKX-bGSWsPqDu7OLOhqvUm5l_CzUt26UW3l9-0z-7GU57SF61x7hmJQ913cxlK7EAPsRpaIwS2SL4x0jspuO6IGjV46jd8ZH9PYIyZnbtLcfKXUUIHtOWyL7mE0DlVkHZ4NunJ99MjQSuVF2HSgdOvOeFdnBFQTp93',
+  'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80',
+  'https://images.unsplash.com/photo-1502672260266-1c1de2d9d00c?w=800&q=80',
+  'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80',
+  'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80',
+  'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&q=80',
+  'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=80',
+  'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800&q=80',
+  'https://images.unsplash.com/photo-1583847268964-b28ce8fba1f3?w=800&q=80',
+  'https://images.unsplash.com/photo-1554995207-c18c203602cb?w=800&q=80',
 ];
 
 const OWNER_AVATAR =
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuAa6i3t63X_3Eaz-W-RdWzSWo5T-A9zZsL9lg81Swah_4fYUoTXodRfa2wbp2ZYgJN0ANnVSJn8Lw-FW4fijKfST2BjcLO6jJKnZOANjWWHX5LAHVQdtGCS--HVrjFf5XHLaYEhcSOo5axpH8huhk-jWu7_QJ-k9w3Y4scPvwfnyCytn00yA48mudilOsUorI1uw8yzK05Hepgi_ID6iMlsqv1gpLSshTrzJfc4mZCxg9mOHudlWHg0JsTzWsZ2xPKxJmhfFSeCuO3o';
+  'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop';
 
 async function seed() {
   console.log('🌱 Starting database seed...');
