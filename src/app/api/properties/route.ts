@@ -13,6 +13,8 @@ export async function GET(req: NextRequest) {
     const minPrice = searchParams.get('minPrice');
     const maxPrice = searchParams.get('maxPrice');
     const search = searchParams.get('search');
+    const amenities = searchParams.get('amenities');
+    const sort = searchParams.get('sort');
     
     // Build query object
     let query: any = { status: 'active' };
@@ -35,7 +37,18 @@ export async function GET(req: NextRequest) {
       ];
     }
 
-    const properties = await Property.find(query).sort({ createdAt: -1 });
+    if (amenities) {
+      const amenitiesList = amenities.split(',');
+      query.amenities = { $all: amenitiesList.map(a => new RegExp(a, 'i')) };
+    }
+
+    let sortObj: any = { createdAt: -1 };
+    if (sort === 'price_asc') sortObj = { price: 1 };
+    else if (sort === 'price_desc') sortObj = { price: -1 };
+    else if (sort === 'newest') sortObj = { createdAt: -1 };
+    else if (sort === 'popular') sortObj = { views: -1 };
+
+    const properties = await Property.find(query).sort(sortObj);
 
     return NextResponse.json({ properties }, { status: 200 });
   } catch (error: any) {

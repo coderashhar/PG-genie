@@ -69,21 +69,81 @@ export default function PgsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    async function fetchProperties() {
-      try {
-        const res = await fetch('/api/properties');
-        if (!res.ok) throw new Error('Failed to fetch properties');
-        const data = await res.json();
-        setProperties(data.properties || []);
-      } catch (err: any) {
-        setError(err.message || 'Something went wrong');
-      } finally {
-        setLoading(false);
+  // Filter states
+  const [searchQuery, setSearchQuery] = useState('');
+  const [priceRange, setPriceRange] = useState<string>('any'); // 'any', 'under_5k', '5k_8k', '8k_12k', 'above_12k'
+  const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
+  const [sortOption, setSortOption] = useState('popular');
+
+  const fetchProperties = async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams();
+      if (searchQuery) params.append('search', searchQuery);
+      
+      if (priceRange === 'under_5k') {
+        params.append('maxPrice', '5000');
+      } else if (priceRange === '5k_8k') {
+        params.append('minPrice', '5000');
+        params.append('maxPrice', '8000');
+      } else if (priceRange === '8k_12k') {
+        params.append('minPrice', '8000');
+        params.append('maxPrice', '12000');
+      } else if (priceRange === 'above_12k') {
+        params.append('minPrice', '12000');
       }
+
+      if (selectedAmenities.length > 0) {
+        params.append('amenities', selectedAmenities.join(','));
+      }
+      
+      if (sortOption) {
+        params.append('sort', sortOption);
+      }
+
+      const res = await fetch(`/api/properties?${params.toString()}`);
+      if (!res.ok) throw new Error('Failed to fetch properties');
+      const data = await res.json();
+      setProperties(data.properties || []);
+    } catch (err: any) {
+      setError(err.message || 'Something went wrong');
+    } finally {
+      setLoading(false);
     }
+  };
+
+  useEffect(() => {
     fetchProperties();
-  }, []);
+  }, [sortOption]); // Re-fetch when sort changes
+
+  const handleApplyFilters = () => {
+    fetchProperties();
+  };
+
+  const handleClearFilters = () => {
+    setPriceRange('any');
+    setSelectedAmenities([]);
+    setSearchQuery('');
+    setSortOption('popular');
+    // We will let the state update first, then fetch
+    setTimeout(() => {
+      fetchProperties();
+    }, 0);
+  };
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      fetchProperties();
+    }
+  };
+
+  const toggleAmenity = (amenity: string) => {
+    setSelectedAmenities(prev => 
+      prev.includes(amenity) 
+        ? prev.filter(a => a !== amenity)
+        : [...prev, amenity]
+    );
+  };
 
   // Track view when a property card is clicked
   const trackView = (propertyId: string) => {
@@ -107,7 +167,14 @@ export default function PgsPage() {
           <div className="flex items-center gap-4">
             <div className="hidden md:flex bg-surface-container-high rounded-full px-4 py-2 items-center gap-2">
               <span className="material-symbols-outlined text-on-surface-variant">search</span>
-              <input className="bg-transparent border-none focus:ring-0 text-body-md w-48 text-on-surface outline-none" placeholder="Search Kothri..." type="text" />
+              <input 
+                className="bg-transparent border-none focus:ring-0 text-body-md w-48 text-on-surface outline-none" 
+                placeholder="Search Kothri..." 
+                type="text" 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleSearchKeyDown}
+              />
             </div>
             <button className="p-2 text-primary dark:text-primary-fixed-dim hover:bg-primary-container/10 transition-colors rounded-full cursor-pointer">
               <span className="material-symbols-outlined">notifications</span>
@@ -126,7 +193,7 @@ export default function PgsPage() {
           <div className="bg-surface-container-low rounded-xl p-6 shadow-sm border border-outline-variant/30">
             <div className="flex justify-between items-center mb-6">
               <h2 className="font-h2 text-h2 text-on-surface">Filters</h2>
-              <button className="text-primary font-body-md text-body-md hover:underline cursor-pointer">Clear all</button>
+              <button onClick={handleClearFilters} className="text-primary font-body-md text-body-md hover:underline cursor-pointer">Clear all</button>
             </div>
 
             {/* Price Range */}
@@ -134,19 +201,23 @@ export default function PgsPage() {
               <h3 className="font-body-lg text-body-lg font-semibold mb-stack-sm text-on-surface">Price Range (Monthly)</h3>
               <div className="flex flex-col gap-3">
                 <label className="flex items-center gap-3 cursor-pointer">
-                  <input className="form-radio text-primary focus:ring-primary h-5 w-5 border-outline" name="price" type="radio" />
+                  <input checked={priceRange === 'any'} onChange={() => setPriceRange('any')} className="form-radio text-primary focus:ring-primary h-5 w-5 border-outline" name="price" type="radio" />
+                  <span className="font-body-md text-body-md text-on-surface-variant">Any Price</span>
+                </label>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input checked={priceRange === 'under_5k'} onChange={() => setPriceRange('under_5k')} className="form-radio text-primary focus:ring-primary h-5 w-5 border-outline" name="price" type="radio" />
                   <span className="font-body-md text-body-md text-on-surface-variant">Under ₹5,000</span>
                 </label>
                 <label className="flex items-center gap-3 cursor-pointer">
-                  <input defaultChecked className="form-radio text-primary focus:ring-primary h-5 w-5 border-outline" name="price" type="radio" />
+                  <input checked={priceRange === '5k_8k'} onChange={() => setPriceRange('5k_8k')} className="form-radio text-primary focus:ring-primary h-5 w-5 border-outline" name="price" type="radio" />
                   <span className="font-body-md text-body-md text-on-surface-variant">₹5,000 - ₹8,000</span>
                 </label>
                 <label className="flex items-center gap-3 cursor-pointer">
-                  <input className="form-radio text-primary focus:ring-primary h-5 w-5 border-outline" name="price" type="radio" />
+                  <input checked={priceRange === '8k_12k'} onChange={() => setPriceRange('8k_12k')} className="form-radio text-primary focus:ring-primary h-5 w-5 border-outline" name="price" type="radio" />
                   <span className="font-body-md text-body-md text-on-surface-variant">₹8,000 - ₹12,000</span>
                 </label>
                 <label className="flex items-center gap-3 cursor-pointer">
-                  <input className="form-radio text-primary focus:ring-primary h-5 w-5 border-outline" name="price" type="radio" />
+                  <input checked={priceRange === 'above_12k'} onChange={() => setPriceRange('above_12k')} className="form-radio text-primary focus:ring-primary h-5 w-5 border-outline" name="price" type="radio" />
                   <span className="font-body-md text-body-md text-on-surface-variant">Above ₹12,000</span>
                 </label>
               </div>
@@ -171,22 +242,22 @@ export default function PgsPage() {
               <h3 className="font-body-lg text-body-lg font-semibold mb-stack-sm text-on-surface">Facilities</h3>
               <div className="flex flex-col gap-3">
                 <label className="flex items-center gap-3 cursor-pointer">
-                  <input defaultChecked className="form-checkbox text-primary focus:ring-primary h-5 w-5 border-outline rounded" type="checkbox" />
+                  <input checked={selectedAmenities.includes('WiFi')} onChange={() => toggleAmenity('WiFi')} className="form-checkbox text-primary focus:ring-primary h-5 w-5 border-outline rounded" type="checkbox" />
                   <span className="material-symbols-outlined text-on-surface-variant text-xl">wifi</span>
                   <span className="font-body-md text-body-md text-on-surface-variant">High-Speed WiFi</span>
                 </label>
                 <label className="flex items-center gap-3 cursor-pointer">
-                  <input className="form-checkbox text-primary focus:ring-primary h-5 w-5 border-outline rounded" type="checkbox" />
+                  <input checked={selectedAmenities.includes('AC')} onChange={() => toggleAmenity('AC')} className="form-checkbox text-primary focus:ring-primary h-5 w-5 border-outline rounded" type="checkbox" />
                   <span className="material-symbols-outlined text-on-surface-variant text-xl">ac_unit</span>
                   <span className="font-body-md text-body-md text-on-surface-variant">Air Conditioning</span>
                 </label>
                 <label className="flex items-center gap-3 cursor-pointer">
-                  <input defaultChecked className="form-checkbox text-primary focus:ring-primary h-5 w-5 border-outline rounded" type="checkbox" />
+                  <input checked={selectedAmenities.includes('Meals')} onChange={() => toggleAmenity('Meals')} className="form-checkbox text-primary focus:ring-primary h-5 w-5 border-outline rounded" type="checkbox" />
                   <span className="material-symbols-outlined text-on-surface-variant text-xl">restaurant</span>
                   <span className="font-body-md text-body-md text-on-surface-variant">Meals Included</span>
                 </label>
                 <label className="flex items-center gap-3 cursor-pointer">
-                  <input className="form-checkbox text-primary focus:ring-primary h-5 w-5 border-outline rounded" type="checkbox" />
+                  <input checked={selectedAmenities.includes('Laundry')} onChange={() => toggleAmenity('Laundry')} className="form-checkbox text-primary focus:ring-primary h-5 w-5 border-outline rounded" type="checkbox" />
                   <span className="material-symbols-outlined text-on-surface-variant text-xl">local_laundry_service</span>
                   <span className="font-body-md text-body-md text-on-surface-variant">Laundry</span>
                 </label>
@@ -206,7 +277,7 @@ export default function PgsPage() {
               </div>
             </div>
 
-            <button className="w-full bg-primary text-on-primary py-3 rounded-lg font-body-lg text-body-lg font-semibold hover:bg-primary-container transition-colors shadow-sm cursor-pointer">
+            <button onClick={handleApplyFilters} className="w-full bg-primary text-on-primary py-3 rounded-lg font-body-lg text-body-lg font-semibold hover:bg-primary-container transition-colors shadow-sm cursor-pointer">
               Apply Filters
             </button>
           </div>
@@ -228,12 +299,16 @@ export default function PgsPage() {
                 Filters
               </button>
               <div className="relative flex-1 sm:flex-none">
-                <select className="w-full appearance-none bg-surface border border-outline text-on-surface-variant py-2 pl-4 pr-10 rounded-lg font-body-md text-body-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent cursor-pointer">
-                  <option>Sort by: Popularity</option>
-                  <option>Price: Low to High</option>
-                  <option>Price: High to Low</option>
-                  <option>Newest First</option>
-                  <option>Closest to Campus</option>
+                <select 
+                  value={sortOption}
+                  onChange={(e) => setSortOption(e.target.value)}
+                  className="w-full appearance-none bg-surface border border-outline text-on-surface-variant py-2 pl-4 pr-10 rounded-lg font-body-md text-body-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent cursor-pointer"
+                >
+                  <option value="popular">Sort by: Popularity</option>
+                  <option value="price_asc">Price: Low to High</option>
+                  <option value="price_desc">Price: High to Low</option>
+                  <option value="newest">Newest First</option>
+                  <option value="closest">Closest to Campus</option>
                 </select>
                 <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">expand_more</span>
               </div>
