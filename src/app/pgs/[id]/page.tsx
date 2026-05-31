@@ -198,15 +198,15 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
             <div className="mb-stack-lg">
               <h2 className="font-h2 text-h2 text-on-surface mb-stack-sm">Location</h2>
               <div className="rounded-xl overflow-hidden border border-outline-variant shadow-sm h-[300px] relative bg-surface-container">
-                {/* Placeholder for Map */}
-                <img alt="Map View" className="w-full h-full object-cover opacity-80" src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&q=80" />
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="bg-surface/90 backdrop-blur-sm p-4 rounded-lg shadow-lg text-center pointer-events-auto border border-outline-variant">
-                    <span className="material-symbols-outlined text-[32px] text-primary mb-2">map</span>
-                    <p className="font-label-sm text-label-sm text-on-surface">{property.location?.city}</p>
-                    <button className="mt-2 text-primary font-label-sm text-label-sm hover:underline cursor-pointer">View on Google Maps</button>
-                  </div>
-                </div>
+                <iframe
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  loading="lazy"
+                  allowFullScreen
+                  referrerPolicy="no-referrer-when-downgrade"
+                  src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}&q=${encodeURIComponent((property.location?.address || '') + ', ' + (property.location?.city || '') + ', ' + (property.location?.state || ''))}`}
+                ></iframe>
               </div>
             </div>
           </div>
