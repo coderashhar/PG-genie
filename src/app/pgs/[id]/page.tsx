@@ -37,6 +37,18 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
+  const fallbackImages = [
+    "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80",
+    "https://images.unsplash.com/photo-1502672260266-1c1de2d9d00c?w=800&q=80",
+    "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80",
+    "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80",
+    "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&q=80"
+  ];
+  
+  const displayImages = property?.images?.length > 0 
+    ? [...property.images, ...fallbackImages].slice(0, Math.max(5, property.images.length))
+    : fallbackImages;
+
   const openGallery = (index: number) => {
     setCurrentImageIndex(index);
     setIsGalleryOpen(true);
@@ -46,12 +58,12 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
 
   const nextImage = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setCurrentImageIndex((prev) => (prev + 1) % (property?.images?.length || 1));
+    setCurrentImageIndex((prev) => (prev + 1) % displayImages.length);
   };
 
   const prevImage = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setCurrentImageIndex((prev) => (prev === 0 ? (property?.images?.length || 1) - 1 : prev - 1));
+    setCurrentImageIndex((prev) => (prev === 0 ? displayImages.length - 1 : prev - 1));
   };
 
   useEffect(() => {
@@ -125,23 +137,23 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
         {/* Bento Grid Gallery */}
         <section className="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-base h-[400px] md:h-[500px] rounded-xl overflow-hidden mb-stack-lg">
           <div className="md:col-span-2 md:row-span-2 relative group cursor-pointer overflow-hidden" onClick={() => openGallery(0)}>
-            <img alt="Main PG Image" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={property.images?.[0] || "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80"} />
+            <img alt="Main PG Image" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={displayImages[0]} />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
           </div>
           <div className="hidden md:block relative group cursor-pointer overflow-hidden" onClick={() => openGallery(1)}>
-            <img alt="PG Image 2" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={property.images?.[1] || "https://images.unsplash.com/photo-1502672260266-1c1de2d9d00c?w=800&q=80"} />
+            <img alt="PG Image 2" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={displayImages[1]} />
           </div>
           <div className="hidden md:block relative group cursor-pointer overflow-hidden" onClick={() => openGallery(2)}>
-            <img alt="PG Image 3" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={property.images?.[2] || "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80"} />
+            <img alt="PG Image 3" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={displayImages[2]} />
           </div>
           <div className="hidden md:block relative group cursor-pointer overflow-hidden" onClick={() => openGallery(3)}>
-            <img alt="PG Image 4" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={property.images?.[3] || "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80"} />
+            <img alt="PG Image 4" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={displayImages[3]} />
           </div>
           <div className="hidden md:block relative group cursor-pointer overflow-hidden" onClick={() => openGallery(4)}>
-            <img alt="PG Image 5" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={property.images?.[4] || "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&q=80"} />
+            <img alt="PG Image 5" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={displayImages[4]} />
             <div className="absolute inset-0 bg-black/40 flex items-center justify-center transition-colors group-hover:bg-black/50">
               <span className="text-on-primary font-h2 text-h2 flex items-center gap-2">
-                <span className="material-symbols-outlined">photo_library</span> {property.images?.length > 5 ? `+${property.images.length - 5} Photos` : 'View Gallery'}
+                <span className="material-symbols-outlined">photo_library</span> {displayImages.length > 5 ? `+${displayImages.length - 5} Photos` : 'View Gallery'}
               </span>
             </div>
           </div>
@@ -289,7 +301,7 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
       </footer>
 
       {/* Full Screen Image Gallery Modal */}
-      {isGalleryOpen && property?.images?.length > 0 && (
+      {isGalleryOpen && displayImages?.length > 0 && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={closeGallery}>
           <button className="absolute top-6 right-6 text-white hover:text-gray-300 z-50 p-2 cursor-pointer" onClick={closeGallery}>
             <span className="material-symbols-outlined text-4xl">close</span>
@@ -301,13 +313,13 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
           
           <div className="relative w-full max-w-6xl h-[80vh] px-4 sm:px-16 flex items-center justify-center">
             <img 
-              src={property.images[currentImageIndex]} 
+              src={displayImages[currentImageIndex]} 
               alt={`Gallery image ${currentImageIndex + 1}`} 
               className="max-w-full max-h-full object-contain select-none"
               onClick={(e) => e.stopPropagation()}
             />
             <div className="absolute bottom-[-40px] left-1/2 -translate-x-1/2 text-white/80 font-body-md tracking-widest">
-              {currentImageIndex + 1} / {property.images.length}
+              {currentImageIndex + 1} / {displayImages.length}
             </div>
           </div>
 
