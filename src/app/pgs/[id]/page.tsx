@@ -205,7 +205,7 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
                   loading="lazy"
                   allowFullScreen
                   referrerPolicy="no-referrer-when-downgrade"
-                  src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}&q=${encodeURIComponent((property.location?.address || '') + ', ' + (property.location?.city || '') + ', ' + (property.location?.state || ''))}`}
+                  src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}&q=${encodeURIComponent(`${property.title || ''}, ${property.location?.address || ''}, ${property.location?.city || ''}, ${property.location?.state || ''} ${property.location?.zipCode || ''}`.trim())}`}
                 ></iframe>
               </div>
             </div>
