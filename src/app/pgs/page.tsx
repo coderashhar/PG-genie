@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
 // --- Types ---
 interface PropertyLocation {
@@ -65,18 +66,31 @@ function PropertyCardSkeleton({ wide = false }: { wide?: boolean }) {
 }
 
 export default function PgsPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <PgsContent />
+    </Suspense>
+  );
+}
+
+function PgsContent() {
+  const searchParams = useSearchParams();
   const [properties, setProperties] = useState<PropertyData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Filter states
-  const [searchQuery, setSearchQuery] = useState('');
-  const [priceRange, setPriceRange] = useState<string>('any'); // 'any', 'under_5k', '5k_8k', '8k_12k', 'above_12k'
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
+  const [priceRange, setPriceRange] = useState<string>(searchParams.get('priceRange') || 'any'); // 'any', 'under_5k', '5k_8k', '8k_12k', 'above_12k'
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [sortOption, setSortOption] = useState('popular');
 
-  const fetchProperties = async () => {
-    setLoading(true);
+  // Pagination states
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+
+  const fetchProperties = async (pageNum = 1) => {
+    if (pageNum === 1) setLoading(true);
     try {
       const params = new URLSearchParams();
       if (searchQuery) params.append('search', searchQuery);
@@ -101,10 +115,19 @@ export default function PgsPage() {
         params.append('sort', sortOption);
       }
 
+      params.append('page', pageNum.toString());
+      params.append('limit', '6');
+
       const res = await fetch(`/api/properties?${params.toString()}`);
       if (!res.ok) throw new Error('Failed to fetch properties');
       const data = await res.json();
-      setProperties(data.properties || []);
+      
+      if (pageNum === 1) {
+        setProperties(data.properties || []);
+      } else {
+        setProperties(prev => [...prev, ...(data.properties || [])]);
+      }
+      setHasMore(data.hasMore);
     } catch (err: any) {
       setError(err.message || 'Something went wrong');
     } finally {
@@ -113,11 +136,13 @@ export default function PgsPage() {
   };
 
   useEffect(() => {
-    fetchProperties();
+    setPage(1);
+    fetchProperties(1);
   }, [sortOption]); // Re-fetch when sort changes
 
   const handleApplyFilters = () => {
-    fetchProperties();
+    setPage(1);
+    fetchProperties(1);
   };
 
   const handleClearFilters = () => {
@@ -125,16 +150,24 @@ export default function PgsPage() {
     setSelectedAmenities([]);
     setSearchQuery('');
     setSortOption('popular');
+    setPage(1);
     // We will let the state update first, then fetch
     setTimeout(() => {
-      fetchProperties();
+      fetchProperties(1);
     }, 0);
   };
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      fetchProperties();
+      setPage(1);
+      fetchProperties(1);
     }
+  };
+
+  const handleLoadMore = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+    fetchProperties(nextPage);
   };
 
   const toggleAmenity = (amenity: string) => {
@@ -463,9 +496,9 @@ export default function PgsPage() {
           </div>
 
           {/* Load More */}
-          {!loading && properties.length > 0 && (
+          {!loading && properties.length > 0 && hasMore && (
             <div className="mt-stack-lg flex justify-center">
-              <button className="px-8 py-3 rounded-full border-2 border-primary text-primary font-body-lg text-body-lg font-semibold hover:bg-primary hover:text-on-primary transition-all shadow-sm hover:shadow-md cursor-pointer">
+              <button onClick={handleLoadMore} className="px-8 py-3 rounded-full border-2 border-primary text-primary font-body-lg text-body-lg font-semibold hover:bg-primary hover:text-on-primary transition-all shadow-sm hover:shadow-md cursor-pointer">
                 Load More Properties
               </button>
             </div>

@@ -42,15 +42,26 @@ export async function GET(req: NextRequest) {
       query.amenities = { $all: amenitiesList.map(a => new RegExp(a, 'i')) };
     }
 
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '6');
+    const skip = (page - 1) * limit;
+
     let sortObj: any = { createdAt: -1 };
     if (sort === 'price_asc') sortObj = { price: 1 };
     else if (sort === 'price_desc') sortObj = { price: -1 };
     else if (sort === 'newest') sortObj = { createdAt: -1 };
     else if (sort === 'popular') sortObj = { views: -1 };
 
-    const properties = await Property.find(query).sort(sortObj);
+    const total = await Property.countDocuments(query);
+    const properties = await Property.find(query).sort(sortObj).skip(skip).limit(limit);
 
-    return NextResponse.json({ properties }, { status: 200 });
+    return NextResponse.json({ 
+      properties,
+      total,
+      page,
+      limit,
+      hasMore: skip + properties.length < total
+    }, { status: 200 });
   } catch (error: any) {
     console.error('Error fetching properties:', error);
     return NextResponse.json(

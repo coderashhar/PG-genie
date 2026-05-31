@@ -1,7 +1,22 @@
+"use client";
+
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
+import { useState } from "react";
 
 export default function Home() {
+  const [location, setLocation] = useState("Kothri, MP");
+  const [roomType, setRoomType] = useState("Any Type");
+  const [budget, setBudget] = useState("any");
+
+  const buildSearchUrl = () => {
+    const params = new URLSearchParams();
+    if (location && location !== "Kothri, MP") params.append("search", location);
+    if (budget !== "any") params.append("priceRange", budget);
+    // Note: roomType is not currently handled by the pgs page filters, but we could pass it if needed.
+    return `/pgs?${params.toString()}`;
+  };
+
   return (
     <>
       <Navbar hideHome />
@@ -42,26 +57,42 @@ export default function Home() {
               <div className="w-full glass-minimal rounded-3xl p-8 flex flex-col gap-6 shadow-2xl backdrop-blur-3xl">
                 <div className="flex flex-col gap-2 border-b border-surface-variant/50 pb-4">
                   <span className="font-label-sm text-xs text-on-surface-variant/70 uppercase font-bold tracking-widest">Location</span>
-                  <input className="bg-transparent border-none focus:ring-0 p-0 font-body-lg text-on-surface w-full font-medium cursor-pointer placeholder:text-on-surface/30 focus:outline-none" placeholder="Where do you want to live?" type="text" defaultValue="Kothri, MP" />
+                  <input 
+                    className="bg-transparent border-none focus:ring-0 p-0 font-body-lg text-on-surface w-full font-medium cursor-pointer placeholder:text-on-surface/30 focus:outline-none" 
+                    placeholder="Where do you want to live?" 
+                    type="text" 
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                  />
                 </div>
                 <div className="flex flex-col gap-2 border-b border-surface-variant/50 pb-4">
                   <span className="font-label-sm text-xs text-on-surface-variant/70 uppercase font-bold tracking-widest">Room Type</span>
-                  <select className="bg-transparent border-none focus:ring-0 p-0 font-body-lg text-on-surface w-full font-medium cursor-pointer appearance-none focus:outline-none">
-                    <option>Any Type</option>
-                    <option>Single Room</option>
-                    <option>Double Sharing</option>
-                    <option>Triple Sharing</option>
+                  <select 
+                    className="bg-transparent border-none focus:ring-0 p-0 font-body-lg text-on-surface w-full font-medium cursor-pointer appearance-none focus:outline-none"
+                    value={roomType}
+                    onChange={(e) => setRoomType(e.target.value)}
+                  >
+                    <option value="Any Type">Any Type</option>
+                    <option value="Single Room">Single Room</option>
+                    <option value="Double Sharing">Double Sharing</option>
+                    <option value="Triple Sharing">Triple Sharing</option>
                   </select>
                 </div>
                 <div className="flex flex-col gap-2 pb-4">
                   <span className="font-label-sm text-xs text-on-surface-variant/70 uppercase font-bold tracking-widest">Budget</span>
-                  <select className="bg-transparent border-none focus:ring-0 p-0 font-body-lg text-on-surface w-full font-medium cursor-pointer appearance-none focus:outline-none">
-                    <option>Up to ₹8,000</option>
-                    <option>Up to ₹10,000</option>
-                    <option>Up to ₹15,000</option>
+                  <select 
+                    className="bg-transparent border-none focus:ring-0 p-0 font-body-lg text-on-surface w-full font-medium cursor-pointer appearance-none focus:outline-none"
+                    value={budget}
+                    onChange={(e) => setBudget(e.target.value)}
+                  >
+                    <option value="any">Any Budget</option>
+                    <option value="under_5k">Under ₹5,000</option>
+                    <option value="5k_8k">₹5,000 - ₹8,000</option>
+                    <option value="8k_12k">₹8,000 - ₹12,000</option>
+                    <option value="above_12k">Above ₹12,000</option>
                   </select>
                 </div>
-                <Link href="/pgs" className="bg-primary hover:bg-primary-container text-white font-body-md font-semibold px-8 py-5 rounded-2xl transition-all duration-300 flex items-center justify-center w-full mt-2 group relative overflow-hidden cursor-pointer">
+                <Link href={buildSearchUrl()} className="bg-primary hover:bg-primary-container text-white font-body-md font-semibold px-8 py-5 rounded-2xl transition-all duration-300 flex items-center justify-center w-full mt-2 group relative overflow-hidden cursor-pointer">
                   <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1s_infinite]"></span>
                   <span className="material-symbols-outlined mr-3 text-xl transition-transform group-hover:rotate-90">arrow_forward</span>
                   Explore Properties
