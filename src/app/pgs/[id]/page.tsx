@@ -290,7 +290,7 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
 
       {/* Full Screen Image Gallery Modal */}
       {isGalleryOpen && property?.images?.length > 0 && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-sm" onClick={closeGallery}>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={closeGallery}>
           <button className="absolute top-6 right-6 text-white hover:text-gray-300 z-50 p-2 cursor-pointer" onClick={closeGallery}>
             <span className="material-symbols-outlined text-4xl">close</span>
           </button>
