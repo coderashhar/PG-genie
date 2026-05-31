@@ -141,7 +141,7 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
             </div>
           )}
           {property?.images?.[3] && (
-            <div className="hidden md:block relative group cursor-pointer overflow-hidden" onClick={() => openGallery(3)}>
+            <div className={`hidden md:block relative group cursor-pointer overflow-hidden ${property.images.length === 4 ? 'md:col-span-2' : ''}`} onClick={() => openGallery(3)}>
               <img alt="PG Image 4" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={property.images[3]} />
             </div>
           )}
