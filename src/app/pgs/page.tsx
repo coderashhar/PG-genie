@@ -542,7 +542,6 @@ function PgsContent() {
           </div>
           <div className="flex flex-col gap-3">
             <h4 className="font-h2 text-h2 text-on-surface mb-2">Quick Links</h4>
-            <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">About Kothri</Link>
             <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="/owner/dashboard">Owner Dashboard</Link>
             <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Help Center</Link>
             <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Privacy Policy</Link>

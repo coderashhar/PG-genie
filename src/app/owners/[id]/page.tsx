@@ -251,7 +251,6 @@ export default function OwnerProfilePage({ params }: { params: { id: string } })
             <p className="font-body-md text-body-md text-on-surface-variant">© 2026 PG Genie. Dedicated to VIT Bhopal Community.</p>
           </div>
           <div className="flex flex-wrap gap-4 md:gap-8 items-center font-body-md text-body-md">
-            <Link className="text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">About Kothri</Link>
             <Link className="text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="/owner/dashboard">Owner Dashboard</Link>
             <Link className="text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">Help Center</Link>
             <Link className="text-on-surface-variant hover:text-secondary transition-colors duration-300 cursor-pointer" href="#">Privacy Policy</Link>

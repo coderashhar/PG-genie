@@ -270,13 +270,11 @@ export default function Home() {
               <span className="font-label-sm uppercase tracking-widest text-surface-variant/40 mb-2">Platform</span>
               <Link className="font-body-md text-surface-variant hover:text-white transition-colors" href="/pgs">Curated Listings</Link>
               <Link className="font-body-md text-surface-variant hover:text-white transition-colors" href="/owner/dashboard">Owner Portal</Link>
-              <Link className="font-body-md text-surface-variant hover:text-white transition-colors" href="#">About Kothri</Link>
             </div>
             <div className="flex flex-col gap-4">
               <span className="font-label-sm uppercase tracking-widest text-surface-variant/40 mb-2">Legal &amp; Help</span>
               <a className="font-body-md text-surface-variant hover:text-white transition-colors" href="#">Privacy Policy</a>
               <a className="font-body-md text-surface-variant hover:text-white transition-colors" href="#">Terms of Service</a>
-              <a className="font-body-md text-surface-variant hover:text-white transition-colors" href="#">Concierge Support</a>
             </div>
           </div>
         </div>

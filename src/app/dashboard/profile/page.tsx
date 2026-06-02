@@ -212,7 +212,6 @@ export default function StudentProfilePage() {
             <p className="font-body-md text-body-md text-on-surface-variant">© 2026 PG Genie. Dedicated to VIT Bhopal Community.</p>
           </div>
           <div className="flex flex-wrap gap-x-6 gap-y-3 items-center">
-            <Link className="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors transition-all duration-300 hover:translate-x-1" href="#">About Kothri</Link>
             <Link className="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors transition-all duration-300 hover:translate-x-1" href="/owner/dashboard">Owner Dashboard</Link>
             <Link className="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors transition-all duration-300 hover:translate-x-1" href="#">Help Center</Link>
             <Link className="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors transition-all duration-300 hover:translate-x-1" href="#">Privacy Policy</Link>

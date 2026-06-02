@@ -481,7 +481,6 @@ export default function OwnerDashboardPage() {
               <p className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant">© 2026 PG Genie. Dedicated to VIT Bhopal Community.</p>
             </div>
             <div className="flex flex-col gap-2">
-              <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">About Kothri</Link>
               <Link className="font-body-md text-body-md text-primary dark:text-primary-fixed-dim underline opacity-70" href="/owner/dashboard">Owner Dashboard</Link>
               <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Help Center</Link>
               <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Privacy Policy</Link>

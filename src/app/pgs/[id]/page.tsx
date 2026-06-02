@@ -289,7 +289,6 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
             <p className="mt-2 text-on-surface-variant font-body-md text-body-md">© 2026 PG Genie. Dedicated to VIT Bhopal Community.</p>
           </div>
           <div className="flex flex-wrap gap-4 md:gap-8">
-            <Link className="text-on-surface-variant hover:text-secondary transition-colors font-body-md text-body-md" href="#">About Kothri</Link>
             <Link className="text-on-surface-variant hover:text-secondary transition-colors font-body-md text-body-md" href="/owner/dashboard">Owner Dashboard</Link>
             <Link className="text-on-surface-variant hover:text-secondary transition-colors font-body-md text-body-md" href="#">Help Center</Link>
             <Link className="text-on-surface-variant hover:text-secondary transition-colors font-body-md text-body-md" href="#">Privacy Policy</Link>
