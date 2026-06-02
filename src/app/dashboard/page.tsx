@@ -3,7 +3,7 @@ import React, { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import Navbar from '@/components/Navbar';
+
 import ImageUpload from '@/components/ImageUpload';
 
 // --- Types for API response ---
@@ -255,54 +255,31 @@ function DashboardContent() {
   });
 
   return (
-    <div className="bg-background text-on-background font-body-md text-body-md antialiased md:flex min-h-screen">
-      {/* SideNavBar (Web Only) */}
-      <aside className="hidden md:flex h-full w-72 left-0 top-0 fixed z-50 bg-surface shadow-xl flex-col p-gutter">
-        <div className="mb-stack-lg">
-          <span className="font-display text-h2 text-primary mb-2 block cursor-default">PG Genie</span>
-          <button onClick={() => handleTabChange('profile')} className="flex w-full items-center text-left gap-4 mt-stack-md p-4 bg-surface-container rounded-lg hover:bg-surface-container-high transition-colors cursor-pointer group">
-            <div className="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-h2 group-hover:scale-105 transition-transform">
-              {userInitial}
-            </div>
-            <div>
-              <h2 className="font-h2 text-h2 text-on-surface group-hover:text-primary transition-colors">Student Portal</h2>
-              <p className="font-body-md text-body-md text-on-surface-variant">
-                {dashData?.user?.university || 'VIT Bhopal student'}
-              </p>
-            </div>
-          </button>
-        </div>
-        <nav className="flex-1 flex flex-col gap-2">
-          <button onClick={() => handleTabChange('overview')} className={`flex items-center gap-4 p-3 font-semibold rounded-lg group cursor-pointer ${activeTab === 'overview' ? 'bg-primary-container text-on-primary-container' : 'text-on-surface-variant hover:bg-surface-container-high transition-all'}`}>
-            <span className="material-symbols-outlined">dashboard</span>
-            <span>Dashboard</span>
-          </button>
-          <Link className="flex items-center gap-4 p-3 text-on-surface-variant hover:bg-surface-container-high transition-all rounded-lg group cursor-pointer" href="/">
-            <span className="material-symbols-outlined">public</span>
-            <span>Home Page</span>
-          </Link>
-          <button onClick={() => handleTabChange('profile')} className={`flex items-center gap-4 p-3 font-semibold rounded-lg group cursor-pointer ${activeTab === 'profile' ? 'bg-primary-container text-on-primary-container' : 'text-on-surface-variant hover:bg-surface-container-high transition-all'}`}>
-            <span className="material-symbols-outlined">person</span>
-            <span>My Profile</span>
-          </button>
-          <Link className="flex items-center gap-4 p-3 text-on-surface-variant hover:bg-surface-container-high transition-all rounded-lg group cursor-pointer" href="#">
-            <span className="material-symbols-outlined">payments</span>
-            <span>Payment History</span>
-          </Link>
-          <Link className="flex items-center gap-4 p-3 text-on-surface-variant hover:bg-surface-container-high transition-all rounded-lg group cursor-pointer" href="#">
-            <span className="material-symbols-outlined">help_outline</span>
-            <span>Support</span>
-          </Link>
-        </nav>
-        <div className="mt-auto">
-          <button className="w-full bg-primary text-on-primary font-body-lg text-body-lg py-3 rounded-lg hover:opacity-90 transition-opacity cursor-pointer">List your PG</button>
-        </div>
-      </aside>
-
+    <div className="bg-background text-on-background font-body-md text-body-md antialiased min-h-screen">
       {/* Main Content Canvas */}
-      <main className="flex-1 md:ml-72 flex flex-col min-h-screen">
+      <main className="w-full flex flex-col min-h-screen">
         {/* TopNavBar */}
-        <Navbar className="sticky top-0 z-40 shadow-sm bg-surface text-primary" />
+        <header className="w-full sticky top-0 z-40 bg-surface dark:bg-on-background shadow-sm dark:shadow-none">
+          <div className="flex justify-between items-center w-full px-margin-mobile md:px-gutter max-w-container-max mx-auto h-16">
+            <span className="font-display text-h2 font-extrabold text-primary dark:text-primary-fixed-dim cursor-default">
+              PG Genie
+            </span>
+            <div className="hidden md:flex items-center gap-6">
+              <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10 transition-colors h-16 flex items-center px-4 rounded" href="/">Home</Link>
+              <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10 transition-colors h-16 flex items-center px-4 rounded" href="/pgs">Search</Link>
+              <button onClick={() => handleTabChange('overview')} className={`font-body-md text-body-md ${activeTab === 'overview' ? 'text-primary dark:text-primary-fixed-dim font-bold border-b-2 border-primary' : 'text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10'} transition-colors h-16 flex items-center px-4 rounded cursor-pointer`}>Saved</button>
+              <button onClick={() => handleTabChange('profile')} className={`font-body-md text-body-md ${activeTab === 'profile' ? 'text-primary dark:text-primary-fixed-dim font-bold border-b-2 border-primary' : 'text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10'} transition-colors h-16 flex items-center px-4 rounded cursor-pointer`}>Profile</button>
+            </div>
+            <div className="flex items-center gap-4">
+              <button className="p-2 text-primary dark:text-primary-fixed-dim hover:bg-primary-container/10 transition-colors rounded-full cursor-pointer">
+                <span className="material-symbols-outlined">notifications</span>
+              </button>
+              <Link href="/login" className="p-2 text-primary dark:text-primary-fixed-dim hover:bg-primary-container/10 transition-colors rounded-full cursor-pointer">
+                <span className="material-symbols-outlined">account_circle</span>
+              </Link>
+            </div>
+          </div>
+        </header>
         
         <div className="flex-1 w-full px-margin-mobile md:px-gutter max-w-container-max mx-auto py-stack-md md:py-stack-lg">
           {/* Header Section */}
