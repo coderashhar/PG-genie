@@ -194,15 +194,14 @@ function PgsContent() {
           <div className="hidden md:flex items-center gap-6">
             <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10 transition-colors h-16 flex items-center px-4 rounded" href="/">Home</Link>
             <Link className="font-body-md text-body-md text-primary dark:text-primary-fixed-dim font-bold border-b-2 border-primary transition-colors h-16 flex items-center px-4" href="/pgs">Search</Link>
-            <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10 transition-colors h-16 flex items-center px-4 rounded" href="/dashboard">Saved</Link>
-            <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10 transition-colors h-16 flex items-center px-4 rounded" href="/dashboard?tab=profile">Profile</Link>
+            <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10 transition-colors h-16 flex items-center px-4 rounded" href="/dashboard">Dashboard</Link>
           </div>
           <div className="flex items-center gap-4">
 
             <button className="p-2 text-primary dark:text-primary-fixed-dim hover:bg-primary-container/10 transition-colors rounded-full cursor-pointer">
               <span className="material-symbols-outlined">notifications</span>
             </button>
-            <Link href="/login" className="p-2 text-primary dark:text-primary-fixed-dim hover:bg-primary-container/10 transition-colors rounded-full cursor-pointer">
+            <Link href="/dashboard?tab=profile" className="p-2 text-primary dark:text-primary-fixed-dim hover:bg-primary-container/10 transition-colors rounded-full cursor-pointer">
               <span className="material-symbols-outlined">account_circle</span>
             </Link>
           </div>
