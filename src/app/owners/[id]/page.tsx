@@ -18,7 +18,7 @@ export default function OwnerProfilePage({ params }: { params: { id: string } })
             <button className="hover:bg-primary-container/10 transition-colors p-2 rounded-full cursor-pointer">
               <span className="material-symbols-outlined">notifications</span>
             </button>
-            <Link href="/dashboard/profile" className="hover:bg-primary-container/10 transition-colors p-2 rounded-full cursor-pointer flex items-center justify-center">
+            <Link href="/dashboard?tab=profile" className="hover:bg-primary-container/10 transition-colors p-2 rounded-full cursor-pointer flex items-center justify-center">
               <span className="material-symbols-outlined">account_circle</span>
             </Link>
           </div>
@@ -274,7 +274,7 @@ export default function OwnerProfilePage({ params }: { params: { id: string } })
             <span className="material-symbols-outlined">receipt_long</span>
             <span className="font-label-sm text-label-sm mt-1">Bookings</span>
           </Link>
-          <Link className="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors duration-300 cursor-pointer" href="/dashboard/profile">
+          <Link className="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors duration-300 cursor-pointer" href="/dashboard?tab=profile">
             <span className="material-symbols-outlined">person</span>
             <span className="font-label-sm text-label-sm mt-1">Profile</span>
           </Link>

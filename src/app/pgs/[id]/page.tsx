@@ -106,7 +106,7 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
             <button aria-label="notifications" className="p-2 rounded-full hover:bg-primary-container/10 transition-colors text-on-surface-variant flex items-center justify-center group cursor-pointer">
               <span className="material-symbols-outlined group-active:opacity-80 group-active:scale-95 transition-transform">notifications</span>
             </button>
-            <Link href="/dashboard/profile" aria-label="account_circle" className="p-2 rounded-full hover:bg-primary-container/10 transition-colors text-on-surface-variant flex items-center justify-center group cursor-pointer">
+            <Link href="/dashboard?tab=profile" aria-label="account_circle" className="p-2 rounded-full hover:bg-primary-container/10 transition-colors text-on-surface-variant flex items-center justify-center group cursor-pointer">
               <span className="material-symbols-outlined group-active:opacity-80 group-active:scale-95 transition-transform">account_circle</span>
             </Link>
           </div>
