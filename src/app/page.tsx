@@ -132,7 +132,7 @@ export default function Home() {
           
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-start">
             <div className="md:col-span-8 flex flex-col group cursor-pointer">
-              <div className="relative w-full aspect-[16/9] overflow-hidden rounded-3xl mb-6 bg-surface-container">
+              <Link href="/pgs/6a131e6f34188a11736f3cde" className="relative block w-full aspect-[16/9] overflow-hidden rounded-3xl mb-6 bg-surface-container">
                 <img 
                   alt="Premium student accommodation" 
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
@@ -142,10 +142,10 @@ export default function Home() {
                   <span className="material-symbols-outlined text-secondary text-sm mr-2" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
                   <span className="font-label-sm text-on-surface tracking-wide">Verified</span>
                 </div>
-              </div>
+              </Link>
               <div className="flex justify-between items-start">
                 <div>
-                  <h3 className="font-display text-3xl text-on-surface mb-2 group-hover:text-primary transition-colors">Elite Boys Hostel</h3>
+                  <h3 className="font-display text-3xl text-on-surface mb-2 group-hover:text-primary transition-colors">Elite Co-living Spaces</h3>
                   <p className="font-body-md text-on-surface-variant flex items-center mb-4">
                     0.8 km from VIT Main Gate
                   </p>
@@ -162,7 +162,7 @@ export default function Home() {
             </div>
             
             <div className="md:col-span-4 flex flex-col group cursor-pointer md:mt-24">
-              <div className="relative w-full aspect-[3/4] overflow-hidden rounded-3xl mb-6 bg-surface-container">
+              <Link href="/pgs/6a131e6f34188a11736f3cdb" className="relative block w-full aspect-[3/4] overflow-hidden rounded-3xl mb-6 bg-surface-container">
                 <img 
                   alt="Student PG interior" 
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
@@ -171,9 +171,9 @@ export default function Home() {
                 <div className="absolute top-6 left-6 bg-primary text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg tracking-wider uppercase">
                   New
                 </div>
-              </div>
+              </Link>
               <div className="flex flex-col">
-                <h3 className="font-display text-2xl text-on-surface mb-2 group-hover:text-primary transition-colors">Shanti Residency</h3>
+                <h3 className="font-display text-2xl text-on-surface mb-2 group-hover:text-primary transition-colors">Shanti Niwas</h3>
                 <p className="font-body-md text-on-surface-variant flex items-center mb-4">
                   1.2 km from VIT Main Gate
                 </p>
