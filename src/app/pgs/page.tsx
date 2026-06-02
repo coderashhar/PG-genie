@@ -198,17 +198,7 @@ function PgsContent() {
             <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10 transition-colors h-16 flex items-center px-4 rounded" href="/dashboard?tab=profile">Profile</Link>
           </div>
           <div className="flex items-center gap-4">
-            <div className="hidden md:flex bg-surface-container-high rounded-full px-4 py-2 items-center gap-2">
-              <span className="material-symbols-outlined text-on-surface-variant">search</span>
-              <input 
-                className="bg-transparent border-none focus:ring-0 text-body-md w-48 text-on-surface outline-none" 
-                placeholder="Search Kothri..." 
-                type="text" 
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={handleSearchKeyDown}
-              />
-            </div>
+
             <button className="p-2 text-primary dark:text-primary-fixed-dim hover:bg-primary-container/10 transition-colors rounded-full cursor-pointer">
               <span className="material-symbols-outlined">notifications</span>
             </button>
@@ -326,16 +316,28 @@ function PgsContent() {
                 {loading ? 'Loading properties...' : `Showing ${properties.length} properties`}
               </p>
             </div>
-            <div className="flex items-center gap-4 w-full sm:w-auto">
-              <button className="md:hidden flex-1 flex items-center justify-center gap-2 px-4 py-2 border border-outline rounded-lg bg-surface text-on-surface-variant font-body-md text-body-md cursor-pointer">
-                <span className="material-symbols-outlined">tune</span>
-                Filters
-              </button>
-              <div className="relative flex-1 sm:flex-none">
+            <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+              {/* Search Bar with Integrated Filter */}
+              <div className="flex items-center bg-surface-container-high rounded-full px-4 py-2 w-full sm:w-80 border border-outline-variant/50 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
+                <span className="material-symbols-outlined text-on-surface-variant mr-2">search</span>
+                <input 
+                  className="bg-transparent border-none focus:ring-0 text-body-md flex-grow text-on-surface outline-none" 
+                  placeholder="Search Kothri..." 
+                  type="text" 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={handleSearchKeyDown}
+                />
+                <button className="md:hidden ml-2 p-1.5 bg-surface rounded-full text-on-surface-variant shadow-sm border border-outline-variant flex items-center justify-center cursor-pointer hover:text-primary transition-colors">
+                  <span className="material-symbols-outlined text-sm">tune</span>
+                </button>
+              </div>
+
+              <div className="relative w-full sm:w-auto flex-1 sm:flex-none">
                 <select 
                   value={sortOption}
                   onChange={(e) => setSortOption(e.target.value)}
-                  className="w-full appearance-none bg-surface border border-outline text-on-surface-variant py-2 pl-4 pr-10 rounded-lg font-body-md text-body-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent cursor-pointer"
+                  className="w-full appearance-none bg-surface border border-outline text-on-surface-variant py-2 pl-4 pr-10 rounded-full font-body-md text-body-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent cursor-pointer h-[42px]"
                 >
                   <option value="popular">Sort by: Popularity</option>
                   <option value="price_asc">Price: Low to High</option>
@@ -343,7 +345,7 @@ function PgsContent() {
                   <option value="newest">Newest First</option>
                   <option value="closest">Closest to Campus</option>
                 </select>
-                <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">expand_more</span>
+                <span className="material-symbols-outlined absolute right-3 top-[9px] text-on-surface-variant pointer-events-none">expand_more</span>
               </div>
             </div>
           </div>
