@@ -3,6 +3,8 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import toast from 'react-hot-toast';
 
 // --- Types ---
 interface PropertyLocation {
@@ -78,6 +80,17 @@ function PgsContent() {
   const [properties, setProperties] = useState<PropertyData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { data: session } = useSession();
+
+  const handleSaveClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!session) {
+      toast.error('Please sign in to save PGs!');
+      return;
+    }
+    toast.success('Added to Favorites!');
+  };
 
   // Filter states
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
@@ -381,7 +394,7 @@ function PgsContent() {
                               <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span> Verified
                             </div>
                             <button 
-                              onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                              onClick={handleSaveClick}
                               className="bg-surface/80 backdrop-blur-sm text-on-surface hover:text-secondary p-1.5 rounded-full shadow-md transition-colors flex items-center justify-center cursor-pointer"
                             >
                               <span className="material-symbols-outlined text-[18px]">favorite_border</span>
@@ -457,7 +470,7 @@ function PgsContent() {
                         <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span> Verified
                       </div>
                       <button 
-                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                        onClick={handleSaveClick}
                         className="bg-surface/80 backdrop-blur-sm text-on-surface hover:text-secondary p-1.5 rounded-full shadow-md transition-colors flex items-center justify-center cursor-pointer"
                       >
                         <span className="material-symbols-outlined text-[18px]">favorite_border</span>

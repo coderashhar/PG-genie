@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState, use } from 'react';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+import toast from 'react-hot-toast';
 
 // --- Amenity icon map ---
 const amenityIconMap: Record<string, string> = {
@@ -36,6 +38,18 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
   // Gallery states
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const { data: session } = useSession();
+
+  const handleSaveClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!session) {
+      toast.error('Please sign in to save PGs!');
+      return;
+    }
+    toast.success('Added to Favorites!');
+  };
 
   const openGallery = (index: number) => {
     setCurrentImageIndex(index);
@@ -242,7 +256,10 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
                     <span className="material-symbols-outlined text-[20px]">call</span>
                     Contact
                   </button>
-                  <button className="flex-1 bg-surface-container-lowest border-2 border-secondary text-secondary hover:bg-secondary/5 font-label-sm text-label-sm py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer">
+                  <button 
+                    onClick={handleSaveClick}
+                    className="flex-1 bg-surface-container-lowest border-2 border-secondary text-secondary hover:bg-secondary/5 font-label-sm text-label-sm py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer"
+                  >
                     <span className="material-symbols-outlined text-[20px]">favorite_border</span>
                     Save
                   </button>

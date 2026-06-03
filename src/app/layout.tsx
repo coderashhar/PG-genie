@@ -5,6 +5,7 @@ import PageTransition from "@/components/PageTransition";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BottomNav from "@/components/BottomNav";
+import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -39,6 +40,7 @@ export default function RootLayout({
       </head>
       <body className="bg-surface-container-lowest text-on-background font-body-md antialiased overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col relative">
         <SessionProvider>
+          <Toaster position="top-center" />
           <Navbar />
           <PageTransition>
             {children}
