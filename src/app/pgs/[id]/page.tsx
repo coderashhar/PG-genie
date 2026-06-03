@@ -92,26 +92,6 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
 
   return (
     <div className="bg-background text-on-background font-body-md antialiased min-h-screen flex flex-col">
-      {/* TopNavBar */}
-      <nav className="w-full sticky top-0 z-40 shadow-sm bg-surface">
-        <div className="flex justify-between items-center w-full px-margin-mobile md:px-gutter max-w-container-max mx-auto h-16">
-          <span className="font-display text-h2 font-extrabold text-primary cursor-default">PG Genie</span>
-          <div className="hidden md:flex flex-1 justify-center max-w-md px-gutter">
-            <div className="w-full relative group">
-              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors">search</span>
-              <input className="w-full bg-surface-container-low border-none rounded-full py-2 pl-10 pr-4 text-body-md text-on-surface focus:ring-2 focus:ring-primary focus:bg-surface transition-all outline-none" placeholder="Search Kothri PGs..." type="text" />
-            </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <button aria-label="notifications" className="p-2 rounded-full hover:bg-primary-container/10 transition-colors text-on-surface-variant flex items-center justify-center group cursor-pointer">
-              <span className="material-symbols-outlined group-active:opacity-80 group-active:scale-95 transition-transform">notifications</span>
-            </button>
-            <Link href="/dashboard?tab=profile" aria-label="account_circle" className="p-2 rounded-full hover:bg-primary-container/10 transition-colors text-on-surface-variant flex items-center justify-center group cursor-pointer">
-              <span className="material-symbols-outlined group-active:opacity-80 group-active:scale-95 transition-transform">account_circle</span>
-            </Link>
-          </div>
-        </div>
-      </nav>
 
       {/* Main Content Canvas */}
       <main className="flex-1 w-full max-w-container-max mx-auto px-margin-mobile md:px-gutter py-stack-md">
@@ -280,22 +260,6 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
           </div>
         </div>
       </main>
-
-      {/* Footer */}
-      <footer className="w-full mt-stack-lg bg-surface-container-highest border-t border-outline-variant">
-        <div className="w-full py-stack-lg px-margin-mobile md:px-gutter max-w-container-max mx-auto flex flex-col md:flex-row justify-between gap-stack-md">
-          <div>
-            <Link className="font-display text-h1 text-primary" href="/">PG Genie</Link>
-            <p className="mt-2 text-on-surface-variant font-body-md text-body-md">© 2026 PG Genie. Dedicated to VIT Bhopal Community.</p>
-          </div>
-          <div className="flex flex-wrap gap-4 md:gap-8">
-            <Link className="text-on-surface-variant hover:text-secondary transition-colors font-body-md text-body-md" href="/owner/dashboard">Owner Dashboard</Link>
-            <Link className="text-on-surface-variant hover:text-secondary transition-colors font-body-md text-body-md" href="#">Help Center</Link>
-            <Link className="text-on-surface-variant hover:text-secondary transition-colors font-body-md text-body-md" href="#">Privacy Policy</Link>
-            <Link className="text-on-surface-variant hover:text-secondary transition-colors font-body-md text-body-md" href="#">Contact Support</Link>
-          </div>
-        </div>
-      </footer>
 
       {/* Full Screen Image Gallery Modal */}
       {isGalleryOpen && property?.images?.length > 0 && (

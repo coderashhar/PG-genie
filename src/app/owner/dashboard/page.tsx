@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import Navbar from '@/components/Navbar';
 
 // --- Types ---
 interface PropertyLocation {
@@ -239,8 +238,6 @@ export default function OwnerDashboardPage() {
       
       {/* Main Content Canvas */}
       <main className="flex-1 md:ml-72 flex flex-col min-h-screen">
-        {/* TopNavBar */}
-        <Navbar className="sticky top-0 z-40 bg-surface shadow-sm text-primary" />
         
         <div className="flex-1 p-margin-mobile md:p-gutter max-w-container-max mx-auto w-full space-y-stack-lg">
           {/* Dashboard Header */}
@@ -472,43 +469,7 @@ export default function OwnerDashboardPage() {
             </section>
           </div>
         </div>
-        
-        {/* Footer */}
-        <footer className="w-full mt-auto bg-surface-container-highest dark:bg-on-background border-t border-outline-variant dark:border-outline">
-          <div className="py-stack-lg px-margin-mobile md:px-gutter max-w-container-max mx-auto flex flex-col md:flex-row justify-between gap-stack-md">
-            <div>
-              <div className="font-display text-h1 text-primary dark:text-primary-fixed-dim mb-4">PG Genie</div>
-              <p className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant">© 2026 PG Genie. Dedicated to VIT Bhopal Community.</p>
-            </div>
-            <div className="flex flex-col gap-2">
-              <Link className="font-body-md text-body-md text-primary dark:text-primary-fixed-dim underline opacity-70" href="/owner/dashboard">Owner Dashboard</Link>
-              <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Help Center</Link>
-              <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Privacy Policy</Link>
-              <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Contact Support</Link>
-            </div>
-          </div>
-        </footer>
       </main>
-      
-      {/* BottomNavBar (Mobile Only) */}
-      <nav className="md:hidden fixed bottom-0 w-full z-50 rounded-t-xl bg-surface-container dark:bg-surface-container-low shadow-[0px_-4px_20px_rgba(76,29,149,0.05)] shadow-lg left-0 flex justify-around items-center px-4 py-3 pb-safe">
-        <Link className="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim" href="/pgs">
-          <span className="material-symbols-outlined">search</span>
-          <span className="font-label-sm text-label-sm mt-1">Search</span>
-        </Link>
-        <Link className="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim" href="#">
-          <span className="material-symbols-outlined">favorite</span>
-          <span className="font-label-sm text-label-sm mt-1">Saved</span>
-        </Link>
-        <Link className="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim" href="#">
-          <span className="material-symbols-outlined">receipt_long</span>
-          <span className="font-label-sm text-label-sm mt-1">Bookings</span>
-        </Link>
-        <Link className="flex flex-col items-center justify-center bg-primary-container text-on-primary-container dark:bg-primary-fixed-dim dark:text-on-primary-fixed rounded-full px-5 py-1 scale-90 transition-all duration-200" href="/owner/dashboard">
-          <span className="material-symbols-outlined fill" style={{ fontVariationSettings: "'FILL' 1" }}>person</span>
-          <span className="font-label-sm text-label-sm mt-1">Profile</span>
-        </Link>
-      </nav>
     </div>
   );
 }

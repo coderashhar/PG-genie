@@ -258,27 +258,6 @@ function DashboardContent() {
     <div className="bg-background text-on-background font-body-md text-body-md antialiased min-h-screen">
       {/* Main Content Canvas */}
       <main className="w-full flex flex-col min-h-screen">
-        {/* TopNavBar */}
-        <header className="w-full sticky top-0 z-40 bg-surface dark:bg-on-background shadow-sm dark:shadow-none">
-          <div className="flex justify-between items-center w-full px-margin-mobile md:px-gutter max-w-container-max mx-auto h-16">
-            <span className="font-display text-h2 font-extrabold text-primary dark:text-primary-fixed-dim cursor-default">
-              PG Genie
-            </span>
-            <div className="hidden md:flex items-center gap-6">
-              <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10 transition-colors h-16 flex items-center px-4 rounded" href="/">Home</Link>
-              <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10 transition-colors h-16 flex items-center px-4 rounded" href="/pgs">Search</Link>
-              <Link className="font-body-md text-body-md text-primary dark:text-primary-fixed-dim font-bold border-b-2 border-primary transition-colors h-16 flex items-center px-4" href="/dashboard">Dashboard</Link>
-            </div>
-            <div className="flex items-center gap-4">
-              <button className="p-2 text-primary dark:text-primary-fixed-dim hover:bg-primary-container/10 transition-colors rounded-full cursor-pointer">
-                <span className="material-symbols-outlined">notifications</span>
-              </button>
-              <button onClick={() => handleTabChange('profile')} className="p-2 text-primary dark:text-primary-fixed-dim hover:bg-primary-container/10 transition-colors rounded-full cursor-pointer">
-                <span className="material-symbols-outlined">account_circle</span>
-              </button>
-            </div>
-          </div>
-        </header>
         
         <div className="flex-1 w-full px-margin-mobile md:px-gutter max-w-container-max mx-auto py-stack-md md:py-stack-lg">
           {/* Header Section */}
@@ -684,43 +663,7 @@ function DashboardContent() {
             </div>
           )}
         </div>
-
-        {/* Footer */}
-        <footer className="w-full mt-auto bg-surface-container-highest border-t border-outline-variant">
-          <div className="w-full py-stack-lg px-margin-mobile md:px-gutter max-w-container-max mx-auto flex flex-col md:flex-row justify-between gap-stack-md">
-            <div className="flex flex-col gap-4">
-              <span className="font-display text-h1 text-primary">PG Genie</span>
-              <span className="font-body-md text-body-md text-on-surface-variant">© 2026 PG Genie. Dedicated to VIT Bhopal Community.</span>
-            </div>
-            <div className="flex flex-wrap gap-4 md:gap-8 items-center">
-              <Link className="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors cursor-pointer" href="/owner/dashboard">Owner Dashboard</Link>
-              <Link className="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors cursor-pointer" href="#">Help Center</Link>
-              <Link className="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors cursor-pointer" href="#">Privacy Policy</Link>
-              <Link className="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors cursor-pointer" href="#">Contact Support</Link>
-            </div>
-          </div>
-        </footer>
       </main>
-
-      {/* BottomNavBar (Mobile Only) */}
-      <nav className="md:hidden fixed bottom-0 w-full z-50 rounded-t-xl bg-surface-container shadow-[0px_-4px_20px_rgba(76,29,149,0.05)] left-0 flex justify-around items-center px-4 py-3 pb-safe">
-        <Link className="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary group transition-all duration-200 cursor-pointer" href="/pgs">
-          <span className="material-symbols-outlined mb-1">search</span>
-          <span className="font-label-sm text-label-sm">Search</span>
-        </Link>
-        <Link className="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary group transition-all duration-200 cursor-pointer" href="#">
-          <span className="material-symbols-outlined mb-1">favorite</span>
-          <span className="font-label-sm text-label-sm">Saved</span>
-        </Link>
-        <Link className="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary group transition-all duration-200 cursor-pointer" href="#">
-          <span className="material-symbols-outlined mb-1">receipt_long</span>
-          <span className="font-label-sm text-label-sm">Bookings</span>
-        </Link>
-        <button onClick={() => handleTabChange('profile')} className={`flex flex-col items-center justify-center transition-all duration-200 cursor-pointer ${activeTab === 'profile' ? 'bg-primary-container text-on-primary-container rounded-full px-5 py-1 scale-90' : 'text-on-surface-variant hover:text-primary group'}`}>
-          <span className="material-symbols-outlined mb-1" style={activeTab === 'profile' ? {fontVariationSettings: "'FILL' 1"} : {}}>person</span>
-          <span className="font-label-sm text-label-sm">Profile</span>
-        </button>
-      </nav>
     </div>
   );
 }

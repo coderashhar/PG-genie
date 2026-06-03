@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Playfair_Display, Caveat } from "next/font/google";
 import SessionProvider from "@/components/SessionProvider";
 import PageTransition from "@/components/PageTransition";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import BottomNav from "@/components/BottomNav";
 import "./globals.css";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -34,11 +37,14 @@ export default function RootLayout({
       <head>
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
       </head>
-      <body className="bg-surface-container-lowest text-on-background font-body-md antialiased overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+      <body className="bg-surface-container-lowest text-on-background font-body-md antialiased overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col relative">
         <SessionProvider>
+          <Navbar />
           <PageTransition>
             {children}
           </PageTransition>
+          <BottomNav />
+          <Footer />
         </SessionProvider>
       </body>
     </html>

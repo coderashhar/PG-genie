@@ -191,28 +191,6 @@ function PgsContent() {
 
   return (
     <div className="bg-background text-on-background font-body-md min-h-screen flex flex-col">
-      {/* TopNavBar */}
-      <header className="w-full sticky top-0 z-40 bg-surface dark:bg-on-background shadow-sm dark:shadow-none">
-        <div className="flex justify-between items-center w-full px-margin-mobile md:px-gutter max-w-container-max mx-auto h-16">
-          <span className="font-display text-h2 font-extrabold text-primary dark:text-primary-fixed-dim cursor-default">
-            PG Genie
-          </span>
-          <div className="hidden md:flex items-center gap-6">
-            <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10 transition-colors h-16 flex items-center px-4 rounded" href="/">Home</Link>
-            <Link className="font-body-md text-body-md text-primary dark:text-primary-fixed-dim font-bold border-b-2 border-primary transition-colors h-16 flex items-center px-4" href="/pgs">Search</Link>
-            <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10 transition-colors h-16 flex items-center px-4 rounded" href="/dashboard">Dashboard</Link>
-          </div>
-          <div className="flex items-center gap-4">
-
-            <button className="p-2 text-primary dark:text-primary-fixed-dim hover:bg-primary-container/10 transition-colors rounded-full cursor-pointer">
-              <span className="material-symbols-outlined">notifications</span>
-            </button>
-            <Link href="/dashboard?tab=profile" className="p-2 text-primary dark:text-primary-fixed-dim hover:bg-primary-container/10 transition-colors rounded-full cursor-pointer">
-              <span className="material-symbols-outlined">account_circle</span>
-            </Link>
-          </div>
-        </div>
-      </header>
 
       {/* Main Content Area */}
       <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-gutter py-stack-lg flex flex-col md:flex-row gap-stack-lg">
@@ -524,50 +502,6 @@ function PgsContent() {
           )}
         </div>
       </main>
-
-      {/* BottomNavBar (Mobile Only) */}
-      <nav className="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-surface-container dark:bg-surface-container-low shadow-[0px_-4px_20px_rgba(76,29,149,0.05)] rounded-t-xl md:hidden">
-        <Link className="flex flex-col items-center justify-center bg-primary-container text-on-primary-container dark:bg-primary-fixed-dim dark:text-on-primary-fixed rounded-full px-5 py-1 scale-90 transition-all duration-200" href="/pgs">
-          <span className="material-symbols-outlined">search</span>
-          <span className="font-label-sm text-label-sm mt-1">Search</span>
-        </Link>
-        <Link className="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim cursor-pointer" href="/dashboard">
-          <span className="material-symbols-outlined mb-1">favorite</span>
-          <span className="font-label-sm text-label-sm mt-1">Saved</span>
-        </Link>
-        <Link className="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim cursor-pointer" href="/dashboard">
-          <span className="material-symbols-outlined mb-1">receipt_long</span>
-          <span className="font-label-sm text-label-sm mt-1">Bookings</span>
-        </Link>
-        <Link className="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim cursor-pointer" href="/dashboard?tab=profile">
-          <span className="material-symbols-outlined mb-1">person</span>
-          <span className="font-label-sm text-label-sm mt-1">Profile</span>
-        </Link>
-      </nav>
-
-      {/* Footer */}
-      <footer className="w-full mt-stack-lg bg-surface-container-highest dark:bg-on-background border-t border-outline-variant dark:border-outline py-stack-lg px-margin-mobile md:px-gutter pb-24 md:pb-stack-lg">
-        <div className="max-w-container-max mx-auto flex flex-col md:flex-row justify-between gap-stack-md">
-          <div className="flex flex-col gap-4 max-w-sm">
-            <div className="font-display text-h1 text-primary dark:text-primary-fixed-dim">
-              PG Genie
-            </div>
-            <p className="font-body-md text-body-md text-on-surface-variant">
-              Your digital concierge for finding the perfect student accommodation in Kothri. Simple, secure, and magical.
-            </p>
-            <p className="font-label-sm text-label-sm text-on-surface-variant mt-4">
-              © 2026 PG Genie. Dedicated to VIT Bhopal Community.
-            </p>
-          </div>
-          <div className="flex flex-col gap-3">
-            <h4 className="font-h2 text-h2 text-on-surface mb-2">Quick Links</h4>
-            <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="/owner/dashboard">Owner Dashboard</Link>
-            <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Help Center</Link>
-            <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Privacy Policy</Link>
-            <Link className="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Contact Support</Link>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
