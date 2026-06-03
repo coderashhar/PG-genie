@@ -92,6 +92,16 @@ function PgsContent() {
     toast.success('Added to Favorites!');
   };
 
+  const handleBookClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!session) {
+      toast.error('Please sign in to book a visit!');
+      return;
+    }
+    toast.success('Visit requested successfully!');
+  };
+
   // Filter states
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [priceRange, setPriceRange] = useState<string>(searchParams.get('priceRange') || 'any'); // 'any', 'under_5k', '5k_8k', '8k_12k', 'above_12k'
@@ -445,7 +455,7 @@ function PgsContent() {
                                 View Map
                               </button>
                               <button 
-                                onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                                onClick={handleBookClick}
                                 className="bg-secondary text-on-secondary px-6 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-on-secondary-fixed-variant transition-colors shadow-sm cursor-pointer"
                               >
                                 Book Now

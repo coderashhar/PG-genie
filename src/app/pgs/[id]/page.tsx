@@ -51,6 +51,26 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
     toast.success('Added to Favorites!');
   };
 
+  const handleBookClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!session) {
+      toast.error('Please sign in to book a visit!');
+      return;
+    }
+    toast.success('Visit requested successfully!');
+  };
+
+  const handleContactClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!session) {
+      toast.error('Please sign in to view contact details!');
+      return;
+    }
+    toast.success('Owner contact requested!');
+  };
+
   const openGallery = (index: number) => {
     setCurrentImageIndex(index);
     setIsGalleryOpen(true);
@@ -247,12 +267,18 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
                 </div>
               </div>
               <div className="flex flex-col gap-4">
-                <button className="w-full bg-secondary hover:bg-secondary/90 text-on-secondary font-label-sm text-label-sm py-4 px-6 rounded-lg shadow-md transition-all flex items-center justify-center gap-2 hover:shadow-lg active:scale-95 cursor-pointer">
+                <button 
+                  onClick={handleBookClick}
+                  className="w-full bg-secondary hover:bg-secondary/90 text-on-secondary font-label-sm text-label-sm py-4 px-6 rounded-lg shadow-md transition-all flex items-center justify-center gap-2 hover:shadow-lg active:scale-95 cursor-pointer"
+                >
                   <span className="material-symbols-outlined text-[20px]">calendar_month</span>
                   Book a Visit
                 </button>
                 <div className="flex gap-4">
-                  <button className="flex-1 bg-surface-container-lowest border-2 border-primary text-primary hover:bg-primary/5 font-label-sm text-label-sm py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer">
+                  <button 
+                    onClick={handleContactClick}
+                    className="flex-1 bg-surface-container-lowest border-2 border-primary text-primary hover:bg-primary/5 font-label-sm text-label-sm py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer"
+                  >
                     <span className="material-symbols-outlined text-[20px]">call</span>
                     Contact
                   </button>
