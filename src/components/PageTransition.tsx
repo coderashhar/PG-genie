@@ -23,37 +23,33 @@ export default function PageTransition({ children }: { children: React.ReactNode
     prevPathRef.current = pathname;
   }, [pathname]);
 
-  // The exact Codrops "Move to left / from right" easing and duration
   const transition = { duration: 0.8, ease: [0.16, 1, 0.3, 1] };
 
-  const variants = {
-    initial: (d: number) => ({
-      x: d > 0 ? "100%" : "-100%",
-    }),
-    animate: {
-      x: "0%",
-      transition
-    },
-    exit: (d: number) => ({
-      x: d > 0 ? "-100%" : "100%",
-      transition
-    })
-  };
+  const customData = { direction, shouldAnimate };
 
-  const noAnimVariants = {
-    initial: { x: 0, opacity: 1 },
-    animate: { x: 0, opacity: 1, transition: { duration: 0 } },
-    exit: { x: 0, opacity: 1, transition: { duration: 0 } }
+  const variants = {
+    initial: ({ direction, shouldAnimate }: { direction: number; shouldAnimate: boolean }) => {
+      if (!shouldAnimate) return { x: 0, opacity: 1 };
+      return { x: direction > 0 ? "100%" : "-100%" };
+    },
+    animate: ({ shouldAnimate }: { shouldAnimate: boolean }) => {
+      if (!shouldAnimate) return { x: 0, opacity: 1, transition: { duration: 0 } };
+      return { x: "0%", transition };
+    },
+    exit: ({ direction, shouldAnimate }: { direction: number; shouldAnimate: boolean }) => {
+      if (!shouldAnimate) return { x: 0, opacity: 1, transition: { duration: 0 } };
+      return { x: direction > 0 ? "-100%" : "100%", transition };
+    }
   };
 
   return (
     <div className="w-full relative overflow-hidden min-h-screen bg-background">
       {/* mode="popLayout" automatically pulls the exiting element out of the document flow (making it absolute) so the new element can take its place instantly and animate simultaneously! */}
-      <AnimatePresence mode="popLayout" initial={false} custom={direction}>
+      <AnimatePresence mode="popLayout" initial={false} custom={customData}>
         <motion.div
           key={pathname}
-          custom={direction}
-          variants={shouldAnimate ? variants : noAnimVariants}
+          custom={customData}
+          variants={variants}
           initial="initial"
           animate="animate"
           exit="exit"

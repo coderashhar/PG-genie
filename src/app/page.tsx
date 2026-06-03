@@ -118,19 +118,20 @@ export default function Home() {
         </section>
 
         {/* Featured Listings - Asymmetric Grid */}
-        <section className="w-full px-margin-mobile md:px-gutter py-stack-xl max-w-container-max mx-auto bg-surface-container-lowest">
-          <div className="flex justify-between items-end mb-16">
-            <div className="max-w-2xl">
-              <h2 className="font-display text-[48px] text-on-surface leading-tight">
-                Curated Spaces <br/><span className="italic text-on-surface-variant font-light">for student living</span>
-              </h2>
+        <section className="w-full py-stack-xl bg-surface-container-lowest">
+          <div className="px-margin-mobile md:px-gutter max-w-container-max mx-auto">
+            <div className="flex justify-between items-end mb-16">
+              <div className="max-w-2xl">
+                <h2 className="font-display text-[48px] text-on-surface leading-tight">
+                  Curated Spaces <br/><span className="italic text-on-surface-variant font-light">for student living</span>
+                </h2>
+              </div>
+              <Link href="/pgs" className="hidden md:flex text-on-surface font-body-md font-medium items-center hover:text-primary transition-colors group cursor-pointer">
+                View collection <span className="material-symbols-outlined ml-2 transition-transform group-hover:translate-x-1">trending_flat</span>
+              </Link>
             </div>
-            <Link href="/pgs" className="hidden md:flex text-on-surface font-body-md font-medium items-center hover:text-primary transition-colors group cursor-pointer">
-              View collection <span className="material-symbols-outlined ml-2 transition-transform group-hover:translate-x-1">trending_flat</span>
-            </Link>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-start">
+            
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-start">
             <div className="md:col-span-8 flex flex-col group cursor-pointer">
               <Link href="/pgs/6a131e6f34188a11736f3cde" className="relative block w-full aspect-[16/9] overflow-hidden rounded-3xl mb-6 bg-surface-container">
                 <img 
@@ -185,6 +186,7 @@ export default function Home() {
                   <div className="font-display text-2xl text-on-surface">₹7,500<span className="font-body-md text-on-surface-variant font-sans">/mo</span></div>
                 </div>
               </div>
+            </div>
             </div>
           </div>
         </section>
