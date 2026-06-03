@@ -423,7 +423,10 @@ function PgsContent() {
                               <button className="bg-surface text-primary border border-primary px-4 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-primary/5 transition-colors hidden sm:block cursor-pointer">
                                 View Map
                               </button>
-                              <button className="bg-secondary text-on-secondary px-6 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-on-secondary-fixed-variant transition-colors shadow-sm cursor-pointer">
+                              <button 
+                                onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                                className="bg-secondary text-on-secondary px-6 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-on-secondary-fixed-variant transition-colors shadow-sm cursor-pointer"
+                              >
                                 Book Now
                               </button>
                             </div>
@@ -441,8 +444,16 @@ function PgsContent() {
                     onClick={() => trackView(property._id)}
                     className="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(76,29,149,0.05)] hover:shadow-[0px_8px_30px_rgba(76,29,149,0.15)] transition-shadow duration-300 border border-outline-variant/20 flex flex-col relative cursor-pointer block"
                   >
-                    <div className="absolute top-4 right-4 z-10 bg-secondary text-on-secondary px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1 shadow-md">
-                      <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span> Verified
+                    <div className="absolute top-4 right-4 z-20 flex gap-2">
+                      <div className="bg-secondary text-on-secondary px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1 shadow-md">
+                        <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span> Verified
+                      </div>
+                      <button 
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                        className="bg-surface/80 backdrop-blur-sm text-on-surface hover:text-secondary p-1.5 rounded-full shadow-md transition-colors flex items-center justify-center cursor-pointer"
+                      >
+                        <span className="material-symbols-outlined text-[18px]">favorite_border</span>
+                      </button>
                     </div>
                     <div className="h-56 w-full relative overflow-hidden">
                       <img

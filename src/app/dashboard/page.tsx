@@ -385,9 +385,9 @@ function DashboardContent() {
                   </div>
                 </section>
   
-                {/* Applied PGs */}
+                {/* Booked Visits */}
                 <section>
-                  <h2 className="font-h1 text-h1 text-on-surface mb-stack-md">Applied PGs</h2>
+                  <h2 className="font-h1 text-h1 text-on-surface mb-stack-md">Booked Visits</h2>
                   <div className="bg-surface rounded-xl shadow-[0px_4px_20px_rgba(76,29,149,0.05)] border border-surface-container overflow-hidden">
                     {loading ? (
                       <ul className="divide-y divide-surface-container">
@@ -416,7 +416,7 @@ function DashboardContent() {
                                 <div>
                                   <h3 className="font-h2 text-h2 text-on-surface">{property?.title || 'Unknown PG'}</h3>
                                   <p className="font-body-md text-body-md text-on-surface-variant">
-                                    Applied on {formatDate(booking.createdAt)}
+                                    Booked on {formatDate(booking.createdAt)}
                                   </p>
                                 </div>
                               </div>

@@ -237,10 +237,16 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
                   <span className="material-symbols-outlined text-[20px]">calendar_month</span>
                   Book a Visit
                 </button>
-                <button className="w-full bg-surface-container-lowest border-2 border-primary text-primary hover:bg-primary/5 font-label-sm text-label-sm py-3 px-6 rounded-lg transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer">
-                  <span className="material-symbols-outlined text-[20px]">call</span>
-                  Contact Owner
-                </button>
+                <div className="flex gap-4">
+                  <button className="flex-1 bg-surface-container-lowest border-2 border-primary text-primary hover:bg-primary/5 font-label-sm text-label-sm py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer">
+                    <span className="material-symbols-outlined text-[20px]">call</span>
+                    Contact
+                  </button>
+                  <button className="flex-1 bg-surface-container-lowest border-2 border-secondary text-secondary hover:bg-secondary/5 font-label-sm text-label-sm py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer">
+                    <span className="material-symbols-outlined text-[20px]">favorite_border</span>
+                    Save
+                  </button>
+                </div>
               </div>
               <div className="mt-6 bg-surface-container-low p-4 rounded-lg">
                 <h3 className="font-label-sm text-label-sm text-on-surface mb-2">Available Room Types</h3>
