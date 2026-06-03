@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 
 export default function PageTransition({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -23,22 +23,22 @@ export default function PageTransition({ children }: { children: React.ReactNode
     prevPathRef.current = pathname;
   }, [pathname]);
 
-  const transition = { duration: 0.8, ease: [0.16, 1, 0.3, 1] };
+  const transition = { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const };
 
   const customData = { direction, shouldAnimate };
 
-  const variants = {
+  const variants: Variants = {
     initial: ({ direction, shouldAnimate }: { direction: number; shouldAnimate: boolean }) => {
-      if (!shouldAnimate) return { x: 0, opacity: 1 };
-      return { x: direction > 0 ? "100%" : "-100%" };
+      if (!shouldAnimate) return { x: "0%", opacity: 1 };
+      return { x: direction > 0 ? "100%" : "-100%", opacity: 1 };
     },
     animate: ({ shouldAnimate }: { shouldAnimate: boolean }) => {
-      if (!shouldAnimate) return { x: 0, opacity: 1, transition: { duration: 0 } };
-      return { x: "0%", transition };
+      if (!shouldAnimate) return { x: "0%", opacity: 1, transition: { duration: 0 } };
+      return { x: "0%", opacity: 1, transition };
     },
     exit: ({ direction, shouldAnimate }: { direction: number; shouldAnimate: boolean }) => {
-      if (!shouldAnimate) return { x: 0, opacity: 1, transition: { duration: 0 } };
-      return { x: direction > 0 ? "-100%" : "100%", transition };
+      if (!shouldAnimate) return { x: "0%", opacity: 1, transition: { duration: 0 } };
+      return { x: direction > 0 ? "-100%" : "100%", opacity: 1, transition };
     }
   };
 
