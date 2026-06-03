@@ -376,8 +376,16 @@ function PgsContent() {
                     >
                       <div className="flex flex-col md:flex-row h-full">
                         <div className="md:w-2/5 h-56 md:h-auto relative overflow-hidden">
-                          <div className="absolute top-4 right-4 z-10 bg-secondary text-on-secondary px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1 shadow-md">
-                            <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span> Verified
+                          <div className="absolute top-4 right-4 z-20 flex gap-2">
+                            <div className="bg-secondary text-on-secondary px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1 shadow-md">
+                              <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span> Verified
+                            </div>
+                            <button 
+                              onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                              className="bg-surface/80 backdrop-blur-sm text-on-surface hover:text-secondary p-1.5 rounded-full shadow-md transition-colors flex items-center justify-center cursor-pointer"
+                            >
+                              <span className="material-symbols-outlined text-[18px]">favorite_border</span>
+                            </button>
                           </div>
                           <img
                             alt={property.title}
