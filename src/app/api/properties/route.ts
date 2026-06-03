@@ -15,6 +15,7 @@ export async function GET(req: NextRequest) {
     const search = searchParams.get('search');
     const amenities = searchParams.get('amenities');
     const sort = searchParams.get('sort');
+    const gender = searchParams.get('gender');
     
     // Build query object
     let query: any = { status: 'active' };
@@ -40,6 +41,16 @@ export async function GET(req: NextRequest) {
     if (amenities) {
       const amenitiesList = amenities.split(',');
       query.amenities = { $all: amenitiesList.map(a => new RegExp(a, 'i')) };
+    }
+
+    if (gender) {
+      query.$and = query.$and || [];
+      query.$and.push({
+        $or: [
+          { title: new RegExp(gender, 'i') },
+          { description: new RegExp(gender, 'i') }
+        ]
+      });
     }
 
     const page = parseInt(searchParams.get('page') || '1');

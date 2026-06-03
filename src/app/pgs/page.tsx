@@ -82,6 +82,7 @@ function PgsContent() {
   // Filter states
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [priceRange, setPriceRange] = useState<string>(searchParams.get('priceRange') || 'any'); // 'any', 'under_5k', '5k_8k', '8k_12k', 'above_12k'
+  const [genderPreference, setGenderPreference] = useState<string>(searchParams.get('gender') || '');
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [sortOption, setSortOption] = useState('popular');
 
@@ -94,7 +95,7 @@ function PgsContent() {
     try {
       const params = new URLSearchParams();
       if (searchQuery) params.append('search', searchQuery);
-      
+
       if (priceRange === 'under_5k') {
         params.append('maxPrice', '5000');
       } else if (priceRange === '5k_8k') {
@@ -110,7 +111,11 @@ function PgsContent() {
       if (selectedAmenities.length > 0) {
         params.append('amenities', selectedAmenities.join(','));
       }
-      
+
+      if (genderPreference) {
+        params.append('gender', genderPreference);
+      }
+
       if (sortOption) {
         params.append('sort', sortOption);
       }
@@ -121,7 +126,7 @@ function PgsContent() {
       const res = await fetch(`/api/properties?${params.toString()}`);
       if (!res.ok) throw new Error('Failed to fetch properties');
       const data = await res.json();
-      
+
       if (pageNum === 1) {
         setProperties(data.properties || []);
       } else {
@@ -147,6 +152,7 @@ function PgsContent() {
 
   const handleClearFilters = () => {
     setPriceRange('any');
+    setGenderPreference('');
     setSelectedAmenities([]);
     setSearchQuery('');
     setSortOption('popular');
@@ -171,8 +177,8 @@ function PgsContent() {
   };
 
   const toggleAmenity = (amenity: string) => {
-    setSelectedAmenities(prev => 
-      prev.includes(amenity) 
+    setSelectedAmenities(prev =>
+      prev.includes(amenity)
         ? prev.filter(a => a !== amenity)
         : [...prev, amenity]
     );
@@ -180,7 +186,7 @@ function PgsContent() {
 
   // Track view when a property card is clicked
   const trackView = (propertyId: string) => {
-    fetch(`/api/properties/${propertyId}/view`, { method: 'POST' }).catch(() => {});
+    fetch(`/api/properties/${propertyId}/view`, { method: 'POST' }).catch(() => { });
   };
 
   return (
@@ -249,11 +255,23 @@ function PgsContent() {
 
             {/* Gender */}
             <div className="mb-stack-md">
-              <h3 className="font-body-lg text-body-lg font-semibold mb-stack-sm text-on-surface">Gender Focus</h3>
+              <h3 className="font-body-lg text-body-lg font-semibold mb-stack-sm text-on-surface">Gender Preference</h3>
               <div className="flex flex-wrap gap-2">
-                <button className="px-4 py-2 rounded-full border border-primary bg-primary-container/10 text-primary font-body-md text-body-md cursor-pointer">Boys</button>
-                <button className="px-4 py-2 rounded-full border border-outline bg-surface text-on-surface-variant font-body-md text-body-md hover:bg-surface-container-high transition-colors cursor-pointer">Girls</button>
-                <button className="px-4 py-2 rounded-full border border-outline bg-surface text-on-surface-variant font-body-md text-body-md hover:bg-surface-container-high transition-colors cursor-pointer">Co-ed</button>
+                <button 
+                  onClick={() => setGenderPreference(genderPreference === 'Boys' ? '' : 'Boys')}
+                  className={`px-4 py-2 rounded-full border font-body-md text-body-md cursor-pointer transition-colors ${genderPreference === 'Boys' ? 'border-primary bg-primary-container/10 text-primary' : 'border-outline bg-surface text-on-surface-variant hover:bg-surface-container-high'}`}>
+                  Boys
+                </button>
+                <button 
+                  onClick={() => setGenderPreference(genderPreference === 'Girls' ? '' : 'Girls')}
+                  className={`px-4 py-2 rounded-full border font-body-md text-body-md cursor-pointer transition-colors ${genderPreference === 'Girls' ? 'border-primary bg-primary-container/10 text-primary' : 'border-outline bg-surface text-on-surface-variant hover:bg-surface-container-high'}`}>
+                  Girls
+                </button>
+                <button 
+                  onClick={() => setGenderPreference(genderPreference === 'Co-ed' ? '' : 'Co-ed')}
+                  className={`px-4 py-2 rounded-full border font-body-md text-body-md cursor-pointer transition-colors ${genderPreference === 'Co-ed' ? 'border-primary bg-primary-container/10 text-primary' : 'border-outline bg-surface text-on-surface-variant hover:bg-surface-container-high'}`}>
+                  Co-ed
+                </button>
               </div>
             </div>
 
@@ -319,10 +337,10 @@ function PgsContent() {
               {/* Search Bar with Integrated Filter */}
               <div className="flex items-center bg-surface-container-high rounded-full px-4 py-2 w-full sm:w-80 border border-outline-variant/50 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
                 <span className="material-symbols-outlined text-on-surface-variant mr-2">search</span>
-                <input 
-                  className="bg-transparent border-none focus:ring-0 text-body-md flex-grow text-on-surface outline-none" 
-                  placeholder="Search Kothri..." 
-                  type="text" 
+                <input
+                  className="bg-transparent border-none focus:ring-0 text-body-md flex-grow text-on-surface outline-none"
+                  placeholder="Search Kothri..."
+                  type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={handleSearchKeyDown}
@@ -333,7 +351,7 @@ function PgsContent() {
               </div>
 
               <div className="relative w-full sm:w-auto flex-1 sm:flex-none">
-                <select 
+                <select
                   value={sortOption}
                   onChange={(e) => setSortOption(e.target.value)}
                   className="w-full appearance-none bg-surface border border-outline text-on-surface-variant py-2 pl-4 pr-10 rounded-full font-body-md text-body-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent cursor-pointer h-[42px]"
