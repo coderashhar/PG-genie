@@ -1,11 +1,23 @@
 "use client";
 import Link from "next/link";
 import React from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import toast from "react-hot-toast";
 
 export default function Navbar({ className, hideHome }: { className?: string, hideHome?: boolean }) {
   const pathname = usePathname() || "";
   const isHome = pathname === "/";
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  const handleAuthRequiredClick = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
+    if (!session) {
+      e.preventDefault();
+      toast.error("Please sign in or login to continue");
+      router.push("/login");
+    }
+  };
 
   const getActiveClass = (path: string) => {
     const isActive = path === "/" ? pathname === "/" : pathname.startsWith(path);
@@ -23,7 +35,7 @@ export default function Navbar({ className, hideHome }: { className?: string, hi
             <button className="hover:opacity-70 transition-opacity cursor-pointer">
               <span className="material-symbols-outlined text-[28px]">notifications</span>
             </button>
-            <Link href="/login" className="hover:opacity-70 transition-opacity cursor-pointer">
+            <Link href="/login" onClick={(e) => handleAuthRequiredClick(e, "/login")} className="hover:opacity-70 transition-opacity cursor-pointer">
               <span className="material-symbols-outlined text-[28px]">account_circle</span>
             </Link>
           </div>
@@ -42,13 +54,13 @@ export default function Navbar({ className, hideHome }: { className?: string, hi
         <div className="hidden md:flex items-center gap-6">
           <Link className={`font-body-md text-body-md transition-colors h-16 flex items-center px-4 rounded ${getActiveClass("/") ? "text-primary dark:text-primary-fixed-dim font-bold border-b-2 border-primary" : "text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10"}`} href="/">Home</Link>
           <Link className={`font-body-md text-body-md transition-colors h-16 flex items-center px-4 rounded ${getActiveClass("/pgs") ? "text-primary dark:text-primary-fixed-dim font-bold border-b-2 border-primary" : "text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10"}`} href="/pgs">Search</Link>
-          <Link className={`font-body-md text-body-md transition-colors h-16 flex items-center px-4 rounded ${getActiveClass("/dashboard") ? "text-primary dark:text-primary-fixed-dim font-bold border-b-2 border-primary" : "text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10"}`} href="/dashboard">Dashboard</Link>
+          <Link className={`font-body-md text-body-md transition-colors h-16 flex items-center px-4 rounded ${getActiveClass("/dashboard") ? "text-primary dark:text-primary-fixed-dim font-bold border-b-2 border-primary" : "text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10"}`} href="/dashboard" onClick={(e) => handleAuthRequiredClick(e, "/dashboard")}>Dashboard</Link>
         </div>
         <div className="flex items-center gap-4">
           <button className="p-2 text-primary dark:text-primary-fixed-dim hover:bg-primary-container/10 transition-colors rounded-full cursor-pointer">
             <span className="material-symbols-outlined">notifications</span>
           </button>
-          <Link href="/dashboard?tab=profile" className="p-2 text-primary dark:text-primary-fixed-dim hover:bg-primary-container/10 transition-colors rounded-full cursor-pointer">
+          <Link href="/dashboard?tab=profile" onClick={(e) => handleAuthRequiredClick(e, "/dashboard?tab=profile")} className="p-2 text-primary dark:text-primary-fixed-dim hover:bg-primary-container/10 transition-colors rounded-full cursor-pointer">
             <span className="material-symbols-outlined">account_circle</span>
           </Link>
         </div>
