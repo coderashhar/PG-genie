@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 
 import ImageUpload from '@/components/ImageUpload';
+import PropertyCard from '@/components/PropertyCard';
 
 // --- Types for API response ---
 interface PropertyLocation {
@@ -320,60 +321,11 @@ function DashboardContent() {
                       </>
                     ) : dashData && dashData.savedPgs.length > 0 ? (
                       dashData.savedPgs.slice(0, 2).map((pg) => (
-                        <Link
+                        <PropertyCard
                           key={pg._id}
-                          href={`/pgs/${pg._id}`}
-                          className="bg-surface rounded-xl shadow-[0px_4px_20px_rgba(76,29,149,0.05)] overflow-hidden border border-surface-container hover:shadow-xl hover:scale-[1.02] hover:border-primary-container transition-all duration-300 group cursor-pointer flex flex-col block"
-                        >
-                          <div className="relative w-full aspect-video">
-                            <img
-                              alt={pg.title}
-                              className="w-full h-full object-cover"
-                              src={pg.images?.[0] || '/placeholder.jpg'}
-                            />
-                            <div className="absolute top-3 right-3 bg-surface text-secondary px-2 py-1 rounded-md font-label-sm text-label-sm flex items-center gap-1 shadow-sm">
-                              <span className="material-symbols-outlined text-xs">verified</span> Verified
-                            </div>
-                            <button
-                              className="absolute top-3 left-3 w-8 h-8 rounded-full bg-surface/80 backdrop-blur-sm flex items-center justify-center text-primary hover:bg-surface transition-colors cursor-pointer"
-                              onClick={(e) => e.preventDefault()}
-                            >
-                              <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
-                            </button>
-                          </div>
-                          <div className="p-4 flex flex-col flex-1">
-                            <h3 className="font-h2 text-h2 text-on-surface mb-1 group-hover:text-primary transition-colors">{pg.title}</h3>
-                            <p className="font-body-md text-body-md text-on-surface-variant flex items-center gap-1 mb-3">
-                              <span className="material-symbols-outlined text-sm">location_on</span>
-                              {pg.location?.address || 'Kothri, Bhopal'}
-                            </p>
-                            <div className="flex gap-2 mb-4 flex-wrap">
-                              {pg.amenities?.slice(0, 3).map((amenity) => (
-                                <span
-                                  key={amenity}
-                                  className="bg-primary-container/5 text-primary px-2 py-1 rounded font-label-sm text-label-sm flex items-center gap-1"
-                                >
-                                  <span className="material-symbols-outlined text-xs">
-                                    {amenityIconMap[amenity] || 'check_circle'}
-                                  </span>
-                                  {amenity}
-                                </span>
-                              ))}
-                            </div>
-                            <div className="mt-auto pt-4 border-t border-surface-container flex justify-between items-center">
-                              <div>
-                                <span className="font-h2 text-h2 text-primary">₹{pg.price?.toLocaleString('en-IN')}</span>
-                                <span className="font-body-md text-body-md text-on-surface-variant">/mo</span>
-                              </div>
-                              <button
-                                className="bg-primary text-on-primary px-4 py-2 rounded-lg font-label-sm text-label-sm hover:bg-primary-container transition-colors cursor-pointer"
-                                onClick={(e) => e.preventDefault()}
-                              >
-                                View Details
-                              </button>
-                            </div>
-                          </div>
-                        </Link>
+                          property={pg}
+                          initialIsSaved={true}
+                        />
                       ))
                     ) : (
                       <div className="md:col-span-2 bg-surface-container rounded-xl p-8 text-center">

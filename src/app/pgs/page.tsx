@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
+import PropertyCard from '@/components/PropertyCard';
 
 // --- Types ---
 interface PropertyLocation {
@@ -569,63 +570,20 @@ function PgsContent() {
                 }
 
                 return (
-                  <Link
+                  <PropertyCard
                     key={property._id}
-                    href={`/pgs/${property._id}`}
+                    property={property}
+                    initialIsSaved={savedPgIds.has(property._id)}
+                    onSaveToggle={(pgId, isSaved) => {
+                      setSavedPgIds(prev => {
+                        const next = new Set(prev);
+                        if (isSaved) next.add(pgId);
+                        else next.delete(pgId);
+                        return next;
+                      });
+                    }}
                     onClick={() => trackView(property._id)}
-                    className="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(76,29,149,0.05)] hover:shadow-[0px_8px_30px_rgba(76,29,149,0.15)] transition-shadow duration-300 border border-outline-variant/20 flex flex-col relative cursor-pointer block"
-                  >
-                    <div className="absolute top-4 right-4 z-20 flex gap-2">
-                      <div className="bg-secondary text-on-secondary px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1 shadow-md">
-                        <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span> Verified
-                      </div>
-                      <button 
-                        onClick={(e) => handleSaveClick(e, property._id)}
-                        disabled={isSavingMap[property._id]}
-                        className={`bg-surface/80 backdrop-blur-sm p-1.5 rounded-full shadow-md transition-colors flex items-center justify-center cursor-pointer disabled:opacity-70 ${savedPgIds.has(property._id) ? 'text-secondary' : 'text-on-surface hover:text-secondary'}`}
-                      >
-                        <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: savedPgIds.has(property._id) ? "'FILL' 1" : "'FILL' 0" }}>
-                          {savedPgIds.has(property._id) ? 'favorite' : 'favorite_border'}
-                        </span>
-                      </button>
-                    </div>
-                    <div className="h-56 w-full relative overflow-hidden">
-                      <img
-                        alt={property.title}
-                        className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
-                        src={property.images?.[0] || '/placeholder.jpg'}
-                      />
-                    </div>
-                    <div className="p-6 flex flex-col flex-grow">
-                      <div className="flex justify-between items-start mb-2">
-                        <h3 className="font-h2 text-h2 text-on-surface group-hover:text-primary transition-colors">{property.title}</h3>
-                      </div>
-                      <p className="font-body-md text-body-md text-on-surface-variant flex items-center gap-1 mb-stack-sm">
-                        <span className="material-symbols-outlined text-[18px]">location_on</span>
-                        {property.location?.address}
-                      </p>
-                      <div className="flex flex-wrap gap-2 mb-stack-md">
-                        {property.amenities?.slice(0, 3).map((amenity) => (
-                          <div key={amenity} className="bg-primary/5 text-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm flex items-center gap-1.5 border border-primary/10">
-                            <span className="material-symbols-outlined text-[16px]">{amenityIconMap[amenity] || 'check_circle'}</span>
-                            {amenity}
-                          </div>
-                        ))}
-                      </div>
-                      <div className="mt-auto pt-4 border-t border-outline-variant/30 flex justify-between items-end">
-                        <div>
-                          <p className="font-label-sm text-label-sm text-on-surface-variant mb-1">Starting from</p>
-                          <p className="font-h2 text-h2 text-primary font-bold">
-                            ₹{property.price?.toLocaleString('en-IN')}
-                            <span className="font-body-md text-body-md font-normal text-on-surface-variant">/mo</span>
-                          </p>
-                        </div>
-                        <button className="bg-secondary text-on-secondary px-6 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-on-secondary-fixed-variant transition-colors shadow-sm cursor-pointer">
-                          View Details
-                        </button>
-                      </div>
-                    </div>
-                  </Link>
+                  />
                 );
               })
             ) : (
