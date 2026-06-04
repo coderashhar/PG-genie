@@ -6,9 +6,9 @@ import bcrypt from 'bcryptjs';
 
 export async function POST(req: Request) {
   try {
-    let { name, identifier, otp, role, password } = await req.json();
+    let { identifier, otp, newPassword } = await req.json();
 
-    if (!name || !identifier || !otp || !role || !password) {
+    if (!identifier || !otp || !newPassword) {
       return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
     }
 
@@ -36,32 +36,26 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid or expired OTP' }, { status: 400 });
     }
 
-    // OTP is valid, delete it
-    await Otp.deleteOne({ _id: validOtp._id });
-
-    // 2. Check if user already exists
-    const existingUser = await User.findOne(
+    // 2. Check if user exists
+    const user = await User.findOne(
       isEmail ? { email: identifier } : { phone: identifier }
     );
 
-    if (existingUser) {
-      return NextResponse.json({ error: 'User already exists' }, { status: 400 });
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    // 3. Create User
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // OTP is valid, delete it
+    await Otp.deleteOne({ _id: validOtp._id });
 
-    const user = await User.create({
-      name,
-      email: isEmail ? identifier : `${identifier}@temp.com`,
-      phone: !isEmail ? identifier : undefined,
-      role,
-      password: hashedPassword,
-    });
+    // 3. Update Password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
 
-    return NextResponse.json({ success: true, message: 'User registered successfully' }, { status: 201 });
+    return NextResponse.json({ success: true, message: 'Password reset successfully' }, { status: 200 });
   } catch (error) {
-    console.error('Registration Error:', error);
+    console.error('Reset Password Error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

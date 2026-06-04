@@ -19,11 +19,15 @@ export const authOptions: NextAuthOptions = {
         identifier: { label: 'Email or Phone', type: 'text' },
         otp: { label: 'OTP', type: 'text' },
         role: { label: 'Role', type: 'text' },
+        password: { label: 'Password', type: 'password' },
+        loginType: { label: 'Login Type', type: 'text' }, // 'password' or 'otp'
       },
       async authorize(credentials) {
-        if (!credentials?.identifier || !credentials?.otp) {
-          throw new Error('Please provide email/phone and OTP');
+        if (!credentials?.identifier) {
+          throw new Error('Please provide email/phone');
         }
+
+        const loginType = credentials.loginType || 'password';
 
         // Normalize identifier
         let normalizedId = credentials.identifier.trim();
@@ -39,36 +43,48 @@ export const authOptions: NextAuthOptions = {
 
         await connectToDatabase();
 
-        // 1. Verify OTP
-        const validOtp = await Otp.findOne({
-          identifier: normalizedId,
-          otp: credentials.otp,
-        });
-
-        if (!validOtp) {
-          throw new Error('Invalid or expired OTP');
-        }
-
-        // OTP is valid, let's delete it so it can't be reused
-        await Otp.deleteOne({ _id: validOtp._id });
-
-        // 2. Find or Create User
+        // Find User
         let user = await User.findOne(
           isEmail ? { email: normalizedId } : { phone: normalizedId }
-        );
+        ).select('+password');
 
-        if (user) {
-          if (user.role !== credentials.role) {
-            throw new Error(`You are registered as a ${user.role}. Please log in using the ${user.role} portal.`);
+        if (!user) {
+          throw new Error('No account found with this email/phone. Please sign up.');
+        }
+
+        if (user.role !== credentials.role) {
+          throw new Error(`You are registered as a ${user.role}. Please log in using the ${user.role} portal.`);
+        }
+
+        if (loginType === 'password') {
+          if (!credentials.password) {
+            throw new Error('Please provide your password');
           }
-        } else {
-          // Seamless Signup
-          user = await User.create({
-            name: isEmail ? normalizedId.split('@')[0] : 'New User',
-            email: isEmail ? normalizedId : `${normalizedId}@temp.com`, // Temp email if phone used
-            phone: !isEmail ? normalizedId : undefined,
-            role: credentials.role || 'student',
+          if (!user.password) {
+            throw new Error('No password set for this account. Please use OTP or Google/Facebook to log in.');
+          }
+          const isMatch = await bcrypt.compare(credentials.password, user.password);
+          if (!isMatch) {
+            throw new Error('Invalid password');
+          }
+        } else if (loginType === 'otp') {
+          if (!credentials.otp) {
+            throw new Error('Please provide the OTP');
+          }
+          // Verify OTP
+          const validOtp = await Otp.findOne({
+            identifier: normalizedId,
+            otp: credentials.otp,
           });
+
+          if (!validOtp) {
+            throw new Error('Invalid or expired OTP');
+          }
+
+          // OTP is valid, let's delete it so it can't be reused
+          await Otp.deleteOne({ _id: validOtp._id });
+        } else {
+          throw new Error('Invalid login type');
         }
 
         return {
