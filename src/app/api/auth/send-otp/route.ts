@@ -4,10 +4,21 @@ import Otp from '@/models/Otp';
 
 export async function POST(req: Request) {
   try {
-    const { identifier } = await req.json();
+    let { identifier } = await req.json();
 
     if (!identifier) {
       return NextResponse.json({ error: 'Please provide an email or phone number' }, { status: 400 });
+    }
+
+    // Normalize identifier
+    identifier = identifier.trim();
+    if (!identifier.includes('@')) {
+      identifier = identifier.replace(/\s+/g, '');
+      if (identifier.length === 10 && /^\d{10}$/.test(identifier)) {
+        identifier = '+91' + identifier;
+      } else if (identifier.startsWith('91') && identifier.length === 12) {
+        identifier = '+' + identifier;
+      }
     }
 
     await connectToDatabase();

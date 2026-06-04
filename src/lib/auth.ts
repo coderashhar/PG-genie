@@ -25,11 +25,23 @@ export const authOptions: NextAuthOptions = {
           throw new Error('Please provide email/phone and OTP');
         }
 
+        // Normalize identifier
+        let normalizedId = credentials.identifier.trim();
+        const isEmail = normalizedId.includes('@');
+        if (!isEmail) {
+          normalizedId = normalizedId.replace(/\s+/g, '');
+          if (normalizedId.length === 10 && /^\d{10}$/.test(normalizedId)) {
+            normalizedId = '+91' + normalizedId;
+          } else if (normalizedId.startsWith('91') && normalizedId.length === 12) {
+            normalizedId = '+' + normalizedId;
+          }
+        }
+
         await connectToDatabase();
 
         // 1. Verify OTP
         const validOtp = await Otp.findOne({
-          identifier: credentials.identifier,
+          identifier: normalizedId,
           otp: credentials.otp,
         });
 
@@ -41,10 +53,8 @@ export const authOptions: NextAuthOptions = {
         await Otp.deleteOne({ _id: validOtp._id });
 
         // 2. Find or Create User
-        const isEmail = credentials.identifier.includes('@');
-        
         let user = await User.findOne(
-          isEmail ? { email: credentials.identifier } : { phone: credentials.identifier }
+          isEmail ? { email: normalizedId } : { phone: normalizedId }
         );
 
         if (user) {
@@ -54,9 +64,9 @@ export const authOptions: NextAuthOptions = {
         } else {
           // Seamless Signup
           user = await User.create({
-            name: isEmail ? credentials.identifier.split('@')[0] : 'New User',
-            email: isEmail ? credentials.identifier : `${credentials.identifier}@temp.com`, // Temp email if phone used
-            phone: !isEmail ? credentials.identifier : undefined,
+            name: isEmail ? normalizedId.split('@')[0] : 'New User',
+            email: isEmail ? normalizedId : `${normalizedId}@temp.com`, // Temp email if phone used
+            phone: !isEmail ? normalizedId : undefined,
             role: credentials.role || 'student',
           });
         }

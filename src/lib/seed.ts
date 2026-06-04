@@ -78,6 +78,19 @@ const User = mongoose.models.User || mongoose.model('User', UserSchema);
 const Property = mongoose.models.Property || mongoose.model('Property', PropertySchema);
 const Booking = mongoose.models.Booking || mongoose.model('Booking', BookingSchema);
 
+const NotificationSchema = new mongoose.Schema(
+  {
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    title: { type: String, required: true },
+    message: { type: String, required: true },
+    type: { type: String, enum: ['system', 'booking', 'message', 'offer'], default: 'system' },
+    isRead: { type: Boolean, default: false },
+    link: { type: String },
+  },
+  { timestamps: true }
+);
+const Notification = mongoose.models.Notification || mongoose.model('Notification', NotificationSchema);
+
 // --- Seed Data ---
 
 const MONGODB_URI = process.env.MONGODB_URI as string;
@@ -114,6 +127,7 @@ async function seed() {
     User.deleteMany({}),
     Property.deleteMany({}),
     Booking.deleteMany({}),
+    Notification.deleteMany({}),
   ]);
   console.log('🗑️  Cleared existing data');
 
@@ -125,7 +139,7 @@ async function seed() {
     email: 'sharma@pggenie.com',
     password: hashedPassword,
     role: 'owner',
-    phone: '+91 9876543210',
+    phone: '+919876543210',
     image: OWNER_AVATAR,
     businessName: 'Sharma Properties',
     businessAddress: 'Main Market, Kothri, Bhopal',
@@ -136,7 +150,7 @@ async function seed() {
     email: 'gupta@pggenie.com',
     password: hashedPassword,
     role: 'owner',
-    phone: '+91 9876543211',
+    phone: '+919876543211',
     businessName: 'Gupta Residences',
     businessAddress: 'Near VIT Gate, Kothri, Bhopal',
   });
@@ -149,7 +163,7 @@ async function seed() {
     email: 'aryan@vitstudent.ac.in',
     password: hashedPassword,
     role: 'student',
-    phone: '+91 9988776655',
+    phone: '+919988776655',
     university: 'VIT Bhopal',
     bio: 'CS undergrad looking for a comfortable PG near campus.',
     address: 'Mumbai, Maharashtra',
@@ -160,7 +174,7 @@ async function seed() {
     email: 'priya@vitstudent.ac.in',
     password: hashedPassword,
     role: 'student',
-    phone: '+91 9988776656',
+    phone: '+919988776656',
     university: 'VIT Bhopal',
     bio: 'Engineering student, foodie, loves a quiet study environment.',
     address: 'Delhi, India',
@@ -171,7 +185,7 @@ async function seed() {
     email: 'rahul@vitstudent.ac.in',
     password: hashedPassword,
     role: 'student',
-    phone: '+91 9988776657',
+    phone: '+919988776657',
     university: 'VIT Bhopal',
     bio: 'Second year mechanical student.',
     address: 'Jaipur, Rajasthan',
@@ -374,6 +388,36 @@ async function seed() {
   ]);
 
   console.log('📋 Created 6 bookings');
+
+  // --- Create Notifications for Accepted/Rejected Bookings ---
+  await Notification.insertMany([
+    {
+      user: student1._id,
+      title: 'Booking Update',
+      message: 'Your booking request has been accepted.',
+      type: 'booking',
+      link: '/dashboard',
+      createdAt: pastDate2,
+    },
+    {
+      user: student3._id,
+      title: 'Booking Update',
+      message: 'Your booking request has been rejected.',
+      type: 'booking',
+      link: '/dashboard',
+      createdAt: new Date(now.getTime() - 24 * 60 * 60 * 1000),
+    },
+    {
+      user: student3._id,
+      title: 'Booking Update',
+      message: 'Your booking request has been accepted.',
+      type: 'booking',
+      link: '/dashboard',
+      createdAt: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000),
+    },
+  ]);
+
+  console.log('🔔 Created 3 notifications');
 
   // --- Summary ---
   console.log('\n🎉 Seed complete! Summary:');

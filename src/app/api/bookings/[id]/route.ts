@@ -40,6 +40,16 @@ export async function PUT(
     booking.status = status;
     const updatedBooking = await booking.save();
 
+    // Create a notification for the student
+    const Notification = (await import('@/models/Notification')).default;
+    await Notification.create({
+      user: booking.studentId,
+      title: 'Booking Update',
+      message: `Your booking request has been ${status}.`,
+      type: 'booking',
+      link: '/dashboard'
+    });
+
     return NextResponse.json({ message: 'Booking updated successfully', booking: updatedBooking }, { status: 200 });
   } catch (error: any) {
     console.error('Error updating booking:', error);
