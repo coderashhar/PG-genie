@@ -184,60 +184,8 @@ export default function OwnerDashboardPage() {
 
   return (
     <div className="bg-background text-on-background font-body-md min-h-screen flex">
-      {/* SideNavBar */}
-      <aside className="hidden md:flex flex-col h-full w-72 left-0 top-0 fixed z-50 bg-surface dark:bg-on-background shadow-xl p-gutter">
-        <span className="font-display text-h2 text-primary mb-6 block cursor-default">PG Genie</span>
-        <div className="flex items-center gap-4 mb-stack-lg">
-          <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 border-2 border-primary-container/20">
-            {ownerImage ? (
-              <img alt="Owner profile avatar" className="w-full h-full object-cover" src={ownerImage} />
-            ) : (
-              <div className="w-full h-full bg-primary-container flex items-center justify-center text-on-primary-container font-h2">
-                {ownerName.charAt(0).toUpperCase()}
-              </div>
-            )}
-          </div>
-          <div>
-            <h2 className="font-h2 text-h2 text-on-surface">Owner Portal</h2>
-            <p className="font-label-sm text-label-sm text-on-surface-variant">
-              {dashData?.owner?.businessName || 'Verified Owner'}
-            </p>
-          </div>
-        </div>
-        
-        <nav className="flex-1 flex flex-col gap-2">
-          <Link className="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary-container text-on-primary-container font-semibold shadow-sm" href="/owner/dashboard">
-            <span className="material-symbols-outlined">dashboard</span>
-            <span className="font-body-md text-body-md">Dashboard</span>
-          </Link>
-          <Link className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high dark:hover:bg-surface-container transition-all hover:scale-[1.02] hover:shadow-sm" href="/">
-            <span className="material-symbols-outlined">public</span>
-            <span className="font-body-md text-body-md">Home Page</span>
-          </Link>
-          <Link className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high dark:hover:bg-surface-container transition-all hover:scale-[1.02] hover:shadow-sm" href="#">
-            <span className="material-symbols-outlined">list_alt</span>
-            <span className="font-body-md text-body-md">My Listings</span>
-          </Link>
-          <Link className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high dark:hover:bg-surface-container transition-all hover:scale-[1.02] hover:shadow-sm" href="#">
-            <span className="material-symbols-outlined">payments</span>
-            <span className="font-body-md text-body-md">Payment History</span>
-          </Link>
-          <Link className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high dark:hover:bg-surface-container transition-all hover:scale-[1.02] hover:shadow-sm" href="#">
-            <span className="material-symbols-outlined">help_outline</span>
-            <span className="font-body-md text-body-md">Support</span>
-          </Link>
-        </nav>
-        
-        <div className="mt-auto">
-          <button className="w-full bg-secondary hover:bg-secondary-container hover:text-on-secondary-container text-on-secondary font-h2 text-body-lg font-bold py-3 px-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 hover:scale-105 cursor-pointer">
-            <span className="material-symbols-outlined">add_circle</span>
-            List your PG
-          </button>
-        </div>
-      </aside>
-      
       {/* Main Content Canvas */}
-      <main className="flex-1 md:ml-72 flex flex-col min-h-screen">
+      <main className="flex-1 flex flex-col min-h-screen">
         
         <div className="flex-1 p-margin-mobile md:p-gutter max-w-container-max mx-auto w-full space-y-stack-lg">
           {/* Dashboard Header */}
