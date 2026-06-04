@@ -400,33 +400,17 @@ function DashboardContent() {
                                   <span className="material-symbols-outlined text-xs">{config.icon}</span>
                                   {config.label}
                                 </span>
-                                <div className="relative">
-                                  <button
-                                    className="w-8 h-8 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors cursor-pointer"
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      e.stopPropagation();
-                                      setActiveDropdown(activeDropdown === booking._id ? null : booking._id);
-                                    }}
-                                  >
-                                    <span className="material-symbols-outlined text-sm">more_vert</span>
-                                  </button>
-                                  {activeDropdown === booking._id && (
-                                    <div className="absolute right-0 top-10 w-36 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg z-50 py-2">
-                                      <button 
-                                        className="w-full text-left px-4 py-2 font-body-md text-body-md text-error hover:bg-error/10 transition-colors flex items-center gap-2 cursor-pointer"
-                                        onClick={(e) => {
-                                          e.preventDefault();
-                                          e.stopPropagation();
-                                          handleDeleteBooking(booking._id);
-                                        }}
-                                      >
-                                        <span className="material-symbols-outlined text-[18px]">delete</span>
-                                        Remove
-                                      </button>
-                                    </div>
-                                  )}
-                                </div>
+                                <button
+                                  className="w-8 h-8 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:bg-error/10 hover:text-error hover:border-error transition-colors cursor-pointer group"
+                                  title="Remove"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    handleDeleteBooking(booking._id);
+                                  }}
+                                >
+                                  <span className="material-symbols-outlined text-sm">delete</span>
+                                </button>
                               </div>
                             </Link>
                           );
