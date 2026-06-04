@@ -4,6 +4,7 @@ import React from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
+import NotificationDropdown from "./NotificationDropdown";
 
 export default function Navbar({ className, hideHome }: { className?: string, hideHome?: boolean }) {
   const pathname = usePathname() || "";
@@ -34,9 +35,7 @@ export default function Navbar({ className, hideHome }: { className?: string, hi
             PG Genie
           </span>
           <div className="flex items-center gap-6">
-            <button className="hover:opacity-70 transition-opacity cursor-pointer">
-              <span className="material-symbols-outlined text-[28px]">notifications</span>
-            </button>
+            <NotificationDropdown />
             <Link href="/login" onClick={(e) => handleAuthRequiredClick(e, "/login")} className="hover:opacity-70 transition-opacity cursor-pointer">
               <span className="material-symbols-outlined text-[28px]">account_circle</span>
             </Link>
@@ -59,9 +58,7 @@ export default function Navbar({ className, hideHome }: { className?: string, hi
           <Link className={`font-body-md text-body-md transition-colors h-16 flex items-center px-4 rounded ${getActiveClass("/dashboard") ? "text-primary dark:text-primary-fixed-dim font-bold border-b-2 border-primary" : "text-on-surface-variant dark:text-outline-variant hover:bg-primary-container/10"}`} href="/dashboard" onClick={(e) => handleAuthRequiredClick(e, "/dashboard")}>Dashboard</Link>
         </div>
         <div className="flex items-center gap-4">
-          <button className="p-2 text-primary dark:text-primary-fixed-dim hover:bg-primary-container/10 transition-colors rounded-full cursor-pointer">
-            <span className="material-symbols-outlined">notifications</span>
-          </button>
+          <NotificationDropdown />
           <Link href="/dashboard?tab=profile" onClick={(e) => handleAuthRequiredClick(e, "/dashboard?tab=profile")} className="p-2 text-primary dark:text-primary-fixed-dim hover:bg-primary-container/10 transition-colors rounded-full cursor-pointer">
             <span className="material-symbols-outlined">account_circle</span>
           </Link>
