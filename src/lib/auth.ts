@@ -4,6 +4,7 @@ import GoogleProvider from 'next-auth/providers/google';
 import bcrypt from 'bcryptjs';
 import connectToDatabase from './db';
 import User from '../models/User';
+import Otp from '../models/Otp';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -14,35 +15,44 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        emailOrPhone: { label: 'Email or Phone', type: 'text' },
-        password: { label: 'Password', type: 'password' },
+        identifier: { label: 'Email or Phone', type: 'text' },
+        otp: { label: 'OTP', type: 'text' },
       },
       async authorize(credentials) {
-        if (!credentials?.emailOrPhone || !credentials?.password) {
-          throw new Error('Please provide email/phone and password');
+        if (!credentials?.identifier || !credentials?.otp) {
+          throw new Error('Please provide email/phone and OTP');
         }
 
         await connectToDatabase();
 
-        // Check if the input is an email or phone number
-        const isEmail = credentials.emailOrPhone.includes('@');
+        // 1. Verify OTP
+        const validOtp = await Otp.findOne({
+          identifier: credentials.identifier,
+          otp: credentials.otp,
+        });
+
+        if (!validOtp) {
+          throw new Error('Invalid or expired OTP');
+        }
+
+        // OTP is valid, let's delete it so it can't be reused
+        await Otp.deleteOne({ _id: validOtp._id });
+
+        // 2. Find or Create User
+        const isEmail = credentials.identifier.includes('@');
         
-        const user = await User.findOne(
-          isEmail ? { email: credentials.emailOrPhone } : { phone: credentials.emailOrPhone }
-        ).select('+password');
+        let user = await User.findOne(
+          isEmail ? { email: credentials.identifier } : { phone: credentials.identifier }
+        );
 
         if (!user) {
-          throw new Error('Invalid credentials');
-        }
-
-        if (!user.password) {
-          throw new Error('Please login using Google or reset your password');
-        }
-
-        const isMatch = await bcrypt.compare(credentials.password, user.password);
-
-        if (!isMatch) {
-          throw new Error('Invalid credentials');
+          // Seamless Signup
+          user = await User.create({
+            name: isEmail ? credentials.identifier.split('@')[0] : 'New User',
+            email: isEmail ? credentials.identifier : `${credentials.identifier}@temp.com`, // Temp email if phone used
+            phone: !isEmail ? credentials.identifier : undefined,
+            role: 'student',
+          });
         }
 
         return {

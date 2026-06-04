@@ -1,15 +1,80 @@
 "use client";
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
+import toast from 'react-hot-toast';
 
 function LoginContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const callbackUrl = searchParams.get("callbackUrl");
   const isFromSearch = callbackUrl?.includes("/pgs");
   const backHref = isFromSearch ? "/pgs" : "/";
   const backText = isFromSearch ? "Back to Search" : "Back to Home";
+
+  const [identifier, setIdentifier] = useState('');
+  const [otp, setOtp] = useState('');
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+
+  const handleSendOtp = async () => {
+    if (!identifier) {
+      toast.error("Please enter an email or phone number");
+      return;
+    }
+    
+    setIsSendingOtp(true);
+    try {
+      const res = await fetch("/api/auth/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ identifier }),
+      });
+      const data = await res.json();
+      
+      if (res.ok) {
+        toast.success("OTP sent! (Check server console)");
+        setOtpSent(true);
+      } else {
+        toast.error(data.error || "Failed to send OTP");
+      }
+    } catch (error) {
+      toast.error("An error occurred");
+    } finally {
+      setIsSendingOtp(false);
+    }
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!identifier || !otp) {
+      toast.error("Please enter your identifier and OTP");
+      return;
+    }
+
+    setIsLoggingIn(true);
+    try {
+      const res = await signIn("credentials", {
+        identifier,
+        otp,
+        redirect: false,
+      });
+
+      if (res?.error) {
+        toast.error(res.error);
+      } else {
+        toast.success("Logged in successfully!");
+        router.push(callbackUrl || "/dashboard");
+      }
+    } catch (error) {
+      toast.error("Failed to login");
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
 
   return (
     <div className="bg-background text-on-background font-body min-h-screen flex items-center justify-center p-4 md:p-8">
@@ -53,40 +118,65 @@ function LoginContent() {
           
           {/* Tabs */}
           <div className="flex gap-8 border-b border-outline-variant mb-8">
-            <button className="pb-3 text-primary font-bold border-b-2 border-primary font-body text-lg transition-colors cursor-pointer">Log In</button>
-            <button className="pb-3 text-on-surface-variant hover:text-primary transition-colors font-body text-lg cursor-pointer">Sign Up</button>
+            <button className="pb-3 text-primary font-bold border-b-2 border-primary font-body text-lg transition-colors cursor-default">Log In / Sign Up</button>
           </div>
           
           {/* Form */}
-          <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-6" onSubmit={handleLogin}>
             <div className="space-y-2">
-              <label className="font-label text-sm font-semibold tracking-wider text-on-surface uppercase" htmlFor="phone">Phone Number</label>
+              <label className="font-label text-sm font-semibold tracking-wider text-on-surface uppercase" htmlFor="identifier">Email or Phone Number</label>
               <div className="relative">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant">
-                  <span className="material-symbols-outlined">phone_iphone</span>
+                  <span className="material-symbols-outlined">person</span>
                 </span>
-                <input className="w-full pl-12 pr-4 py-3 bg-surface-container rounded-lg border-none focus:ring-2 focus:ring-primary text-on-surface font-body outline-none transition-shadow" id="phone" placeholder="+91 98765 43210" required type="tel" />
+                <input 
+                  className="w-full pl-12 pr-4 py-3 bg-surface-container rounded-lg border-none focus:ring-2 focus:ring-primary text-on-surface font-body outline-none transition-shadow" 
+                  id="identifier" 
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)}
+                  placeholder="name@example.com or +91 98765 43210" 
+                  required 
+                  type="text" 
+                  disabled={otpSent}
+                />
               </div>
             </div>
             
-            <div className="space-y-2">
+            <div className={`space-y-2 transition-all duration-300 ${otpSent ? 'opacity-100' : 'opacity-50'}`}>
               <label className="font-label text-sm font-semibold tracking-wider text-on-surface uppercase" htmlFor="otp">OTP</label>
               <div className="flex gap-4">
                 <div className="relative flex-1">
                   <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant">
                     <span className="material-symbols-outlined">password</span>
                   </span>
-                  <input className="w-full pl-12 pr-4 py-3 bg-surface-container rounded-lg border-none focus:ring-2 focus:ring-primary text-on-surface font-body outline-none transition-shadow" id="otp" placeholder="Enter 6-digit OTP" type="text" />
+                  <input 
+                    className="w-full pl-12 pr-4 py-3 bg-surface-container rounded-lg border-none focus:ring-2 focus:ring-primary text-on-surface font-body outline-none transition-shadow" 
+                    id="otp" 
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    placeholder="Enter 6-digit OTP" 
+                    type="text" 
+                    disabled={!otpSent}
+                  />
                 </div>
-                <button className="px-6 py-3 border-[1.5px] border-primary text-primary font-semibold rounded-lg hover:bg-primary/5 transition-colors whitespace-nowrap cursor-pointer" type="button">
-                  Send OTP
+                <button 
+                  onClick={handleSendOtp}
+                  disabled={isSendingOtp || !identifier || (otpSent && !isSendingOtp)}
+                  className="px-6 py-3 border-[1.5px] border-primary text-primary font-semibold rounded-lg hover:bg-primary/5 transition-colors whitespace-nowrap cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" 
+                  type="button"
+                >
+                  {isSendingOtp ? 'Sending...' : otpSent ? 'OTP Sent' : 'Send OTP'}
                 </button>
               </div>
             </div>
             
-            <Link href="/dashboard" className="block w-full bg-secondary text-center text-on-secondary py-4 rounded-lg font-bold text-lg hover:bg-secondary/90 transition-colors shadow-md mt-4 cursor-pointer">
-              Continue to Dashboard
-            </Link>
+            <button 
+              type="submit"
+              disabled={isLoggingIn || !otpSent || !otp}
+              className="block w-full bg-secondary text-center text-on-secondary py-4 rounded-lg font-bold text-lg hover:bg-secondary/90 transition-colors shadow-md mt-4 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoggingIn ? 'Verifying...' : 'Continue to Dashboard'}
+            </button>
           </form>
           
           <div className="mt-8 flex items-center gap-4">
