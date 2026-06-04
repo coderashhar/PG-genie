@@ -42,6 +42,7 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
 
   const [isSaving, setIsSaving] = useState(false);
   const [isBooking, setIsBooking] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
 
   const { data: session } = useSession();
   const router = useRouter();
@@ -58,16 +59,34 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
     
     setIsSaving(true);
     try {
-      const res = await fetch('/api/users/favorites', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pgId: property._id })
-      });
-      const data = await res.json();
-      if (res.ok) {
-        toast.success(data.message || 'Added to Favorites!');
+      if (isSaved) {
+        // Unsave
+        const res = await fetch('/api/users/favorites', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pgId: property._id })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setIsSaved(false);
+          toast.success('Removed from Favorites!');
+        } else {
+          toast.error(data.error || 'Failed to remove from favorites');
+        }
       } else {
-        toast.error(data.error || data.message || 'Failed to save');
+        // Save
+        const res = await fetch('/api/users/favorites', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pgId: property._id })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setIsSaved(true);
+          toast.success('Added to Favorites!');
+        } else {
+          toast.error(data.error || data.message || 'Failed to save');
+        }
       }
     } catch (err) {
       toast.error('An error occurred');
@@ -155,6 +174,24 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
     }
     fetchProperty();
   }, [id]);
+
+  useEffect(() => {
+    async function checkSavedStatus() {
+      if (session?.user) {
+        try {
+          const res = await fetch('/api/users/favorites');
+          if (res.ok) {
+            const data = await res.json();
+            const saved = data.favorites?.some((p: any) => p._id === id || p === id);
+            setIsSaved(!!saved);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+    checkSavedStatus();
+  }, [id, session]);
 
   if (loading) {
     return (
@@ -338,10 +375,19 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
                   <button 
                     onClick={handleSaveClick}
                     disabled={isSaving}
-                    className="flex-1 bg-surface-container-lowest border-2 border-secondary text-secondary hover:bg-secondary/5 font-label-sm text-label-sm py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+                    className={`flex-1 border-2 font-label-sm text-label-sm py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed ${
+                      isSaved 
+                        ? 'bg-secondary text-on-secondary border-secondary hover:bg-secondary/90' 
+                        : 'bg-surface-container-lowest text-secondary border-secondary hover:bg-secondary/5'
+                    }`}
                   >
-                    <span className="material-symbols-outlined text-[20px]">favorite_border</span>
-                    {isSaving ? 'Saving...' : 'Save'}
+                    <span 
+                      className="material-symbols-outlined text-[20px]"
+                      style={{ fontVariationSettings: isSaved ? "'FILL' 1" : "'FILL' 0" }}
+                    >
+                      {isSaved ? 'favorite' : 'favorite_border'}
+                    </span>
+                    {isSaving ? 'Please wait...' : isSaved ? 'Saved' : 'Save'}
                   </button>
                 </div>
               </div>
