@@ -3,6 +3,7 @@ import React, { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import toast from 'react-hot-toast';
 
 import ImageUpload from '@/components/ImageUpload';
 import PropertyCard from '@/components/PropertyCard';
@@ -167,24 +168,11 @@ function DashboardContent() {
   const [dashData, setDashData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   
   const [profile, setProfile] = useState<any>(null);
   const [profileLoading, setProfileLoading] = useState(true);
 
-  // Sync tab with URL parameter
-  useEffect(() => {
-    const tab = searchParams.get('tab');
-    if (tab === 'profile' || tab === 'overview') {
-      setActiveTab(tab);
-    }
-  }, [searchParams]);
-
-  const handleTabChange = (tab: 'overview' | 'profile') => {
-    setActiveTab(tab);
-    router.push(`/dashboard${tab === 'profile' ? '?tab=profile' : ''}`);
-  };
-
-  // Fetch Dashboard Overview
   useEffect(() => {
     async function fetchDashboard() {
       try {
@@ -209,6 +197,31 @@ function DashboardContent() {
       fetchDashboard();
     }
   }, [sessionStatus]);
+
+  useEffect(() => {
+    if (sessionStatus === 'unauthenticated') {
+      router.push('/login');
+    }
+  }, [sessionStatus, router]);
+
+  const handleDeleteBooking = async (id: string) => {
+    try {
+      const res = await fetch(`/api/bookings/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        toast.success('Booking removed successfully');
+        setDashData(prev => prev ? {
+          ...prev,
+          bookings: prev.bookings.filter(b => b._id !== id)
+        } : prev);
+        setActiveDropdown(null);
+      } else {
+        const data = await res.json();
+        toast.error(data.error || 'Failed to remove booking');
+      }
+    } catch (err) {
+      toast.error('An error occurred');
+    }
+  };
 
   // Fetch Profile data
   useEffect(() => {
@@ -325,6 +338,14 @@ function DashboardContent() {
                           key={pg._id}
                           property={pg}
                           initialIsSaved={true}
+                          onSaveToggle={(pgId, isSaved) => {
+                            if (!isSaved) {
+                              setDashData(prev => prev ? {
+                                ...prev,
+                                savedPgs: prev.savedPgs.filter(p => p._id !== pgId)
+                              } : prev);
+                            }
+                          }}
                         />
                       ))
                     ) : (
@@ -379,12 +400,33 @@ function DashboardContent() {
                                   <span className="material-symbols-outlined text-xs">{config.icon}</span>
                                   {config.label}
                                 </span>
-                                <button
-                                  className="w-8 h-8 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors cursor-pointer"
-                                  onClick={(e) => e.preventDefault()}
-                                >
-                                  <span className="material-symbols-outlined text-sm">more_vert</span>
-                                </button>
+                                <div className="relative">
+                                  <button
+                                    className="w-8 h-8 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors cursor-pointer"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      setActiveDropdown(activeDropdown === booking._id ? null : booking._id);
+                                    }}
+                                  >
+                                    <span className="material-symbols-outlined text-sm">more_vert</span>
+                                  </button>
+                                  {activeDropdown === booking._id && (
+                                    <div className="absolute right-0 top-10 w-36 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg z-50 py-2">
+                                      <button 
+                                        className="w-full text-left px-4 py-2 font-body-md text-body-md text-error hover:bg-error/10 transition-colors flex items-center gap-2 cursor-pointer"
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          e.stopPropagation();
+                                          handleDeleteBooking(booking._id);
+                                        }}
+                                      >
+                                        <span className="material-symbols-outlined text-[18px]">delete</span>
+                                        Remove
+                                      </button>
+                                    </div>
+                                  )}
+                                </div>
                               </div>
                             </Link>
                           );

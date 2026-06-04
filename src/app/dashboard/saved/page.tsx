@@ -142,6 +142,11 @@ export default function SavedPgsPage() {
               key={pg._id}
               property={pg}
               initialIsSaved={true}
+              onSaveToggle={(pgId, isSaved) => {
+                if (!isSaved) {
+                  setSavedPgs(prev => prev.filter(p => p._id !== pgId));
+                }
+              }}
             />
           ))
         ) : (

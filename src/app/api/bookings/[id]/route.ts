@@ -70,10 +70,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Not authorized to delete this booking' }, { status: 403 });
     }
 
-    // Only allow deletion if status is still pending (optional business logic, but good practice)
-    if (booking.status !== 'pending') {
-      return NextResponse.json({ error: 'Cannot cancel an application that is already processed' }, { status: 400 });
-    }
+    // Business logic: allowed to remove from history even if accepted/rejected.
 
     await Booking.findByIdAndDelete(id);
 
