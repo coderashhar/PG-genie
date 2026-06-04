@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
+import OwnerDashboardPage from '../owner/dashboard/page';
 
 import ImageUpload from '@/components/ImageUpload';
 import PropertyCard from '@/components/PropertyCard';
@@ -662,6 +663,18 @@ function DashboardContent() {
 }
 
 export default function StudentDashboardPage() {
+  const { data: session, status } = useSession();
+
+  if (status === "loading") {
+    return <div className="min-h-screen flex items-center justify-center font-display text-primary text-2xl">Loading Dashboard...</div>;
+  }
+
+  const isOwner = (session?.user as any)?.role === 'owner';
+
+  if (isOwner) {
+    return <OwnerDashboardPage />;
+  }
+
   return (
     <Suspense fallback={<div className="min-h-screen flex items-center justify-center font-display text-primary text-2xl">Loading Dashboard...</div>}>
       <DashboardContent />

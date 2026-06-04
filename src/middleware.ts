@@ -21,9 +21,6 @@ export default withAuth(
       if (!isAuth) {
         return NextResponse.redirect(new URL('/login?callbackUrl=' + encodeURIComponent(req.nextUrl.pathname), req.url));
       }
-      if (token?.role === 'owner') {
-        return NextResponse.redirect(new URL('/owner/dashboard', req.url));
-      }
     }
   },
   {
