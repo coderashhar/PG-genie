@@ -40,11 +40,14 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
+  const [isSaving, setIsSaving] = useState(false);
+  const [isBooking, setIsBooking] = useState(false);
+
   const { data: session } = useSession();
   const router = useRouter();
   const pathname = usePathname();
 
-  const handleSaveClick = (e: React.MouseEvent) => {
+  const handleSaveClick = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (!session) {
@@ -52,10 +55,28 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
       router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
       return;
     }
-    toast.success('Added to Favorites!');
+    
+    setIsSaving(true);
+    try {
+      const res = await fetch('/api/users/favorites', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pgId: property._id })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(data.message || 'Added to Favorites!');
+      } else {
+        toast.error(data.error || data.message || 'Failed to save');
+      }
+    } catch (err) {
+      toast.error('An error occurred');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
-  const handleBookClick = (e: React.MouseEvent) => {
+  const handleBookClick = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (!session) {
@@ -63,7 +84,32 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
       router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
       return;
     }
-    toast.success('Visit requested successfully!');
+    
+    setIsBooking(true);
+    try {
+      const visitDate = new Date();
+      visitDate.setDate(visitDate.getDate() + 1); // Tomorrow
+
+      const res = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          pgId: property._id,
+          message: "I am interested in visiting this PG.",
+          visitDate: visitDate.toISOString()
+        })
+      });
+      const data = await res.json();
+      if (res.ok || res.status === 201) {
+        toast.success('Visit requested successfully!');
+      } else {
+        toast.error(data.error || 'Failed to request visit');
+      }
+    } catch (err) {
+      toast.error('An error occurred');
+    } finally {
+      setIsBooking(false);
+    }
   };
 
   const handleContactClick = (e: React.MouseEvent) => {
@@ -275,10 +321,11 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
               <div className="flex flex-col gap-4">
                 <button 
                   onClick={handleBookClick}
-                  className="w-full bg-secondary hover:bg-secondary/90 text-on-secondary font-label-sm text-label-sm py-4 px-6 rounded-lg shadow-md transition-all flex items-center justify-center gap-2 hover:shadow-lg active:scale-95 cursor-pointer"
+                  disabled={isBooking}
+                  className="w-full bg-secondary hover:bg-secondary/90 text-on-secondary font-label-sm text-label-sm py-4 px-6 rounded-lg shadow-md transition-all flex items-center justify-center gap-2 hover:shadow-lg active:scale-95 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   <span className="material-symbols-outlined text-[20px]">calendar_month</span>
-                  Book a Visit
+                  {isBooking ? 'Booking...' : 'Book a Visit'}
                 </button>
                 <div className="flex gap-4">
                   <button 
@@ -290,10 +337,11 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
                   </button>
                   <button 
                     onClick={handleSaveClick}
-                    className="flex-1 bg-surface-container-lowest border-2 border-secondary text-secondary hover:bg-secondary/5 font-label-sm text-label-sm py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer"
+                    disabled={isSaving}
+                    className="flex-1 bg-surface-container-lowest border-2 border-secondary text-secondary hover:bg-secondary/5 font-label-sm text-label-sm py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
                   >
                     <span className="material-symbols-outlined text-[20px]">favorite_border</span>
-                    Save
+                    {isSaving ? 'Saving...' : 'Save'}
                   </button>
                 </div>
               </div>
