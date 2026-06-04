@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
@@ -81,12 +81,15 @@ function PgsContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { data: session } = useSession();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const handleSaveClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (!session) {
       toast.error('Please sign in to save PGs!');
+      router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
       return;
     }
     toast.success('Added to Favorites!');
@@ -97,6 +100,7 @@ function PgsContent() {
     e.stopPropagation();
     if (!session) {
       toast.error('Please sign in to book a visit!');
+      router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
       return;
     }
     toast.success('Visit requested successfully!');

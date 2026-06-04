@@ -1,9 +1,16 @@
 "use client";
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
-export default function LoginPage() {
+function LoginContent() {
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
+  const isFromSearch = callbackUrl?.includes("/pgs");
+  const backHref = isFromSearch ? "/pgs" : "/";
+  const backText = isFromSearch ? "Back to Search" : "Back to Home";
+
   return (
     <div className="bg-background text-on-background font-body min-h-screen flex items-center justify-center p-4 md:p-8">
       <div className="w-full max-w-6xl bg-surface-container-lowest rounded-xl shadow-xl overflow-hidden flex flex-col lg:flex-row h-full lg:h-[800px]">
@@ -31,8 +38,8 @@ export default function LoginPage() {
         <div className="w-full lg:w-1/2 flex flex-col justify-center p-8 md:p-16 h-full overflow-y-auto relative">
           
           {/* Back Button */}
-          <Link href="/" className="absolute top-4 md:top-8 left-4 md:left-8 text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2 font-label-sm text-sm">
-            <span className="material-symbols-outlined text-lg">arrow_back</span> Back to Home
+          <Link href={backHref} className="absolute top-4 md:top-8 left-4 md:left-8 text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2 font-label-sm text-sm">
+            <span className="material-symbols-outlined text-lg">arrow_back</span> {backText}
           </Link>
           
           {/* Brand */}
@@ -105,5 +112,13 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-background">Loading...</div>}>
+      <LoginContent />
+    </Suspense>
   );
 }

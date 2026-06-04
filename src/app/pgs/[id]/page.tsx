@@ -4,6 +4,7 @@ import React, { useEffect, useState, use } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
+import { useRouter, usePathname } from 'next/navigation';
 
 // --- Amenity icon map ---
 const amenityIconMap: Record<string, string> = {
@@ -40,12 +41,15 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const { data: session } = useSession();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const handleSaveClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (!session) {
       toast.error('Please sign in to save PGs!');
+      router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
       return;
     }
     toast.success('Added to Favorites!');
@@ -56,6 +60,7 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
     e.stopPropagation();
     if (!session) {
       toast.error('Please sign in to book a visit!');
+      router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
       return;
     }
     toast.success('Visit requested successfully!');
@@ -66,6 +71,7 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
     e.stopPropagation();
     if (!session) {
       toast.error('Please sign in to view contact details!');
+      router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
       return;
     }
     toast.success('Owner contact requested!');

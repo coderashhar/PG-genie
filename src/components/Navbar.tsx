@@ -15,7 +15,7 @@ export default function Navbar({ className, hideHome }: { className?: string, hi
     if (!session) {
       e.preventDefault();
       toast.error("Please sign in or login to continue");
-      router.push("/login");
+      router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
     }
   };
 
@@ -23,6 +23,8 @@ export default function Navbar({ className, hideHome }: { className?: string, hi
     const isActive = path === "/" ? pathname === "/" : pathname.startsWith(path);
     return isActive ? "border-b-2 border-current pb-1" : "";
   };
+
+  if (pathname === "/login") return null;
 
   if (isHome) {
     return (
