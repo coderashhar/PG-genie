@@ -173,6 +173,19 @@ function DashboardContent() {
   const [profile, setProfile] = useState<any>(null);
   const [profileLoading, setProfileLoading] = useState(true);
 
+  // Sync tab with URL parameter
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab === 'profile' || tab === 'overview') {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
+
+  const handleTabChange = (tab: 'overview' | 'profile') => {
+    setActiveTab(tab);
+    router.push(`/dashboard${tab === 'profile' ? '?tab=profile' : ''}`);
+  };
+
   useEffect(() => {
     async function fetchDashboard() {
       try {
