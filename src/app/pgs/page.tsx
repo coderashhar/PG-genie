@@ -80,11 +80,32 @@ function PgsContent() {
   const [properties, setProperties] = useState<PropertyData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [savedPgIds, setSavedPgIds] = useState<Set<string>>(new Set());
+  const [isSavingMap, setIsSavingMap] = useState<Record<string, boolean>>({});
+
   const { data: session } = useSession();
   const router = useRouter();
   const pathname = usePathname();
 
-  const handleSaveClick = (e: React.MouseEvent) => {
+  useEffect(() => {
+    async function fetchSavedPgs() {
+      if (session?.user) {
+        try {
+          const res = await fetch('/api/users/favorites');
+          if (res.ok) {
+            const data = await res.json();
+            const ids = new Set<string>(data.favorites?.map((p: any) => p._id || p) || []);
+            setSavedPgIds(ids);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+    fetchSavedPgs();
+  }, [session]);
+
+  const handleSaveClick = async (e: React.MouseEvent, pgId: string) => {
     e.preventDefault();
     e.stopPropagation();
     if (!session) {
@@ -92,10 +113,54 @@ function PgsContent() {
       router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
       return;
     }
-    toast.success('Added to Favorites!');
+
+    if (isSavingMap[pgId]) return;
+
+    setIsSavingMap(prev => ({ ...prev, [pgId]: true }));
+    const isSaved = savedPgIds.has(pgId);
+
+    try {
+      if (isSaved) {
+        const res = await fetch('/api/users/favorites', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pgId })
+        });
+        if (res.ok) {
+          setSavedPgIds(prev => {
+            const next = new Set(prev);
+            next.delete(pgId);
+            return next;
+          });
+          toast.success('Removed from Favorites!');
+        } else {
+          toast.error('Failed to remove from favorites');
+        }
+      } else {
+        const res = await fetch('/api/users/favorites', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pgId })
+        });
+        if (res.ok) {
+          setSavedPgIds(prev => {
+            const next = new Set(prev);
+            next.add(pgId);
+            return next;
+          });
+          toast.success('Added to Favorites!');
+        } else {
+          toast.error('Failed to save');
+        }
+      }
+    } catch (err) {
+      toast.error('An error occurred');
+    } finally {
+      setIsSavingMap(prev => ({ ...prev, [pgId]: false }));
+    }
   };
 
-  const handleBookClick = (e: React.MouseEvent) => {
+  const handleBookClick = async (e: React.MouseEvent, pgId: string) => {
     e.preventDefault();
     e.stopPropagation();
     if (!session) {
@@ -103,7 +168,34 @@ function PgsContent() {
       router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
       return;
     }
-    toast.success('Visit requested successfully!');
+    
+    if (isSavingMap[`book_${pgId}`]) return;
+    setIsSavingMap(prev => ({ ...prev, [`book_${pgId}`]: true }));
+
+    try {
+      const visitDate = new Date();
+      visitDate.setDate(visitDate.getDate() + 1);
+
+      const res = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          pgId,
+          message: "I am interested in visiting this PG.",
+          visitDate: visitDate.toISOString()
+        })
+      });
+      const data = await res.json();
+      if (res.ok || res.status === 201) {
+        toast.success('Visit requested successfully!');
+      } else {
+        toast.error(data.error || 'Failed to request visit');
+      }
+    } catch (err) {
+      toast.error('An error occurred');
+    } finally {
+      setIsSavingMap(prev => ({ ...prev, [`book_${pgId}`]: false }));
+    }
   };
 
   // Filter states
@@ -408,10 +500,13 @@ function PgsContent() {
                               <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span> Verified
                             </div>
                             <button 
-                              onClick={handleSaveClick}
-                              className="bg-surface/80 backdrop-blur-sm text-on-surface hover:text-secondary p-1.5 rounded-full shadow-md transition-colors flex items-center justify-center cursor-pointer"
+                              onClick={(e) => handleSaveClick(e, property._id)}
+                              disabled={isSavingMap[property._id]}
+                              className={`bg-surface/80 backdrop-blur-sm p-1.5 rounded-full shadow-md transition-colors flex items-center justify-center cursor-pointer disabled:opacity-70 ${savedPgIds.has(property._id) ? 'text-secondary' : 'text-on-surface hover:text-secondary'}`}
                             >
-                              <span className="material-symbols-outlined text-[18px]">favorite_border</span>
+                              <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: savedPgIds.has(property._id) ? "'FILL' 1" : "'FILL' 0" }}>
+                                {savedPgIds.has(property._id) ? 'favorite' : 'favorite_border'}
+                              </span>
                             </button>
                           </div>
                           <img
@@ -459,10 +554,11 @@ function PgsContent() {
                                 View Map
                               </button>
                               <button 
-                                onClick={handleBookClick}
-                                className="bg-secondary text-on-secondary px-6 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-on-secondary-fixed-variant transition-colors shadow-sm cursor-pointer"
+                                onClick={(e) => handleBookClick(e, property._id)}
+                                disabled={isSavingMap[`book_${property._id}`]}
+                                className="bg-secondary text-on-secondary px-6 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-on-secondary-fixed-variant transition-colors shadow-sm cursor-pointer disabled:opacity-70"
                               >
-                                Book Now
+                                {isSavingMap[`book_${property._id}`] ? 'Booking...' : 'Book Now'}
                               </button>
                             </div>
                           </div>
@@ -484,10 +580,13 @@ function PgsContent() {
                         <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span> Verified
                       </div>
                       <button 
-                        onClick={handleSaveClick}
-                        className="bg-surface/80 backdrop-blur-sm text-on-surface hover:text-secondary p-1.5 rounded-full shadow-md transition-colors flex items-center justify-center cursor-pointer"
+                        onClick={(e) => handleSaveClick(e, property._id)}
+                        disabled={isSavingMap[property._id]}
+                        className={`bg-surface/80 backdrop-blur-sm p-1.5 rounded-full shadow-md transition-colors flex items-center justify-center cursor-pointer disabled:opacity-70 ${savedPgIds.has(property._id) ? 'text-secondary' : 'text-on-surface hover:text-secondary'}`}
                       >
-                        <span className="material-symbols-outlined text-[18px]">favorite_border</span>
+                        <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: savedPgIds.has(property._id) ? "'FILL' 1" : "'FILL' 0" }}>
+                          {savedPgIds.has(property._id) ? 'favorite' : 'favorite_border'}
+                        </span>
                       </button>
                     </div>
                     <div className="h-56 w-full relative overflow-hidden">

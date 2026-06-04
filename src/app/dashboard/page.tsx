@@ -306,9 +306,11 @@ function DashboardContent() {
                 <section>
                   <div className="flex justify-between items-center mb-stack-md">
                     <h2 className="font-h1 text-h1 text-on-surface">Saved PGs</h2>
-                    <Link href="/dashboard/saved" className="text-primary hover:text-primary-fixed-dim hover:translate-x-1 transition-all duration-300 font-label-sm text-label-sm flex items-center gap-1 cursor-pointer">
-                      View All <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                    </Link>
+                    {dashData && dashData.savedPgs.length > 2 && (
+                      <Link href="/dashboard/saved" className="text-primary hover:text-primary-fixed-dim hover:translate-x-1 transition-all duration-300 font-label-sm text-label-sm flex items-center gap-1 cursor-pointer">
+                        View All <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                      </Link>
+                    )}
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
                     {loading ? (
