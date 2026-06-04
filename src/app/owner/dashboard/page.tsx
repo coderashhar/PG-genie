@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
+import toast from 'react-hot-toast';
+import PropertyModal from '@/components/PropertyModal';
 
 // --- Types ---
 interface PropertyLocation {
@@ -148,35 +150,82 @@ export default function OwnerDashboardPage() {
   const [dashData, setDashData] = useState<OwnerDashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  // Modal State
+  const [isPropertyModalOpen, setIsPropertyModalOpen] = useState(false);
+  const [editingProperty, setEditingProperty] = useState<ListingData | null>(null);
+
+  const fetchOwnerDashboard = useCallback(async () => {
+    try {
+      const res = await fetch('/api/owner/dashboard');
+      if (!res.ok) {
+        if (res.status === 401) {
+          setError('Please log in to view your dashboard.');
+          return;
+        }
+        if (res.status === 403) {
+          setError('Only property owners can access this dashboard.');
+          return;
+        }
+        throw new Error('Failed to fetch owner dashboard data');
+      }
+      const data = await res.json();
+      setDashData(data);
+    } catch (err: any) {
+      setError(err.message || 'Something went wrong');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    async function fetchOwnerDashboard() {
-      try {
-        const res = await fetch('/api/owner/dashboard');
-        if (!res.ok) {
-          if (res.status === 401) {
-            setError('Please log in to view your dashboard.');
-            return;
-          }
-          if (res.status === 403) {
-            setError('Only property owners can access this dashboard.');
-            return;
-          }
-          throw new Error('Failed to fetch owner dashboard data');
-        }
-        const data = await res.json();
-        setDashData(data);
-      } catch (err: any) {
-        setError(err.message || 'Something went wrong');
-      } finally {
-        setLoading(false);
-      }
-    }
 
     if (sessionStatus !== 'loading') {
       fetchOwnerDashboard();
     }
-  }, [sessionStatus]);
+  }, [sessionStatus, refreshKey, fetchOwnerDashboard]);
+
+  const handleStatusToggle = async (propertyId: string, currentStatus: string) => {
+    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+    try {
+      const res = await fetch(`/api/properties/${propertyId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (!res.ok) throw new Error('Failed to update status');
+      toast.success(`Property marked as ${newStatus === 'active' ? 'Available' : 'Filled'}`);
+      setRefreshKey(k => k + 1);
+    } catch (err: any) {
+      toast.error(err.message);
+    }
+  };
+
+  const handleInquiryAction = async (bookingId: string, action: 'accepted' | 'rejected') => {
+    try {
+      const res = await fetch(`/api/bookings/${bookingId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: action }),
+      });
+      if (!res.ok) throw new Error(`Failed to ${action} booking`);
+      toast.success(`Inquiry ${action} successfully!`);
+      setRefreshKey(k => k + 1);
+    } catch (err: any) {
+      toast.error(err.message);
+    }
+  };
+
+  const handleListProperty = () => {
+    setEditingProperty(null);
+    setIsPropertyModalOpen(true);
+  };
+
+  const handleEditProperty = (property: ListingData) => {
+    setEditingProperty(property);
+    setIsPropertyModalOpen(true);
+  };
 
   const ownerName = dashData?.owner?.name || session?.user?.name || 'Owner';
   const ownerImage = dashData?.owner?.image || session?.user?.image;
@@ -199,11 +248,15 @@ export default function OwnerDashboardPage() {
                 )}
               </h1>
               <p className="font-body-lg text-body-lg text-on-surface-variant">Here is what&apos;s happening with your properties in Kothri today.</p>
-            </div>
-            <button className="bg-primary hover:bg-primary-container text-on-primary px-6 py-3 rounded-xl font-h2 text-body-md flex items-center gap-2 shadow-lg transition-all active:scale-95 hover:scale-105 hover:shadow-xl cursor-pointer">
-              <span className="material-symbols-outlined">add_home</span>
-              Add New Listing
-            </button>
+              </div>
+              
+              <button 
+                onClick={handleListProperty}
+                className="bg-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container px-6 py-3 rounded-xl font-h2 font-bold text-body-lg shadow-lg hover:shadow-xl transition-all hover:scale-105 flex items-center justify-center gap-2"
+              >
+                <span className="material-symbols-outlined">add_circle</span>
+                <span className="hidden sm:inline">List your PG</span>
+              </button>
           </div>
           
           {/* Error State */}
@@ -338,11 +391,17 @@ export default function OwnerDashboardPage() {
                           </div>
                         </div>
                         <div className="flex gap-2 mt-auto">
-                          <button className="flex-1 border-[1.5px] border-primary text-primary hover:bg-primary-container/10 px-4 py-2 rounded-lg font-label-sm text-label-sm transition-colors text-center hover:scale-105 hover:shadow-xl cursor-pointer">
+                          <button 
+                            onClick={() => handleEditProperty(listing)}
+                            className="flex-1 border-[1.5px] border-primary text-primary hover:bg-primary-container/10 px-4 py-2 rounded-lg font-label-sm text-label-sm transition-colors text-center hover:scale-105 hover:shadow-xl cursor-pointer"
+                          >
                             Edit
                           </button>
-                          <button className="flex-1 border-[1.5px] border-outline-variant text-on-surface-variant hover:bg-surface-container px-4 py-2 rounded-lg font-label-sm text-label-sm transition-colors text-center hover:scale-105 hover:shadow-xl cursor-pointer">
-                            Mark as Filled
+                          <button 
+                            onClick={() => handleStatusToggle(listing._id, listing.status)}
+                            className="flex-1 border-[1.5px] border-outline-variant text-on-surface-variant hover:bg-surface-container px-4 py-2 rounded-lg font-label-sm text-label-sm transition-colors text-center hover:scale-105 hover:shadow-xl cursor-pointer"
+                          >
+                            {listing.status === 'active' ? 'Mark as Filled' : 'Mark Available'}
                           </button>
                         </div>
                       </div>
@@ -396,12 +455,18 @@ export default function OwnerDashboardPage() {
                             <p className="font-label-sm text-[10px] text-outline mt-1">{timeAgo(inquiry.createdAt)}</p>
                           </div>
                         </div>
-                        <div className="flex gap-2">
-                          <button className="flex-1 bg-secondary/10 text-secondary hover:bg-secondary hover:text-on-secondary px-3 py-1.5 rounded-lg font-label-sm text-label-sm transition-colors flex items-center justify-center gap-1 hover:scale-105 cursor-pointer">
-                            <span className="material-symbols-outlined text-[16px]">call</span> Call
+                        <div className="flex gap-2 mt-2">
+                          <button 
+                            onClick={() => handleInquiryAction(inquiry._id, 'accepted')}
+                            className="flex-1 bg-primary/10 text-primary hover:bg-primary hover:text-on-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm transition-colors flex items-center justify-center gap-1 hover:scale-105 cursor-pointer"
+                          >
+                            <span className="material-symbols-outlined text-[16px]">check_circle</span> Accept
                           </button>
-                          <button className="flex-1 bg-primary-container/10 text-primary-container hover:bg-primary-container hover:text-on-primary-container px-3 py-1.5 rounded-lg font-label-sm text-label-sm transition-colors flex items-center justify-center gap-1 hover:scale-105 cursor-pointer">
-                            <span className="material-symbols-outlined text-[16px]">chat</span> Message
+                          <button 
+                            onClick={() => handleInquiryAction(inquiry._id, 'rejected')}
+                            className="flex-1 bg-error-container/20 text-error hover:bg-error-container hover:text-on-error-container px-3 py-1.5 rounded-lg font-label-sm text-label-sm transition-colors flex items-center justify-center gap-1 hover:scale-105 cursor-pointer"
+                          >
+                            <span className="material-symbols-outlined text-[16px]">cancel</span> Reject
                           </button>
                         </div>
                       </div>
@@ -418,6 +483,13 @@ export default function OwnerDashboardPage() {
           </div>
         </div>
       </main>
+
+      <PropertyModal 
+        isOpen={isPropertyModalOpen} 
+        onClose={() => setIsPropertyModalOpen(false)} 
+        property={editingProperty}
+        onSuccess={() => setRefreshKey(k => k + 1)}
+      />
     </div>
   );
 }
