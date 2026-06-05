@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth';
 import connectToDatabase from '@/lib/db';
 import User from '@/models/User';
 import { validateProfileUpdate } from '@/lib/validation';
+import bcrypt from 'bcryptjs';
 
 /**
  * GET /api/users/profile
@@ -47,8 +48,7 @@ export async function GET(req: NextRequest) {
 /**
  * PUT /api/users/profile
  * Updates the authenticated user's profile details.
- * Allowed fields: name, phone, image, university, bio, address.
- * Role and email cannot be changed via this endpoint.
+ * Allowed fields: name, email, phone, university, batch.
  */
 export async function PUT(req: NextRequest) {
   try {
@@ -78,10 +78,23 @@ export async function PUT(req: NextRequest) {
     }
 
     if (Object.keys(updateData).length === 0) {
+      console.log('No valid fields provided. Body:', body);
       return NextResponse.json(
         { error: 'No valid fields provided for update' },
         { status: 400 }
       );
+    }
+    console.log('Updating user with data:', updateData);
+
+    // Check email uniqueness if email is being changed
+    if (updateData.email) {
+      const existingUser = await User.findOne({ email: updateData.email, _id: { $ne: userId } });
+      if (existingUser) {
+        return NextResponse.json(
+          { error: 'This email is already in use by another account.' },
+          { status: 409 }
+        );
+      }
     }
 
     const updatedUser = await User.findByIdAndUpdate(
@@ -109,4 +122,3 @@ export async function PUT(req: NextRequest) {
     );
   }
 }
-

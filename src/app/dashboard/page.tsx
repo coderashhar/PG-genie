@@ -6,7 +6,6 @@ import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import OwnerDashboardPage from '../owner/dashboard/page';
 
-import ImageUpload from '@/components/ImageUpload';
 import PropertyCard from '@/components/PropertyCard';
 
 // --- Types for API response ---
@@ -159,6 +158,201 @@ function formatVisitDate(dateString: string): string {
   return date.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' });
 }
 
+// --- Edit Profile Form Component ---
+function EditProfileForm({ profile, setProfile }: { profile: any; setProfile: (p: any) => void }) {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    batch: '',
+    password: '',
+  });
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (profile) {
+      let phoneStr = profile.phone || '';
+      if (phoneStr.startsWith('+91')) {
+        phoneStr = phoneStr.slice(3).trim();
+      }
+
+      setFormData({
+        name: profile.name || '',
+        email: profile.email || '',
+        phone: phoneStr,
+        batch: profile.batch || '',
+      });
+    }
+  }, [profile]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+    if (e.target.name === 'phone') {
+      value = value.replace(/\D/g, '').slice(0, 10);
+    }
+    setFormData(prev => ({ ...prev, [e.target.name]: value }));
+  };
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+
+    // Client-side validations
+    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    if (formData.email && !emailRegex.test(formData.email)) {
+      toast.error('Please enter a valid email address');
+      setSaving(false);
+      return;
+    }
+
+    const phoneFull = formData.phone ? `+91${formData.phone}` : '';
+    if (formData.phone && formData.phone.length !== 10) {
+      toast.error('Phone number must be exactly 10 digits');
+      setSaving(false);
+      return;
+    }
+
+    if (formData.batch && !/^(20|21)\d{2}$/.test(formData.batch)) {
+      toast.error('Batch must be a valid 4-digit year (e.g. 2026)');
+      setSaving(false);
+      return;
+    }
+
+    // Only send changed fields
+    const updates: Record<string, string> = {};
+    if (formData.name && formData.name !== profile?.name) updates.name = formData.name;
+    if (formData.email && formData.email !== profile?.email) updates.email = formData.email;
+    if (phoneFull !== (profile?.phone || '')) updates.phone = phoneFull;
+    if (formData.batch !== (profile?.batch || '')) updates.batch = formData.batch;
+
+    if (Object.keys(updates).length === 0) {
+      toast.error('No changes to save');
+      setSaving(false);
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/users/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        toast.success('Profile updated successfully!');
+        setProfile(data.user);
+      } else {
+        const errorMsg = data.details ? data.details.join(', ') : data.error;
+        toast.error(errorMsg || 'Failed to update profile');
+      }
+    } catch {
+      toast.error('An error occurred while saving');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const inputClass = "w-full bg-surface-container border border-outline-variant rounded-lg pl-12 pr-4 py-3 text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors";
+
+  return (
+    <div className="bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)]">
+      <h2 className="font-h2 text-h2 text-on-background flex items-center gap-2 mb-stack-md">
+        <span className="material-symbols-outlined text-primary">edit</span>
+        Edit Profile
+      </h2>
+
+      <form onSubmit={handleSave} className="space-y-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {/* Name */}
+          <div>
+            <label className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Full Name</label>
+            <div className="relative">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant">
+                <span className="material-symbols-outlined text-[20px]">person</span>
+              </span>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                className={inputClass}
+                placeholder="Your full name"
+              />
+            </div>
+          </div>
+
+          {/* Email */}
+          <div>
+            <label className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Email</label>
+            <div className="relative">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant">
+                <span className="material-symbols-outlined text-[20px]">mail</span>
+              </span>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className={inputClass}
+                placeholder="your@email.com"
+              />
+            </div>
+          </div>
+
+          {/* Phone */}
+          <div>
+            <label className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Phone Number</label>
+            <div className="relative">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant font-body-md border-r border-outline-variant pr-3">
+                +91
+              </span>
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                className="w-full bg-surface-container border border-outline-variant rounded-lg pl-16 pr-4 py-3 text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
+                placeholder="9876543210"
+              />
+            </div>
+          </div>
+
+          {/* Batch */}
+          <div>
+            <label className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Batch</label>
+            <div className="relative">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant">
+                <span className="material-symbols-outlined text-[20px]">calendar_month</span>
+              </span>
+              <input
+                type="text"
+                name="batch"
+                value={formData.batch}
+                onChange={handleChange}
+                className={inputClass}
+                placeholder="e.g. 2026"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Save Button */}
+        <div className="pt-2 flex justify-end">
+          <button
+            type="submit"
+            disabled={saving}
+            className="bg-primary text-on-primary hover:bg-primary/90 px-8 py-3 rounded-xl font-h2 font-bold text-body-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:pointer-events-none flex items-center gap-2 cursor-pointer"
+          >
+            {saving && <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>}
+            {saving ? 'Saving...' : 'Save Changes'}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
 function DashboardContent() {
   const { data: session, status: sessionStatus, update } = useSession();
   const searchParams = useSearchParams();
@@ -255,26 +449,9 @@ function DashboardContent() {
     loadProfile();
   }, []);
 
-  const handleImageUpload = async (url: string) => {
-    try {
-      const res = await fetch('/api/users/profile', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image: url }),
-      });
-      if (res.ok) {
-        setProfile((prev: any) => ({ ...prev, image: url }));
-        update({ image: url }); // Update next-auth session locally
-      }
-    } catch (err) {
-      console.error('Failed to update profile image', err);
-    }
-  };
-
   // Derive user info
   const userName = profile?.name || dashData?.user?.name || session?.user?.name || 'Student';
   const userInitial = userName.charAt(0).toUpperCase();
-  const displayImage = profile?.image || session?.user?.image || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop';
 
   // Filter upcoming visits
   const upcomingVisits = (dashData?.bookings || []).filter((b) => {
@@ -511,149 +688,68 @@ function DashboardContent() {
           ) : (
             /* Profile Tab Layout */
             <div className="flex flex-col">
-              {/* Profile Header Bento Grid */}
+              {/* Profile Header */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-stack-md mb-stack-lg">
                 {/* User Avatar & Identity Card */}
                 <div className="col-span-1 md:col-span-1 bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
                   <div className="relative mb-stack-sm w-32 h-32">
-                    {!profileLoading && (
-                      <ImageUpload
-                        shape="circle"
-                        defaultImage={displayImage}
-                        onUploadSuccess={handleImageUpload}
-                        label="Avatar"
-                      />
-                    )}
+                    <div className="w-32 h-32 rounded-full bg-primary flex items-center justify-center relative group">
+                      <span className="text-on-primary font-display text-4xl">{userInitial}</span>
+                    </div>
                   </div>
                   <h1 className="font-h1 text-h1 text-on-background mb-1">{userName}</h1>
                   <p className="font-body-md text-body-md text-on-surface-variant flex items-center justify-center gap-1">
                     <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>school</span>
-                    VIT Bhopal
+                    {profile?.university || 'University'}
                   </p>
-                  <div className="mt-4 inline-block bg-primary-container/10 text-primary rounded-full px-4 py-1 font-label-sm text-label-sm">
-                    Batch of 2026
-                  </div>
+                  {profile?.batch && (
+                    <div className="mt-4 inline-block bg-primary-container/10 text-primary rounded-full px-4 py-1 font-label-sm text-label-sm">
+                      Batch of {profile.batch}
+                    </div>
+                  )}
                 </div>
 
-                {/* Verification Status Card */}
-                <div className="col-span-1 md:col-span-2 bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] flex flex-col justify-between">
-                  <div>
-                    <h2 className="font-h2 text-h2 text-on-background flex items-center gap-2 mb-stack-sm">
-                      <span className="material-symbols-outlined text-secondary">verified_user</span>
-                      Document Verification
-                    </h2>
-                    <p className="font-body-md text-body-md text-on-surface-variant mb-stack-md">Complete your profile to unlock instant bookings and connect with verified owners.</p>
-                  </div>
-                  <div className="space-y-4">
-                    {/* Aadhar Status */}
-                    <div className="flex items-center justify-between bg-surface p-4 rounded-lg border border-surface-variant transition-all duration-300 cursor-pointer hover:bg-surface-container-low hover:border-primary/30">
-                      <div className="flex items-center gap-4">
-                        <div className="bg-secondary/10 p-2 rounded-full text-secondary flex items-center justify-center">
-                          <span className="material-symbols-outlined">credit_card</span>
-                        </div>
-                        <div>
-                          <h3 className="font-body-lg text-body-lg font-bold text-on-background">Aadhar Card</h3>
-                          <p className="font-label-sm text-label-sm text-secondary">Verified</p>
-                        </div>
+                {/* Quick Info Card */}
+                <div className="col-span-1 md:col-span-2 bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] flex flex-col justify-center">
+                  <h2 className="font-h2 text-h2 text-on-background flex items-center gap-2 mb-stack-md">
+                    <span className="material-symbols-outlined text-primary">account_circle</span>
+                    Account Information
+                  </h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="flex items-center gap-3 bg-surface p-4 rounded-lg border border-surface-variant">
+                      <span className="material-symbols-outlined text-primary">mail</span>
+                      <div>
+                        <p className="font-label-sm text-label-sm text-on-surface-variant">Email</p>
+                        <p className="font-body-md text-body-md text-on-surface">{profile?.email || '—'}</p>
                       </div>
-                      <span className="material-symbols-outlined text-secondary">check_circle</span>
                     </div>
-                    
-                    {/* Student ID Status */}
-                    <div className="flex items-center justify-between bg-surface p-4 rounded-lg border border-outline-variant transition-all duration-300 cursor-pointer hover:bg-surface-container-low hover:border-primary/30">
-                      <div className="flex items-center gap-4">
-                        <div className="bg-surface-variant p-2 rounded-full text-on-surface-variant flex items-center justify-center">
-                          <span className="material-symbols-outlined">badge</span>
-                        </div>
-                        <div>
-                          <h3 className="font-body-lg text-body-lg font-bold text-on-background">Student ID</h3>
-                          <p className="font-label-sm text-label-sm text-on-surface-variant">Pending Upload</p>
-                        </div>
+                    <div className="flex items-center gap-3 bg-surface p-4 rounded-lg border border-surface-variant">
+                      <span className="material-symbols-outlined text-primary">call</span>
+                      <div>
+                        <p className="font-label-sm text-label-sm text-on-surface-variant">Phone</p>
+                        <p className="font-body-md text-body-md text-on-surface">{profile?.phone || '—'}</p>
                       </div>
-                      <button className="bg-primary-container/10 text-primary hover:bg-primary-container hover:text-on-primary px-4 py-2 rounded-full font-label-sm text-label-sm transition-colors border border-primary cursor-pointer">
-                        Upload Now
-                      </button>
+                    </div>
+                    <div className="flex items-center gap-3 bg-surface p-4 rounded-lg border border-surface-variant">
+                      <span className="material-symbols-outlined text-primary">badge</span>
+                      <div>
+                        <p className="font-label-sm text-label-sm text-on-surface-variant">Role</p>
+                        <p className="font-body-md text-body-md text-on-surface capitalize">{profile?.role || '—'}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 bg-surface p-4 rounded-lg border border-surface-variant">
+                      <span className="material-symbols-outlined text-primary">calendar_month</span>
+                      <div>
+                        <p className="font-label-sm text-label-sm text-on-surface-variant">Batch</p>
+                        <p className="font-body-md text-body-md text-on-surface">{profile?.batch || '—'}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Preferences Section */}
-              <h2 className="font-h2 text-h2 text-on-background mb-stack-md">Accommodation Preferences</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-stack-md">
-                {/* Budget Range */}
-                <div className="bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-                  <div className="flex items-center gap-2 mb-stack-sm text-primary">
-                    <span className="material-symbols-outlined">payments</span>
-                    <h3 className="font-body-lg text-body-lg font-bold text-on-background">Monthly Budget</h3>
-                  </div>
-                  <div className="mt-stack-sm">
-                    <div className="flex justify-between font-label-sm text-label-sm text-on-surface-variant mb-2">
-                      <span>₹4,000</span>
-                      <span>₹12,000+</span>
-                    </div>
-                    {/* Custom Range Slider Visual */}
-                    <div className="relative w-full h-2 bg-surface-variant rounded-full mt-4">
-                      <div className="absolute top-0 left-1/4 right-1/4 h-full bg-primary rounded-full"></div>
-                      <div className="absolute top-1/2 left-1/4 w-4 h-4 bg-primary rounded-full shadow border-2 border-surface transform -translate-x-1/2 -translate-y-1/2"></div>
-                      <div className="absolute top-1/2 right-1/4 w-4 h-4 bg-primary rounded-full shadow border-2 border-surface transform translate-x-1/2 -translate-y-1/2"></div>
-                    </div>
-                    <p className="font-body-md text-body-md text-center mt-4 font-bold text-primary">₹6,000 - ₹9,000</p>
-                  </div>
-                </div>
-
-                {/* Room Type */}
-                <div className="bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-                  <div className="flex items-center gap-2 mb-stack-sm text-primary">
-                    <span className="material-symbols-outlined">bed</span>
-                    <h3 className="font-body-lg text-body-lg font-bold text-on-background">Preferred Room Type</h3>
-                  </div>
-                  <div className="flex flex-col gap-3 mt-stack-sm">
-                    <label className="flex items-center justify-between p-3 rounded-lg border border-primary bg-primary-container/5 cursor-pointer">
-                      <div className="flex items-center gap-3">
-                        <span className="material-symbols-outlined text-primary">person</span>
-                        <span className="font-body-md text-body-md text-on-background">Single Room</span>
-                      </div>
-                      <input defaultChecked className="text-primary focus:ring-primary h-5 w-5 border-outline-variant" name="room_type" type="radio" />
-                    </label>
-                    <label className="flex items-center justify-between p-3 rounded-lg border border-outline-variant hover:bg-surface cursor-pointer transition-colors">
-                      <div className="flex items-center gap-3">
-                        <span className="material-symbols-outlined text-on-surface-variant">group</span>
-                        <span className="font-body-md text-body-md text-on-background">Shared Room (2-3)</span>
-                      </div>
-                      <input className="text-primary focus:ring-primary h-5 w-5 border-outline-variant" name="room_type" type="radio" />
-                    </label>
-                  </div>
-                </div>
-                {/* Dietary Preferences */}
-                <div className="bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-                  <div className="flex items-center gap-2 mb-stack-sm text-primary">
-                    <span className="material-symbols-outlined">restaurant</span>
-                    <h3 className="font-body-lg text-body-lg font-bold text-on-background">Dietary Preference</h3>
-                  </div>
-                  <div className="flex flex-wrap gap-3 mt-stack-sm">
-                    <button className="flex items-center gap-2 px-4 py-2 rounded-full border border-secondary bg-secondary/10 text-secondary font-label-sm text-label-sm transition-all duration-300 hover:scale-105 hover:shadow-sm cursor-pointer">
-                      <div className="w-3 h-3 rounded-full bg-secondary"></div>
-                      Veg
-                    </button>
-                    <button className="flex items-center gap-2 px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-sm text-label-sm hover:bg-surface transition-all duration-300 hover:scale-105 hover:shadow-sm cursor-pointer">
-                      <div className="w-3 h-3 rounded-full bg-error"></div>
-                      Non-Veg
-                    </button>
-                    <button className="flex items-center gap-2 px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-sm text-label-sm hover:bg-surface transition-all duration-300 hover:scale-105 hover:shadow-sm cursor-pointer">
-                      <div className="w-3 h-3 rounded-full border-2 border-outline-variant"></div>
-                      Any
-                    </button>
-                  </div>
-                  <p className="font-body-md text-body-md text-on-surface-variant mt-4 text-sm">Helps us recommend PGs with suitable mess facilities.</p>
-                </div>
-              </div>
-
-              <div className="mt-stack-lg flex justify-end">
-                <button className="bg-primary text-on-primary hover:bg-primary-container px-8 py-3 rounded-lg font-body-lg text-body-lg font-bold shadow-md hover:shadow-lg transition-all hover:-translate-y-1 hover:shadow-[0px_8px_30px_rgba(76,29,149,0.2)] cursor-pointer">
-                  Save Preferences
-                </button>
-              </div>
+              {/* Edit Profile Form */}
+              <EditProfileForm profile={profile} setProfile={setProfile} />
             </div>
           )}
         </div>

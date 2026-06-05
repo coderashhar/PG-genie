@@ -19,12 +19,10 @@ const UserSchema = new mongoose.Schema(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true, lowercase: true },
     password: { type: String, select: false },
-    image: { type: String },
     role: { type: String, enum: ['student', 'owner'], default: 'student' },
     phone: { type: String },
     university: { type: String, trim: true },
-    bio: { type: String, maxlength: 500, trim: true },
-    address: { type: String, trim: true },
+    batch: { type: String, trim: true },
     businessName: { type: String, trim: true },
     businessAddress: { type: String, trim: true },
     savedPgs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Property' }],
@@ -113,9 +111,6 @@ const PG_IMAGES = [
   'https://images.unsplash.com/photo-1554995207-c18c203602cb?w=800&q=80',
 ];
 
-const OWNER_AVATAR =
-  'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop';
-
 async function seed() {
   console.log('🌱 Starting database seed...');
 
@@ -140,7 +135,6 @@ async function seed() {
     password: hashedPassword,
     role: 'owner',
     phone: '+919876543210',
-    image: OWNER_AVATAR,
     businessName: 'Sharma Properties',
     businessAddress: 'Main Market, Kothri, Bhopal',
   });
@@ -165,8 +159,7 @@ async function seed() {
     role: 'student',
     phone: '+919988776655',
     university: 'VIT Bhopal',
-    bio: 'CS undergrad looking for a comfortable PG near campus.',
-    address: 'Mumbai, Maharashtra',
+    batch: '2026',
   });
 
   const student2 = await User.create({
@@ -176,8 +169,7 @@ async function seed() {
     role: 'student',
     phone: '+919988776656',
     university: 'VIT Bhopal',
-    bio: 'Engineering student, foodie, loves a quiet study environment.',
-    address: 'Delhi, India',
+    batch: '2025',
   });
 
   const student3 = await User.create({
@@ -187,8 +179,7 @@ async function seed() {
     role: 'student',
     phone: '+919988776657',
     university: 'VIT Bhopal',
-    bio: 'Second year mechanical student.',
-    address: 'Jaipur, Rajasthan',
+    batch: '2027',
   });
 
   console.log('👤 Created 3 students');

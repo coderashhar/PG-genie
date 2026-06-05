@@ -31,7 +31,6 @@ interface InquiryStudent {
   _id: string;
   name: string;
   email: string;
-  image?: string;
   phone?: string;
 }
 
@@ -54,7 +53,7 @@ interface OwnerDashboardData {
     id: string;
     name: string;
     email: string;
-    image?: string;
+    role: string;
     businessName?: string;
   };
   listings: ListingData[];
@@ -253,7 +252,6 @@ export default function OwnerDashboardPage() {
   };
 
   const ownerName = dashData?.owner?.name || session?.user?.name || 'Owner';
-  const ownerImage = dashData?.owner?.image || session?.user?.image;
   const stats = dashData?.stats;
 
   return (
@@ -481,6 +479,10 @@ export default function OwnerDashboardPage() {
                           </div>
                           <div>
                             <h4 className="font-h2 text-body-md text-on-surface">{student?.name || 'Unknown Student'}</h4>
+                            <p className="font-body-md text-label-sm text-on-surface-variant flex items-center gap-1 mt-0.5 mb-0.5">
+                              <span className="material-symbols-outlined text-[12px]">call</span>
+                              {student?.phone || 'No phone number'}
+                            </p>
                             <p className="font-body-md text-label-sm text-on-surface-variant">
                               Interested in: {pg?.title || 'Unknown PG'}
                             </p>

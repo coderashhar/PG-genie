@@ -33,11 +33,7 @@ function AccountMenu({ session, isHome }: { session: any, isHome?: boolean }) {
         onClick={() => setIsOpen(!isOpen)}
         className={`transition-all rounded-full cursor-pointer flex items-center justify-center ${colorClass}`}
       >
-        {session.user?.image ? (
-          <img src={session.user.image} alt="Profile" className={`${imgSize} rounded-full object-cover`} />
-        ) : (
-          <span className={`material-symbols-outlined ${iconSize}`}>account_circle</span>
-        )}
+        <span className={`material-symbols-outlined ${iconSize}`}>account_circle</span>
       </button>
       {isOpen && mounted && createPortal(
         <div className="fixed inset-0 z-[9999] pointer-events-none">

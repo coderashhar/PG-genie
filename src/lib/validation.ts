@@ -18,8 +18,16 @@ export function sanitizeString(value: unknown): string | undefined {
  * Accepts common formats: +91XXXXXXXXXX, 0XXXXXXXXXX, etc.
  */
 export function isValidPhone(phone: string): boolean {
-  const phoneRegex = /^(\+?\d{1,3}[-.\s]?)?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/;
+  const phoneRegex = /^\+91\d{10}$/;
   return phoneRegex.test(phone);
+}
+
+/**
+ * Validate email format.
+ */
+export function isValidEmail(email: string): boolean {
+  const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+  return emailRegex.test(email);
 }
 
 /**
@@ -27,18 +35,6 @@ export function isValidPhone(phone: string): boolean {
  */
 export function isValidBio(bio: string): boolean {
   return bio.length <= 500;
-}
-
-/**
- * Validate image URL format.
- */
-export function isValidImageUrl(url: string): boolean {
-  try {
-    new URL(url);
-    return true;
-  } catch {
-    return false;
-  }
 }
 
 /**
@@ -68,6 +64,16 @@ export function validateProfileUpdate(
     }
   }
 
+  // Email validation
+  if (body.email !== undefined) {
+    const email = sanitizeString(body.email);
+    if (!email || !isValidEmail(email)) {
+      errors.push('Please provide a valid email address');
+    } else {
+      data.email = email.toLowerCase();
+    }
+  }
+
   // Phone validation
   if (body.phone !== undefined) {
     const phone = sanitizeString(body.phone);
@@ -78,16 +84,6 @@ export function validateProfileUpdate(
     }
   }
 
-  // Image URL validation
-  if (body.image !== undefined) {
-    const image = sanitizeString(body.image);
-    if (image && !isValidImageUrl(image)) {
-      errors.push('Invalid image URL');
-    } else {
-      data.image = image || '';
-    }
-  }
-
   // University validation (student-specific, but allowed for all)
   if (body.university !== undefined) {
     const university = sanitizeString(body.university);
@@ -95,6 +91,16 @@ export function validateProfileUpdate(
       errors.push('University name cannot exceed 200 characters');
     } else {
       data.university = university || '';
+    }
+  }
+
+  // Batch validation (student-specific)
+  if (body.batch !== undefined) {
+    const batch = sanitizeString(body.batch);
+    if (batch && !/^(20|21)\d{2}$/.test(batch)) {
+      errors.push('Batch must be a valid 4-digit year (e.g. 2026)');
+    } else {
+      data.batch = batch || '';
     }
   }
 

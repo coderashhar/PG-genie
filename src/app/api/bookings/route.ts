@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/db';
 import Booking from '@/models/Booking';
 import Property from '@/models/Property';
+import User from '@/models/User';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 
@@ -20,7 +21,7 @@ export async function GET(req: NextRequest) {
     let bookings = [];
     if (userRole === 'owner') {
       bookings = await Booking.find({ ownerId: userId })
-        .populate('studentId', 'name email')
+        .populate('studentId', 'name email phone')
         .populate('pgId', 'title')
         .sort({ createdAt: -1 });
     } else {
@@ -57,6 +58,15 @@ export async function POST(req: NextRequest) {
 
     if (!pgId) {
       return NextResponse.json({ error: 'Property ID is required' }, { status: 400 });
+    }
+
+    // Check if user has a phone number
+    const user = await User.findById((session.user as any).id);
+    if (!user || !user.phone) {
+      return NextResponse.json(
+        { error: 'Please enter your phone number in Profile and Settings under Dashboard' },
+        { status: 400 }
+      );
     }
 
     const property = await Property.findById(pgId);

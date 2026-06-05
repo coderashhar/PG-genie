@@ -4,10 +4,10 @@ export interface IUser extends Document {
   name: string;
   email: string;
   password?: string; // Optional if using OAuth
-  image?: string;
   role: 'student' | 'owner';
   phone?: string;
   university?: string; // Student-specific: university name
+  batch?: string; // Student-specific: graduation batch e.g. '2026'
   bio?: string; // Short user biography
   address?: string; // User's current address
   businessName?: string; // Owner-specific: business/PG name
@@ -37,9 +37,6 @@ const UserSchema: Schema<IUser> = new mongoose.Schema(
       type: String,
       select: false, // Don't return password by default
     },
-    image: {
-      type: String,
-    },
     role: {
       type: String,
       enum: ['student', 'owner'],
@@ -49,6 +46,10 @@ const UserSchema: Schema<IUser> = new mongoose.Schema(
       type: String,
     },
     university: {
+      type: String,
+      trim: true,
+    },
+    batch: {
       type: String,
       trim: true,
     },
@@ -82,7 +83,11 @@ const UserSchema: Schema<IUser> = new mongoose.Schema(
 );
 
 // Prevent re-compiling model in development
-const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
+if (process.env.NODE_ENV !== 'production') {
+  delete mongoose.models.User;
+}
+
+const User: Model<IUser> =
+  mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
 
 export default User;
-

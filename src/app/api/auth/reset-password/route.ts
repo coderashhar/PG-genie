@@ -37,9 +37,8 @@ export async function POST(req: Request) {
     }
 
     // 2. Check if user exists
-    const user = await User.findOne(
-      isEmail ? { email: identifier } : { phone: identifier }
-    );
+    const query = isEmail ? { email: identifier } : { phone: identifier };
+    const user = await User.findOne(query);
 
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
@@ -49,9 +48,10 @@ export async function POST(req: Request) {
     await Otp.deleteOne({ _id: validOtp._id });
 
     // 3. Update Password
+    // Using findOneAndUpdate to bypass `select: false` on the password field,
+    // which can prevent user.save() from persisting the new password.
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    user.password = hashedPassword;
-    await user.save();
+    await User.findOneAndUpdate(query, { $set: { password: hashedPassword } });
 
     return NextResponse.json({ success: true, message: 'Password reset successfully' }, { status: 200 });
   } catch (error) {
