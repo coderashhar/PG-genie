@@ -156,6 +156,10 @@ export default function OwnerDashboardPage() {
   const [isPropertyModalOpen, setIsPropertyModalOpen] = useState(false);
   const [editingProperty, setEditingProperty] = useState<ListingData | null>(null);
 
+  // Delete confirmation state
+  const [deletingPropertyId, setDeletingPropertyId] = useState<string | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
   const fetchOwnerDashboard = useCallback(async () => {
     try {
       const res = await fetch('/api/owner/dashboard');
@@ -214,6 +218,27 @@ export default function OwnerDashboardPage() {
       setRefreshKey(k => k + 1);
     } catch (err: any) {
       toast.error(err.message);
+    }
+  };
+
+  const handleDeleteProperty = async () => {
+    if (!deletingPropertyId) return;
+    setDeleteLoading(true);
+    try {
+      const res = await fetch(`/api/properties/${deletingPropertyId}`, {
+        method: 'DELETE',
+      });
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Failed to delete property');
+      }
+      toast.success('Property deleted successfully!');
+      setRefreshKey(k => k + 1);
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setDeleteLoading(false);
+      setDeletingPropertyId(null);
     }
   };
 
@@ -403,6 +428,13 @@ export default function OwnerDashboardPage() {
                           >
                             {listing.status === 'active' ? 'Mark as Filled' : 'Mark Available'}
                           </button>
+                          <button 
+                            onClick={() => setDeletingPropertyId(listing._id)}
+                            className="border-[1.5px] border-error/40 text-error hover:bg-error hover:text-on-error px-3 py-2 rounded-lg font-label-sm text-label-sm transition-colors text-center hover:scale-105 hover:shadow-xl cursor-pointer flex items-center justify-center"
+                            title="Delete property"
+                          >
+                            <span className="material-symbols-outlined text-[18px]">delete</span>
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -490,6 +522,47 @@ export default function OwnerDashboardPage() {
         property={editingProperty}
         onSuccess={() => setRefreshKey(k => k + 1)}
       />
+
+      {/* Delete Confirmation Modal */}
+      {deletingPropertyId && (
+        <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
+          <div 
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => !deleteLoading && setDeletingPropertyId(null)}
+          />
+          <div className="relative bg-surface dark:bg-surface-container rounded-2xl shadow-2xl p-6 max-w-sm w-full space-y-4 animate-[fadeScaleIn_0.2s_ease-out]">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-error-container rounded-full">
+                <span className="material-symbols-outlined text-error text-[28px]">warning</span>
+              </div>
+              <div>
+                <h3 className="font-h2 text-h2 text-on-surface">Delete Property</h3>
+                <p className="font-body-md text-body-md text-on-surface-variant">This action cannot be undone.</p>
+              </div>
+            </div>
+            <p className="text-body-md text-on-surface-variant">
+              Are you sure you want to permanently delete this PG listing? All associated data will be removed.
+            </p>
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={() => setDeletingPropertyId(null)}
+                disabled={deleteLoading}
+                className="flex-1 px-4 py-2.5 rounded-xl font-body-md text-on-surface-variant hover:bg-surface-variant transition-colors cursor-pointer disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteProperty}
+                disabled={deleteLoading}
+                className="flex-1 px-4 py-2.5 rounded-xl font-h2 font-bold bg-error text-on-error shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2 cursor-pointer"
+              >
+                {deleteLoading && <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>}
+                {deleteLoading ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
