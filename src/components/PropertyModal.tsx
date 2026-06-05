@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
@@ -26,8 +26,13 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
     price: '',
     roomTypes: [] as string[],
     amenities: [] as string[],
-    images: '',
+    images: [] as string[],
   });
+
+  // Image upload state
+  const [uploadingImages, setUploadingImages] = useState<{ id: string; name: string; preview: string; progress: number }[]>([]);
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -44,7 +49,7 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
         price: property.price?.toString() || '',
         roomTypes: property.roomTypes || [],
         amenities: property.amenities || [],
-        images: property.images?.join('\n') || '',
+        images: property.images || [],
       });
     } else {
       setFormData({
@@ -56,9 +61,10 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
         price: '',
         roomTypes: [],
         amenities: [],
-        images: '',
+        images: [],
       });
     }
+    setUploadingImages([]);
   }, [property, isOpen]);
 
   if (!mounted) return null;
@@ -77,6 +83,97 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
     });
   };
 
+  // --- Image Upload Handlers ---
+  const uploadFileToS3 = async (file: File): Promise<string> => {
+    // 1. Get presigned URL
+    const res = await fetch('/api/upload', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ filename: file.name, contentType: file.type }),
+    });
+    if (!res.ok) throw new Error('Failed to get upload URL');
+    const { signedUrl, fileUrl } = await res.json();
+
+    // 2. Upload to S3
+    const uploadRes = await fetch(signedUrl, {
+      method: 'PUT',
+      headers: { 'Content-Type': file.type },
+      body: file,
+    });
+    if (!uploadRes.ok) throw new Error('Failed to upload to S3');
+
+    return fileUrl;
+  };
+
+  const handleFilesSelected = async (files: FileList | File[]) => {
+    const fileArray = Array.from(files).filter(f => f.type.startsWith('image/'));
+    if (fileArray.length === 0) return;
+
+    // Create tracking entries with local previews
+    const newUploads = fileArray.map(file => ({
+      id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+      name: file.name,
+      preview: URL.createObjectURL(file),
+      progress: 0,
+    }));
+    setUploadingImages(prev => [...prev, ...newUploads]);
+
+    // Upload each file
+    for (let i = 0; i < fileArray.length; i++) {
+      const file = fileArray[i];
+      const uploadId = newUploads[i].id;
+      try {
+        // Simulate progress
+        setUploadingImages(prev => prev.map(u => u.id === uploadId ? { ...u, progress: 50 } : u));
+        const fileUrl = await uploadFileToS3(file);
+        setUploadingImages(prev => prev.map(u => u.id === uploadId ? { ...u, progress: 100 } : u));
+
+        // Add to form data
+        setFormData(prev => ({ ...prev, images: [...prev.images, fileUrl] }));
+
+        // Remove from uploading list after a brief delay
+        setTimeout(() => {
+          setUploadingImages(prev => prev.filter(u => u.id !== uploadId));
+        }, 600);
+      } catch {
+        toast.error(`Failed to upload ${file.name}`);
+        setUploadingImages(prev => prev.filter(u => u.id !== uploadId));
+      }
+    }
+  };
+
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      handleFilesSelected(e.target.files);
+      e.target.value = ''; // Reset so same file can be re-selected
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files.length > 0) {
+      handleFilesSelected(e.dataTransfer.files);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const removeImage = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index),
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -92,7 +189,7 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
       price: Number(formData.price),
       roomTypes: formData.roomTypes,
       amenities: formData.amenities,
-      images: formData.images.split('\n').map(img => img.trim()).filter(Boolean),
+      images: formData.images,
     };
 
     try {
@@ -283,16 +380,86 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
                 <h3 className="font-h2 text-h2 text-primary border-b border-outline-variant pb-2">Media</h3>
                 
                 <div>
-                  <label className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Image URLs (one per line)</label>
-                  <textarea
-                    name="images"
-                    value={formData.images}
-                    onChange={handleChange}
-                    rows={3}
-                    className="w-full bg-surface-container border border-outline-variant rounded-lg px-4 py-3 text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors resize-none font-mono text-sm"
-                    placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg"
+                  <label className="block text-label-sm font-label-sm text-on-surface-variant mb-2">Property Photos</label>
+                  
+                  {/* Uploaded thumbnails */}
+                  {formData.images.length > 0 && (
+                    <div className="flex flex-wrap gap-3 mb-3">
+                      {formData.images.map((url, idx) => (
+                        <div key={idx} className="relative group w-24 h-24 rounded-lg overflow-hidden border border-outline-variant shadow-sm">
+                          <img src={url} alt={`Property ${idx + 1}`} className="w-full h-full object-cover" />
+                          <button
+                            type="button"
+                            onClick={() => removeImage(idx)}
+                            className="absolute inset-0 bg-black/0 group-hover:bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
+                          >
+                            <span className="material-symbols-outlined text-white text-[20px] drop-shadow-lg">delete</span>
+                          </button>
+                          <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-[9px] text-center py-0.5 font-label-sm">
+                            {idx + 1}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Uploading previews */}
+                  {uploadingImages.length > 0 && (
+                    <div className="flex flex-wrap gap-3 mb-3">
+                      {uploadingImages.map(upload => (
+                        <div key={upload.id} className="relative w-24 h-24 rounded-lg overflow-hidden border border-outline-variant shadow-sm">
+                          <img src={upload.preview} alt={upload.name} className="w-full h-full object-cover opacity-50" />
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                            <span className="material-symbols-outlined animate-spin text-white text-[24px]">progress_activity</span>
+                          </div>
+                          <div className="absolute bottom-0 left-0 right-0 h-1 bg-surface-container">
+                            <div
+                              className="h-full bg-primary transition-all duration-300"
+                              style={{ width: `${upload.progress}%` }}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Drop zone */}
+                  <div
+                    onClick={() => fileInputRef.current?.click()}
+                    onDrop={handleDrop}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    className={`
+                      w-full border-2 border-dashed rounded-xl px-4 py-8 flex flex-col items-center justify-center gap-2
+                      cursor-pointer transition-all duration-200
+                      ${isDragging
+                        ? 'border-primary bg-primary/5 scale-[1.01]'
+                        : 'border-outline-variant bg-surface-container hover:border-primary hover:bg-primary/5'
+                      }
+                    `}
+                  >
+                    <span className="material-symbols-outlined text-[36px] text-on-surface-variant">
+                      {isDragging ? 'downloading' : 'add_photo_alternate'}
+                    </span>
+                    <p className="text-body-md text-on-surface-variant text-center">
+                      {isDragging ? 'Drop images here' : 'Click to upload or drag & drop'}
+                    </p>
+                    <p className="text-xs text-outline">JPG, PNG, WebP • Max 5MB each</p>
+                  </div>
+
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleFileInputChange}
+                    className="hidden"
                   />
-                  <p className="text-xs text-on-surface-variant mt-1">Provide direct links to property images. We recommend at least 3 high-quality photos.</p>
+
+                  <p className="text-xs text-on-surface-variant mt-2 flex items-center gap-1">
+                    <span className="material-symbols-outlined text-[14px]">info</span>
+                    We recommend at least 3 high-quality photos for better visibility.
+                  </p>
                 </div>
               </div>
 
