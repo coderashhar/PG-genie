@@ -3,6 +3,13 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 
+import dynamic from 'next/dynamic';
+
+const LocationPickerMap = dynamic(() => import('./LocationPickerMap'), {
+  ssr: false,
+  loading: () => <div className="w-full h-[300px] bg-surface-container rounded-xl flex items-center justify-center animate-pulse border border-outline-variant"><span className="material-symbols-outlined text-primary text-3xl">map</span></div>
+});
+
 interface PropertyModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -294,6 +301,19 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
               {/* Location */}
               <div className="space-y-4">
                 <h3 className="font-h2 text-h2 text-primary border-b border-outline-variant pb-2">Location</h3>
+                
+                <div className="mb-4">
+                  <LocationPickerMap 
+                    onLocationSelect={(details) => {
+                      setFormData(prev => ({
+                        ...prev,
+                        address: details.address || prev.address,
+                        city: details.city || prev.city,
+                        state: details.state || prev.state
+                      }));
+                    }}
+                  />
+                </div>
                 
                 <div>
                   <label className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Address *</label>
