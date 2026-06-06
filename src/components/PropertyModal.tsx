@@ -30,6 +30,8 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
     address: '',
     city: '',
     state: '',
+    lat: undefined as number | undefined,
+    lng: undefined as number | undefined,
     price: '',
     roomTypes: [] as string[],
     amenities: [] as string[],
@@ -53,6 +55,8 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
         address: property.location?.address || '',
         city: property.location?.city || '',
         state: property.location?.state || '',
+        lat: property.location?.lat,
+        lng: property.location?.lng,
         price: property.price?.toString() || '',
         roomTypes: property.roomTypes || [],
         amenities: property.amenities || [],
@@ -65,6 +69,8 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
         address: '',
         city: '',
         state: '',
+        lat: undefined,
+        lng: undefined,
         price: '',
         roomTypes: [],
         amenities: [],
@@ -192,6 +198,8 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
         address: formData.address,
         city: formData.city,
         state: formData.state,
+        lat: formData.lat,
+        lng: formData.lng,
       },
       price: Number(formData.price),
       roomTypes: formData.roomTypes,
@@ -309,7 +317,9 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
                         ...prev,
                         address: details.address || prev.address,
                         city: details.city || prev.city,
-                        state: details.state || prev.state
+                        state: details.state || prev.state,
+                        lat: details.lat,
+                        lng: details.lng
                       }));
                     }}
                   />

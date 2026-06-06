@@ -9,6 +9,8 @@ export interface IProperty extends Document {
     city: string;
     state: string;
     zipCode?: string;
+    lat?: number;
+    lng?: number;
   };
   price: number;
   roomTypes: string[];
@@ -41,6 +43,8 @@ const PropertySchema: Schema<IProperty> = new mongoose.Schema(
       city: { type: String, required: true },
       state: { type: String, required: true },
       zipCode: { type: String },
+      lat: { type: Number },
+      lng: { type: Number },
     },
     price: {
       type: Number,
@@ -83,6 +87,11 @@ const PropertySchema: Schema<IProperty> = new mongoose.Schema(
   }
 );
 
-const Property: Model<IProperty> = mongoose.models.Property || mongoose.model<IProperty>('Property', PropertySchema);
+// Delete the cached model to ensure schema updates are applied during Next.js hot reloads
+if (mongoose.models.Property) {
+  delete mongoose.models.Property;
+}
+
+const Property: Model<IProperty> = mongoose.model<IProperty>('Property', PropertySchema);
 
 export default Property;

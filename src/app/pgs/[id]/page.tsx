@@ -5,6 +5,12 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import { useRouter, usePathname } from 'next/navigation';
+import dynamic from 'next/dynamic';
+
+const PropertyDisplayMap = dynamic(() => import('@/components/PropertyDisplayMap'), {
+  ssr: false,
+  loading: () => <div className="w-full h-[300px] md:h-[400px] bg-surface-container rounded-xl flex items-center justify-center animate-pulse border border-outline-variant"><span className="material-symbols-outlined text-primary text-3xl">map</span></div>
+});
 
 // --- Amenity icon map ---
 const amenityIconMap: Record<string, string> = {
@@ -336,17 +342,11 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
             {/* Map Section */}
             <div className="mb-stack-lg">
               <h2 className="font-h2 text-h2 text-on-surface mb-stack-sm">Location</h2>
-              <div className="rounded-xl overflow-hidden border border-outline-variant shadow-sm h-[300px] relative bg-surface-container">
-                <iframe
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  loading="lazy"
-                  allowFullScreen
-                  referrerPolicy="no-referrer-when-downgrade"
-                  src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}&q=${encodeURIComponent(`${property.title || ''}, ${property.location?.address || ''}, ${property.location?.city || ''}, ${property.location?.state || ''} ${property.location?.zipCode || ''}`.trim())}`}
-                ></iframe>
-              </div>
+              <PropertyDisplayMap 
+                lat={property.location?.lat} 
+                lng={property.location?.lng} 
+                address={`${property.location?.address || ''}, ${property.location?.city || ''}, ${property.location?.state || ''}`} 
+              />
             </div>
           </div>
 

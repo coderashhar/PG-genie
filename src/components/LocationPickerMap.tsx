@@ -9,7 +9,7 @@ import 'leaflet-defaulticon-compatibility';
 import toast from 'react-hot-toast';
 
 interface LocationPickerMapProps {
-  onLocationSelect: (details: { address: string; city: string; state: string }) => void;
+  onLocationSelect: (details: { address: string; city: string; state: string; lat?: number; lng?: number }) => void;
   initialAddress?: string;
 }
 
@@ -46,7 +46,9 @@ export default function LocationPickerMap({ onLocationSelect, initialAddress }: 
         onLocationSelect({
           address: fullAddress,
           city,
-          state
+          state,
+          lat,
+          lng
         });
       }
     } catch (err) {
