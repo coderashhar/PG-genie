@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
@@ -144,8 +145,207 @@ const inquiryColors = [
   { bg: 'bg-primary-container', text: 'text-on-primary-container' },
 ];
 
-export default function OwnerDashboardPage() {
+// --- Edit Profile Form for Owners ---
+function OwnerEditProfileForm({ profile, setProfile }: { profile: any; setProfile: (p: any) => void }) {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    businessName: '',
+    businessAddress: '',
+  });
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (profile) {
+      let phoneStr = profile.phone || '';
+      if (phoneStr.startsWith('+91')) {
+        phoneStr = phoneStr.slice(3).trim();
+      }
+
+      setFormData({
+        name: profile.name || '',
+        email: profile.email || '',
+        phone: phoneStr,
+        businessName: profile.businessName || '',
+        businessAddress: profile.businessAddress || '',
+      });
+    }
+  }, [profile]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+    if (e.target.name === 'phone') {
+      value = value.replace(/\D/g, '').slice(0, 10);
+    }
+    setFormData(prev => ({ ...prev, [e.target.name]: value }));
+  };
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+
+    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    if (formData.email && !emailRegex.test(formData.email)) {
+      toast.error('Please enter a valid email address');
+      setSaving(false);
+      return;
+    }
+
+    const phoneFull = formData.phone ? `+91${formData.phone}` : '';
+    if (formData.phone && formData.phone.length !== 10) {
+      toast.error('Phone number must be exactly 10 digits');
+      setSaving(false);
+      return;
+    }
+
+    const updates: Record<string, string> = {};
+    if (formData.name && formData.name !== profile?.name) updates.name = formData.name;
+    if (formData.email && formData.email !== profile?.email) updates.email = formData.email;
+    if (phoneFull !== (profile?.phone || '')) updates.phone = phoneFull;
+    if (formData.businessName !== (profile?.businessName || '')) updates.businessName = formData.businessName;
+    if (formData.businessAddress !== (profile?.businessAddress || '')) updates.businessAddress = formData.businessAddress;
+
+    if (Object.keys(updates).length === 0) {
+      toast.error('No changes to save');
+      setSaving(false);
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/users/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        toast.success('Profile updated successfully!');
+        setProfile(data.user);
+      } else {
+        const errorMsg = data.details ? data.details.join(', ') : data.error;
+        toast.error(errorMsg || 'Failed to update profile');
+      }
+    } catch {
+      toast.error('An error occurred while saving');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const inputClass = "w-full bg-surface-container border border-outline-variant rounded-lg pl-12 pr-4 py-3 text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors";
+
+  return (
+    <div className="bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)]">
+      <h2 className="font-h2 text-h2 text-on-background flex items-center gap-2 mb-stack-md">
+        <span className="material-symbols-outlined text-primary">edit</span>
+        Edit Profile
+      </h2>
+
+      <form onSubmit={handleSave} className="space-y-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div>
+            <label className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Full Name</label>
+            <div className="relative">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant">
+                <span className="material-symbols-outlined text-[20px]">person</span>
+              </span>
+              <input type="text" name="name" value={formData.name} onChange={handleChange} className={inputClass} placeholder="Your full name" />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Email</label>
+            <div className="relative">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant">
+                <span className="material-symbols-outlined text-[20px]">mail</span>
+              </span>
+              <input type="email" name="email" value={formData.email} onChange={handleChange} className={inputClass} placeholder="your@email.com" />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Phone Number</label>
+            <div className="relative">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant font-body-md border-r border-outline-variant pr-3">+91</span>
+              <input type="tel" name="phone" value={formData.phone} onChange={handleChange} className="w-full bg-surface-container border border-outline-variant rounded-lg pl-16 pr-4 py-3 text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors" placeholder="9876543210" />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Business/PG Name</label>
+            <div className="relative">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant">
+                <span className="material-symbols-outlined text-[20px]">business</span>
+              </span>
+              <input type="text" name="businessName" value={formData.businessName} onChange={handleChange} className={inputClass} placeholder="e.g. Sharma Properties" />
+            </div>
+          </div>
+          
+          <div className="md:col-span-2">
+            <label className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Business Address</label>
+            <div className="relative">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant">
+                <span className="material-symbols-outlined text-[20px]">location_on</span>
+              </span>
+              <input type="text" name="businessAddress" value={formData.businessAddress} onChange={handleChange} className={inputClass} placeholder="Enter your full business address" />
+            </div>
+          </div>
+        </div>
+
+        <div className="pt-2 flex justify-end">
+          <button type="submit" disabled={saving} className="bg-primary text-on-primary hover:bg-primary/90 px-8 py-3 rounded-xl font-h2 font-bold text-body-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:pointer-events-none flex items-center gap-2 cursor-pointer">
+            {saving && <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>}
+            {saving ? 'Saving...' : 'Save Changes'}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+function OwnerDashboardContent() {
   const { data: session, status: sessionStatus } = useSession();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const initialTab = searchParams.get('tab') === 'profile' ? 'profile' : 'overview';
+  const [activeTab, setActiveTab] = useState(initialTab);
+  
+  const [profile, setProfile] = useState<any>(null);
+  const [profileLoading, setProfileLoading] = useState(true);
+
+  // Sync tab with URL parameter
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab === 'profile' || tab === 'overview') {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
+
+  const handleTabChange = (tab: 'overview' | 'profile') => {
+    setActiveTab(tab);
+    router.push(`/owner/dashboard${tab === 'profile' ? '?tab=profile' : ''}`);
+  };
+
+  // Fetch Profile data
+  useEffect(() => {
+    async function loadProfile() {
+      try {
+        const res = await fetch('/api/users/profile');
+        if (res.ok) {
+          const data = await res.json();
+          setProfile(data.user);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setProfileLoading(false);
+      }
+    }
+    loadProfile();
+  }, []);
+
   const [dashData, setDashData] = useState<OwnerDashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -251,7 +451,7 @@ export default function OwnerDashboardPage() {
     setIsPropertyModalOpen(true);
   };
 
-  const ownerName = dashData?.owner?.name || session?.user?.name || 'Owner';
+  const ownerName = profile?.name || dashData?.owner?.name || session?.user?.name || 'Owner';
   const stats = dashData?.stats;
 
   return (
@@ -282,16 +482,34 @@ export default function OwnerDashboardPage() {
               </button>
           </div>
           
+          {/* Tab Navigation */}
+          <div className="flex border-b border-surface-container mb-stack-lg gap-8 overflow-x-auto whitespace-nowrap hide-scrollbar">
+            <button
+              onClick={() => handleTabChange('overview')}
+              className={`pb-3 font-h2 text-h2 transition-colors border-b-2 ${activeTab === 'overview' ? 'border-primary text-primary' : 'border-transparent text-on-surface-variant hover:text-on-surface cursor-pointer'}`}
+            >
+              Overview
+            </button>
+            <button
+              onClick={() => handleTabChange('profile')}
+              className={`pb-3 font-h2 text-h2 transition-colors border-b-2 ${activeTab === 'profile' ? 'border-primary text-primary' : 'border-transparent text-on-surface-variant hover:text-on-surface cursor-pointer'}`}
+            >
+              Profile & Settings
+            </button>
+          </div>
+
           {/* Error State */}
           {error && (
-            <div className="bg-error-container text-on-error-container p-6 rounded-xl flex items-center gap-3">
+            <div className="bg-error-container text-on-error-container p-6 rounded-xl flex items-center gap-3 mb-stack-lg">
               <span className="material-symbols-outlined">error</span>
               <p>{error}</p>
             </div>
           )}
 
-          {/* Stats Overview (Bento Grid) */}
-          <section className="grid grid-cols-1 md:grid-cols-3 gap-stack-md">
+          {activeTab === 'overview' ? (
+            <div className="space-y-stack-lg">
+              {/* Stats Overview (Bento Grid) */}
+              <section className="grid grid-cols-1 md:grid-cols-3 gap-stack-md">
             {loading ? (
               <>
                 <StatSkeleton />
@@ -514,7 +732,70 @@ export default function OwnerDashboardPage() {
                 )}
               </div>
             </section>
-          </div>
+            </div>
+            </div>
+          ) : (
+            /* Profile Tab Layout */
+            <div className="flex flex-col">
+              {/* Profile Header */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-stack-md mb-stack-lg">
+                {/* User Avatar & Identity Card */}
+                <div className="col-span-1 md:col-span-1 bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                  <div className="relative mb-stack-sm w-32 h-32">
+                    <div className="w-32 h-32 rounded-full bg-primary flex items-center justify-center relative group">
+                      <span className="text-on-primary font-display text-4xl">{getInitials(ownerName)}</span>
+                    </div>
+                  </div>
+                  <h1 className="font-h1 text-h1 text-on-background mb-1">{ownerName}</h1>
+                  <p className="font-body-md text-body-md text-on-surface-variant flex items-center justify-center gap-1">
+                    <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>business</span>
+                    {profile?.businessName || 'Property Owner'}
+                  </p>
+                </div>
+
+                {/* Quick Info Card */}
+                <div className="col-span-1 md:col-span-2 bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] flex flex-col justify-center">
+                  <h2 className="font-h2 text-h2 text-on-background flex items-center gap-2 mb-stack-md">
+                    <span className="material-symbols-outlined text-primary">account_circle</span>
+                    Account Information
+                  </h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="flex items-center gap-3 bg-surface p-4 rounded-lg border border-surface-variant">
+                      <span className="material-symbols-outlined text-primary">mail</span>
+                      <div>
+                        <p className="font-label-sm text-label-sm text-on-surface-variant">Email</p>
+                        <p className="font-body-md text-body-md text-on-surface">{profile?.email || '—'}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 bg-surface p-4 rounded-lg border border-surface-variant">
+                      <span className="material-symbols-outlined text-primary">call</span>
+                      <div>
+                        <p className="font-label-sm text-label-sm text-on-surface-variant">Phone</p>
+                        <p className="font-body-md text-body-md text-on-surface">{profile?.phone || '—'}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 bg-surface p-4 rounded-lg border border-surface-variant">
+                      <span className="material-symbols-outlined text-primary">badge</span>
+                      <div>
+                        <p className="font-label-sm text-label-sm text-on-surface-variant">Role</p>
+                        <p className="font-body-md text-body-md text-on-surface capitalize">{profile?.role || 'Owner'}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 bg-surface p-4 rounded-lg border border-surface-variant">
+                      <span className="material-symbols-outlined text-primary">location_on</span>
+                      <div>
+                        <p className="font-label-sm text-label-sm text-on-surface-variant">Business Location</p>
+                        <p className="font-body-md text-body-md text-on-surface truncate">{profile?.businessAddress || '—'}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Edit Profile Form */}
+              <OwnerEditProfileForm profile={profile} setProfile={setProfile} />
+            </div>
+          )}
         </div>
       </main>
 
@@ -566,5 +847,13 @@ export default function OwnerDashboardPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function OwnerDashboardPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center font-display text-primary text-2xl">Loading Dashboard...</div>}>
+      <OwnerDashboardContent />
+    </Suspense>
   );
 }
