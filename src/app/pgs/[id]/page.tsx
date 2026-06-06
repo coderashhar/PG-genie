@@ -139,7 +139,12 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
       router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
       return;
     }
-    toast.success('Owner contact requested!');
+    
+    if (property?.ownerId?.phone) {
+      window.location.href = `tel:${property.ownerId.phone}`;
+    } else {
+      toast.error('Contact number not available for this owner.');
+    }
   };
 
   const openGallery = (index: number) => {
