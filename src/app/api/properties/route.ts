@@ -40,7 +40,32 @@ export async function GET(req: NextRequest) {
 
     if (amenities) {
       const amenitiesList = amenities.split(',');
-      query.amenities = { $all: amenitiesList.map(a => new RegExp(a, 'i')) };
+      const booleanMap: Record<string, string> = {
+        'furniture': 'furniture',
+        'attachedbath': 'attachedBath',
+        'watersupply': 'waterSupply',
+        'geyser': 'geyser',
+        'wifi': 'wifi',
+        'backuppower': 'backupPower',
+        'cctv': 'cctv',
+        'washingmachine': 'washingMachine',
+        'petfriendly': 'petFriendly'
+      };
+      
+      const stringAmenities: string[] = [];
+      
+      amenitiesList.forEach(a => {
+        const key = a.toLowerCase();
+        if (booleanMap[key]) {
+          query[booleanMap[key]] = true;
+        } else {
+          stringAmenities.push(a);
+        }
+      });
+
+      if (stringAmenities.length > 0) {
+        query.amenities = { $all: stringAmenities.map(a => new RegExp(a, 'i')) };
+      }
     }
 
     if (gender) {

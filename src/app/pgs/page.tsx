@@ -399,6 +399,46 @@ function PgsContent() {
                   <span className="material-symbols-outlined text-on-surface-variant text-xl">local_laundry_service</span>
                   <span className="font-body-md text-body-md text-on-surface-variant">Laundry</span>
                 </label>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input checked={selectedAmenities.includes('Furniture')} onChange={() => toggleAmenity('Furniture')} className="form-checkbox text-primary focus:ring-primary h-5 w-5 border-outline rounded" type="checkbox" />
+                  <span className="material-symbols-outlined text-on-surface-variant text-xl">chair</span>
+                  <span className="font-body-md text-body-md text-on-surface-variant">Furniture</span>
+                </label>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input checked={selectedAmenities.includes('AttachedBath')} onChange={() => toggleAmenity('AttachedBath')} className="form-checkbox text-primary focus:ring-primary h-5 w-5 border-outline rounded" type="checkbox" />
+                  <span className="material-symbols-outlined text-on-surface-variant text-xl">bathtub</span>
+                  <span className="font-body-md text-body-md text-on-surface-variant">Attached Bath</span>
+                </label>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input checked={selectedAmenities.includes('WaterSupply')} onChange={() => toggleAmenity('WaterSupply')} className="form-checkbox text-primary focus:ring-primary h-5 w-5 border-outline rounded" type="checkbox" />
+                  <span className="material-symbols-outlined text-on-surface-variant text-xl">water_drop</span>
+                  <span className="font-body-md text-body-md text-on-surface-variant">Water Supply</span>
+                </label>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input checked={selectedAmenities.includes('Geyser')} onChange={() => toggleAmenity('Geyser')} className="form-checkbox text-primary focus:ring-primary h-5 w-5 border-outline rounded" type="checkbox" />
+                  <span className="material-symbols-outlined text-on-surface-variant text-xl">heat_pump</span>
+                  <span className="font-body-md text-body-md text-on-surface-variant">Geyser</span>
+                </label>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input checked={selectedAmenities.includes('BackupPower')} onChange={() => toggleAmenity('BackupPower')} className="form-checkbox text-primary focus:ring-primary h-5 w-5 border-outline rounded" type="checkbox" />
+                  <span className="material-symbols-outlined text-on-surface-variant text-xl">battery_charging_full</span>
+                  <span className="font-body-md text-body-md text-on-surface-variant">Backup Power</span>
+                </label>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input checked={selectedAmenities.includes('CCTV')} onChange={() => toggleAmenity('CCTV')} className="form-checkbox text-primary focus:ring-primary h-5 w-5 border-outline rounded" type="checkbox" />
+                  <span className="material-symbols-outlined text-on-surface-variant text-xl">videocam</span>
+                  <span className="font-body-md text-body-md text-on-surface-variant">CCTV</span>
+                </label>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input checked={selectedAmenities.includes('WashingMachine')} onChange={() => toggleAmenity('WashingMachine')} className="form-checkbox text-primary focus:ring-primary h-5 w-5 border-outline rounded" type="checkbox" />
+                  <span className="material-symbols-outlined text-on-surface-variant text-xl">local_laundry_service</span>
+                  <span className="font-body-md text-body-md text-on-surface-variant">Washing Machine</span>
+                </label>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input checked={selectedAmenities.includes('PetFriendly')} onChange={() => toggleAmenity('PetFriendly')} className="form-checkbox text-primary focus:ring-primary h-5 w-5 border-outline rounded" type="checkbox" />
+                  <span className="material-symbols-outlined text-on-surface-variant text-xl">pets</span>
+                  <span className="font-body-md text-body-md text-on-surface-variant">Pet Friendly</span>
+                </label>
               </div>
             </div>
 
