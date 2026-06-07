@@ -15,6 +15,15 @@ export interface IProperty extends Document {
   price: number;
   roomTypes: string[];
   amenities: string[];
+  furniture: boolean;
+  attachedBath: boolean;
+  waterSupply: boolean;
+  geyser: boolean;
+  wifi: boolean;
+  backupPower: boolean;
+  cctv: boolean;
+  washingMachine: boolean;
+  petFriendly: boolean;
   images: string[];
   status: 'active' | 'inactive';
   views: number;
@@ -60,6 +69,15 @@ const PropertySchema: Schema<IProperty> = new mongoose.Schema(
         type: String,
       },
     ],
+    furniture: { type: Boolean, default: false },
+    attachedBath: { type: Boolean, default: false },
+    waterSupply: { type: Boolean, default: false },
+    geyser: { type: Boolean, default: false },
+    wifi: { type: Boolean, default: false },
+    backupPower: { type: Boolean, default: false },
+    cctv: { type: Boolean, default: false },
+    washingMachine: { type: Boolean, default: false },
+    petFriendly: { type: Boolean, default: false },
     images: [
       {
         type: String,
