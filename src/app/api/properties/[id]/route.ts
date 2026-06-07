@@ -79,6 +79,10 @@ export async function PUT(
 
     const body = await req.json();
 
+    if (body.images !== undefined && (!Array.isArray(body.images) || body.images.length === 0)) {
+      return NextResponse.json({ error: 'At least one image is required.' }, { status: 400 });
+    }
+
     const property = await Property.findById(id);
 
     if (!property) {

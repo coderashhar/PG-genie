@@ -233,6 +233,12 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
     e.preventDefault();
     setLoading(true);
 
+    if (formData.images.length === 0) {
+      toast.error('Please upload at least one image of the PG');
+      setLoading(false);
+      return;
+    }
+
     const payload = {
       title: formData.title,
       description: formData.description,

@@ -125,6 +125,11 @@ export async function POST(req: NextRequest) {
     
     const body = await req.json();
     
+    // Validate images
+    if (!body.images || !Array.isArray(body.images) || body.images.length === 0) {
+      return NextResponse.json({ error: 'At least one image is required.' }, { status: 400 });
+    }
+    
     // Add the ownerId from the session
     const propertyData = {
       ...body,
