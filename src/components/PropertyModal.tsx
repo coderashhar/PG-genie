@@ -18,7 +18,18 @@ interface PropertyModalProps {
 }
 
 const AVAILABLE_ROOM_TYPES = ['Single', 'Double', 'Triple', 'Dorm'];
-const AVAILABLE_AMENITIES = ['WiFi', 'AC', 'Laundry', 'Meals', 'Gym', 'Study Room'];
+const AVAILABLE_AMENITIES = ['AC', 'Laundry', 'Meals', 'Gym', 'Study Room'];
+const BOOLEAN_AMENITIES = [
+  { key: 'wifi', label: 'WiFi' },
+  { key: 'furniture', label: 'Furniture' },
+  { key: 'attachedBath', label: 'Attached Bath' },
+  { key: 'waterSupply', label: 'Water Supply' },
+  { key: 'geyser', label: 'Geyser' },
+  { key: 'backupPower', label: 'Backup Power' },
+  { key: 'cctv', label: 'CCTV' },
+  { key: 'washingMachine', label: 'Washing Machine' },
+  { key: 'petFriendly', label: 'Pet Friendly' },
+];
 
 export default function PropertyModal({ isOpen, onClose, property, onSuccess }: PropertyModalProps) {
   const [mounted, setMounted] = useState(false);
@@ -36,6 +47,15 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
     roomTypes: [] as string[],
     amenities: [] as string[],
     images: [] as string[],
+    furniture: false,
+    attachedBath: false,
+    waterSupply: false,
+    geyser: false,
+    wifi: false,
+    backupPower: false,
+    cctv: false,
+    washingMachine: false,
+    petFriendly: false,
   });
 
   // Image upload state
@@ -61,6 +81,15 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
         roomTypes: property.roomTypes || [],
         amenities: property.amenities || [],
         images: property.images || [],
+        furniture: property.furniture || false,
+        attachedBath: property.attachedBath || false,
+        waterSupply: property.waterSupply || false,
+        geyser: property.geyser || false,
+        wifi: property.wifi || false,
+        backupPower: property.backupPower || false,
+        cctv: property.cctv || false,
+        washingMachine: property.washingMachine || false,
+        petFriendly: property.petFriendly || false,
       });
     } else {
       setFormData({
@@ -75,6 +104,15 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
         roomTypes: [],
         amenities: [],
         images: [],
+        furniture: false,
+        attachedBath: false,
+        waterSupply: false,
+        geyser: false,
+        wifi: false,
+        backupPower: false,
+        cctv: false,
+        washingMachine: false,
+        petFriendly: false,
       });
     }
     setUploadingImages([]);
@@ -94,6 +132,10 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
       }
       return { ...prev, [name]: [...arr, value] };
     });
+  };
+
+  const handleBooleanChange = (name: string) => {
+    setFormData((prev: any) => ({ ...prev, [name]: !prev[name] }));
   };
 
   // --- Image Upload Handlers ---
@@ -205,6 +247,15 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
       roomTypes: formData.roomTypes,
       amenities: formData.amenities,
       images: formData.images,
+      furniture: formData.furniture,
+      attachedBath: formData.attachedBath,
+      waterSupply: formData.waterSupply,
+      geyser: formData.geyser,
+      wifi: formData.wifi,
+      backupPower: formData.backupPower,
+      cctv: formData.cctv,
+      washingMachine: formData.washingMachine,
+      petFriendly: formData.petFriendly,
     };
 
     try {
@@ -390,6 +441,17 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
                 <div>
                   <label className="block text-label-sm font-label-sm text-on-surface-variant mb-2">Amenities</label>
                   <div className="flex flex-wrap gap-3">
+                    {BOOLEAN_AMENITIES.map(amenity => (
+                      <label key={amenity.key} className="flex items-center gap-2 cursor-pointer bg-surface-container px-3 py-2 rounded-lg border border-outline-variant hover:border-primary transition-colors">
+                        <input
+                          type="checkbox"
+                          checked={(formData as any)[amenity.key]}
+                          onChange={() => handleBooleanChange(amenity.key)}
+                          className="w-4 h-4 text-primary bg-surface border-outline-variant rounded focus:ring-primary"
+                        />
+                        <span className="text-body-sm text-on-surface">{amenity.label}</span>
+                      </label>
+                    ))}
                     {AVAILABLE_AMENITIES.map(amenity => (
                       <label key={amenity} className="flex items-center gap-2 cursor-pointer bg-surface-container px-3 py-2 rounded-lg border border-outline-variant hover:border-primary transition-colors">
                         <input
