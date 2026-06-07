@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
       .populate({
         path: 'savedPgs',
         model: Property,
-        select: 'title description location price images status amenities roomTypes views',
+        select: 'title description location price images status amenities roomTypes views furniture attachedBath waterSupply geyser wifi backupPower cctv washingMachine petFriendly',
       });
 
     if (!user) {

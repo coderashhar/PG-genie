@@ -82,6 +82,14 @@ const amenityIconMap: Record<string, string> = {
   Gym: 'fitness_center',
   'Study Room': 'menu_book',
   'Study Zone': 'menu_book',
+  Furniture: 'chair',
+  'Attached Bath': 'bathtub',
+  'Water Supply': 'water_drop',
+  Geyser: 'heat_pump',
+  'Backup Power': 'battery_charging_full',
+  CCTV: 'videocam',
+  'Washing Machine': 'local_laundry_service',
+  'Pet Friendly': 'pets',
 };
 
 // --- Helper ---
@@ -618,17 +626,56 @@ function OwnerDashboardContent() {
                             {listing.location?.address || 'Kothri'}
                           </p>
                           <div className="flex gap-2 mb-3">
-                            {listing.amenities?.slice(0, 2).map((amenity) => (
-                              <span
-                                key={amenity}
-                                className="bg-primary/5 text-primary px-2 py-1 rounded font-label-sm text-[10px] flex items-center gap-1"
-                              >
-                                <span className="material-symbols-outlined text-[14px]">
-                                  {amenityIconMap[amenity] || 'check_circle'}
+                            {(() => {
+                              const booleanAmenitiesList = [
+                                { key: 'wifi', label: 'WiFi' },
+                                { key: 'furniture', label: 'Furniture' },
+                                { key: 'attachedBath', label: 'Attached Bath' },
+                                { key: 'waterSupply', label: 'Water Supply' },
+                                { key: 'geyser', label: 'Geyser' },
+                                { key: 'backupPower', label: 'Backup Power' },
+                                { key: 'cctv', label: 'CCTV' },
+                                { key: 'washingMachine', label: 'Washing Machine' },
+                                { key: 'petFriendly', label: 'Pet Friendly' },
+                              ];
+                              const activeBooleans = booleanAmenitiesList
+                                .filter(a => (listing as any)[a.key])
+                                .map(a => a.label);
+                              const uniqueAmenities = Array.from(new Set([...(listing.amenities || []), ...activeBooleans]));
+                              return uniqueAmenities.slice(0, 2).map((amenity) => (
+                                <span
+                                  key={amenity}
+                                  className="bg-primary/5 text-primary px-2 py-1 rounded font-label-sm text-[10px] flex items-center gap-1 whitespace-nowrap"
+                                >
+                                  <span className="material-symbols-outlined text-[14px]">
+                                    {amenityIconMap[amenity] || 'check_circle'}
+                                  </span>
+                                  {amenity}
                                 </span>
-                                {amenity}
-                              </span>
-                            ))}
+                              ));
+                            })()}
+                            {(() => {
+                              const booleanAmenitiesList = [
+                                { key: 'wifi', label: 'WiFi' },
+                                { key: 'furniture', label: 'Furniture' },
+                                { key: 'attachedBath', label: 'Attached Bath' },
+                                { key: 'waterSupply', label: 'Water Supply' },
+                                { key: 'geyser', label: 'Geyser' },
+                                { key: 'backupPower', label: 'Backup Power' },
+                                { key: 'cctv', label: 'CCTV' },
+                                { key: 'washingMachine', label: 'Washing Machine' },
+                                { key: 'petFriendly', label: 'Pet Friendly' },
+                              ];
+                              const activeBooleans = booleanAmenitiesList
+                                .filter(a => (listing as any)[a.key])
+                                .map(a => a.label);
+                              const uniqueAmenities = Array.from(new Set([...(listing.amenities || []), ...activeBooleans]));
+                              return uniqueAmenities.length > 2 ? (
+                                <span className="bg-surface-container text-on-surface-variant px-2 py-1 rounded font-label-sm text-[10px] flex items-center whitespace-nowrap">
+                                  +{uniqueAmenities.length - 2} more
+                                </span>
+                              ) : null;
+                            })()}
                           </div>
                         </div>
                         <div className="flex gap-2 mt-auto">
