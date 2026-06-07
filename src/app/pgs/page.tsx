@@ -48,6 +48,14 @@ const amenityIconMap: Record<string, string> = {
   'Study Zone': 'menu_book',
   Parking: 'local_parking',
   'Shuttle to Campus': 'directions_bus',
+  Furniture: 'chair',
+  'Attached Bath': 'bathtub',
+  'Water Supply': 'water_drop',
+  Geyser: 'heat_pump',
+  'Backup Power': 'battery_charging_full',
+  CCTV: 'videocam',
+  'Washing Machine': 'local_laundry_service',
+  'Pet Friendly': 'pets',
 };
 
 // --- Skeleton ---
@@ -575,12 +583,39 @@ function PgsContent() {
                             {property.description}
                           </p>
                           <div className="flex flex-wrap gap-2 mb-stack-md">
-                            {property.amenities?.slice(0, 4).map((amenity) => (
-                              <div key={amenity} className="bg-primary/5 text-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm flex items-center gap-1.5 border border-primary/10">
-                                <span className="material-symbols-outlined text-[16px]">{amenityIconMap[amenity] || 'check_circle'}</span>
-                                {amenity}
-                              </div>
-                            ))}
+                            {(() => {
+                              const booleanAmenitiesList = [
+                                { key: 'wifi', label: 'WiFi' },
+                                { key: 'furniture', label: 'Furniture' },
+                                { key: 'attachedBath', label: 'Attached Bath' },
+                                { key: 'waterSupply', label: 'Water Supply' },
+                                { key: 'geyser', label: 'Geyser' },
+                                { key: 'backupPower', label: 'Backup Power' },
+                                { key: 'cctv', label: 'CCTV' },
+                                { key: 'washingMachine', label: 'Washing Machine' },
+                                { key: 'petFriendly', label: 'Pet Friendly' },
+                              ];
+                              const activeBooleans = booleanAmenitiesList
+                                .filter(a => (property as any)[a.key])
+                                .map(a => a.label);
+                              const uniqueAmenities = Array.from(new Set([...(property.amenities || []), ...activeBooleans]));
+                              
+                              return (
+                                <>
+                                  {uniqueAmenities.slice(0, 4).map((amenity) => (
+                                    <div key={amenity} className="bg-primary/5 text-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm flex items-center gap-1.5 border border-primary/10 whitespace-nowrap">
+                                      <span className="material-symbols-outlined text-[16px]">{amenityIconMap[amenity] || 'check_circle'}</span>
+                                      {amenity}
+                                    </div>
+                                  ))}
+                                  {uniqueAmenities.length > 4 && (
+                                    <div className="bg-surface-container text-on-surface-variant px-3 py-1.5 rounded-lg font-label-sm text-label-sm flex items-center border border-outline-variant/30 whitespace-nowrap">
+                                      +{uniqueAmenities.length - 4} more
+                                    </div>
+                                  )}
+                                </>
+                              );
+                            })()}
                           </div>
                           <div className="mt-auto pt-4 border-t border-outline-variant/30 flex justify-between items-end">
                             <div>

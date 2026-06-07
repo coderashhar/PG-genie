@@ -34,6 +34,14 @@ const amenityIconMap: Record<string, string> = {
   Parking: 'local_parking',
   'Shuttle to Campus': 'directions_bus',
   'Daily Cleaning': 'cleaning_services',
+  Furniture: 'chair',
+  'Attached Bath': 'bathtub',
+  'Water Supply': 'water_drop',
+  Geyser: 'heat_pump',
+  'Backup Power': 'battery_charging_full',
+  CCTV: 'videocam',
+  'Washing Machine': 'local_laundry_service',
+  'Pet Friendly': 'pets',
 };
 
 export default function PgDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -305,12 +313,30 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
             <div>
               <h2 className="font-h2 text-h2 text-on-surface mb-stack-sm">Premium Facilities</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {property.amenities?.map((amenity: string, idx: number) => (
-                  <div key={idx} className="flex flex-col items-center justify-center p-4 rounded-xl bg-primary/5 border border-primary/10 hover:shadow-md hover:border-primary/30 transition-all text-center gap-2">
-                    <span className="material-symbols-outlined text-[32px] text-primary">{amenityIconMap[amenity] || 'check_circle'}</span>
-                    <span className="font-label-sm text-label-sm text-on-surface">{amenity}</span>
-                  </div>
-                ))}
+                {(() => {
+                  const booleanAmenitiesList = [
+                    { key: 'wifi', label: 'WiFi' },
+                    { key: 'furniture', label: 'Furniture' },
+                    { key: 'attachedBath', label: 'Attached Bath' },
+                    { key: 'waterSupply', label: 'Water Supply' },
+                    { key: 'geyser', label: 'Geyser' },
+                    { key: 'backupPower', label: 'Backup Power' },
+                    { key: 'cctv', label: 'CCTV' },
+                    { key: 'washingMachine', label: 'Washing Machine' },
+                    { key: 'petFriendly', label: 'Pet Friendly' },
+                  ];
+                  const activeBooleans = booleanAmenitiesList
+                    .filter(a => property[a.key])
+                    .map(a => a.label);
+                  const uniqueAmenities = Array.from(new Set([...(property.amenities || []), ...activeBooleans]));
+                  
+                  return uniqueAmenities.map((amenity: string, idx: number) => (
+                    <div key={idx} className="flex flex-col items-center justify-center p-4 rounded-xl bg-primary/5 border border-primary/10 hover:shadow-md hover:border-primary/30 transition-all text-center gap-2">
+                      <span className="material-symbols-outlined text-[32px] text-primary">{amenityIconMap[amenity] || 'check_circle'}</span>
+                      <span className="font-label-sm text-label-sm text-on-surface">{amenity}</span>
+                    </div>
+                  ));
+                })()}
               </div>
             </div>
 
