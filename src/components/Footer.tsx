@@ -30,8 +30,8 @@ export default function Footer() {
           </div>
           <div className="flex flex-col gap-4">
             <span className="font-label-sm uppercase tracking-widest text-surface-variant/40 mb-2">Legal &amp; Help</span>
-            <Link className="font-body-md text-surface-variant hover:text-white transition-colors" href="#">Privacy Policy</Link>
-            <Link className="font-body-md text-surface-variant hover:text-white transition-colors" href="#">Terms of Service</Link>
+            <Link className="font-body-md text-surface-variant hover:text-white transition-colors" href="/privacy">Privacy Policy</Link>
+            <Link className="font-body-md text-surface-variant hover:text-white transition-colors" href="/terms">Terms of Service</Link>
             <Link className="font-body-md text-surface-variant hover:text-white transition-colors" href="#">Help Center</Link>
             <Link className="font-body-md text-surface-variant hover:text-white transition-colors" href="#">Contact Support</Link>
           </div>
