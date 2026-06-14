@@ -28,8 +28,7 @@ export default function AdminLogin() {
       }
 
       toast.success("Welcome, Admin!");
-      router.push("/admin");
-      router.refresh();
+      window.location.href = "/admin";
     } catch (error: any) {
       toast.error(error.message || "Invalid credentials");
     } finally {

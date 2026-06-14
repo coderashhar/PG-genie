@@ -79,7 +79,7 @@ export default function Navbar({ className, hideHome }: { className?: string, hi
     return isActive ? "border-b-2 border-current pb-1" : "";
   };
 
-  if (pathname === "/login") return null;
+  if (pathname === "/login" || pathname.startsWith("/admin")) return null;
 
   if (isHome) {
     return (

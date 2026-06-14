@@ -20,7 +20,7 @@ export default function BottomNav() {
 
   const isOwner = (session?.user as any)?.role === "owner";
 
-  if (pathname === "/login") return null;
+  if (pathname === "/login" || pathname.startsWith("/admin")) return null;
 
   if (isOwner) {
     return (

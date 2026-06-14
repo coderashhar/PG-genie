@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 
 export default function Footer() {
   const pathname = usePathname();
-  if (pathname === "/login") return null;
+  if (pathname === "/login" || pathname.startsWith("/admin")) return null;
 
   return (
     <footer className="w-full bg-on-background text-surface py-20 px-margin-mobile md:px-gutter z-50 relative mt-auto">
@@ -32,8 +32,8 @@ export default function Footer() {
             <span className="font-label-sm uppercase tracking-widest text-surface-variant/40 mb-2">Legal &amp; Help</span>
             <Link className="font-body-md text-surface-variant hover:text-white transition-colors" href="/privacy">Privacy Policy</Link>
             <Link className="font-body-md text-surface-variant hover:text-white transition-colors" href="/terms">Terms of Service</Link>
-            <Link className="font-body-md text-surface-variant hover:text-white transition-colors" href="#">Help Center</Link>
-            <Link className="font-body-md text-surface-variant hover:text-white transition-colors" href="#">Contact Support</Link>
+            <Link className="font-body-md text-surface-variant hover:text-white transition-colors" href="/help">Help Center</Link>
+            <Link className="font-body-md text-surface-variant hover:text-white transition-colors" href="/contact">Contact Support</Link>
           </div>
         </div>
       </div>

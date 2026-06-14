@@ -1,7 +1,5 @@
 import React from "react";
 import Link from "next/link";
-import Navbar from "@/components/Navbar";
-import BottomNav from "@/components/BottomNav";
 
 export const metadata = {
   title: "Help Center - PG Genie",
@@ -34,8 +32,6 @@ export default function HelpPage() {
 
   return (
     <div className="bg-background text-on-background min-h-screen font-body pb-24 md:pb-8">
-      <Navbar />
-
       <main className="max-w-container-max mx-auto px-margin-mobile md:px-gutter pt-8 md:pt-12">
         <div className="max-w-3xl mx-auto">
           {/* Header */}
@@ -50,8 +46,8 @@ export default function HelpPage() {
 
           {/* Quick Actions */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
-            <Link href="/contact" className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant hover:border-primary transition-colors flex items-start gap-4 cursor-pointer">
-              <div className="w-12 h-12 rounded-full bg-primary-container text-primary flex items-center justify-center shrink-0">
+            <Link href="/contact?source=help" className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant hover:border-primary transition-colors flex items-start gap-4 cursor-pointer">
+              <div className="w-12 h-12 rounded-full bg-primary-container/20 text-primary flex items-center justify-center shrink-0">
                 <span className="material-symbols-outlined">support_agent</span>
               </div>
               <div>
@@ -103,7 +99,7 @@ export default function HelpPage() {
               If you couldn't find the answer to your question, our support team is ready to assist you.
             </p>
             <Link
-              href="/contact"
+              href="/contact?source=help"
               className="inline-flex items-center justify-center h-12 px-8 rounded-full bg-primary text-on-primary font-label-lg font-medium hover:opacity-90 transition-opacity"
             >
               Submit a Ticket
@@ -111,8 +107,6 @@ export default function HelpPage() {
           </div>
         </div>
       </main>
-
-      <BottomNav />
     </div>
   );
 }

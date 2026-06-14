@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function TermsOfService() {
   return (
-    <main className="min-h-screen bg-surface-container-lowest pt-32 pb-24 px-margin-mobile md:px-gutter">
+    <main className="min-h-screen bg-surface-container-lowest pt-6 md:pt-10 pb-12 px-margin-mobile md:px-gutter">
       <div className="max-w-3xl mx-auto">
         <div className="mb-12">
           <Link href="/" className="inline-flex items-center text-primary hover:text-primary/80 font-body-md font-medium mb-8 transition-colors">

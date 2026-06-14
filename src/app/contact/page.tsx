@@ -1,20 +1,55 @@
 "use client";
 
-import React, { useState } from "react";
-import Navbar from "@/components/Navbar";
-import BottomNav from "@/components/BottomNav";
+import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function ContactPage() {
   const { data: session } = useSession();
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [backLabel, setBackLabel] = useState("Go Back");
   const [formData, setFormData] = useState({
     name: session?.user?.name || "",
     email: session?.user?.email || "",
     subject: "",
     message: "",
   });
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const source = params.get("source");
+      
+      if (source === "help") {
+        setBackLabel("Back to Help Center");
+      } else if (window.history.length > 2) {
+        // history.length > 2 implies they navigated within the app
+        setBackLabel("Go Back");
+      } else {
+        setBackLabel("Back to Home");
+      }
+    }
+  }, []);
+
+  const handleNavigateBack = () => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const source = params.get("source");
+      
+      if (source === "help") {
+        router.push("/help");
+      } else if (window.history.length > 2) {
+        router.back();
+      } else {
+        router.push("/");
+      }
+    } else {
+      router.push("/");
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -47,6 +82,7 @@ export default function ContactPage() {
         subject: "",
         message: "",
       });
+      handleNavigateBack();
     } catch (error: any) {
       toast.error(error.message || "An error occurred");
     } finally {
@@ -56,9 +92,16 @@ export default function ContactPage() {
 
   return (
     <div className="bg-background text-on-background min-h-screen font-body pb-24 md:pb-8">
-      <Navbar />
-
       <main className="max-w-container-max mx-auto px-margin-mobile md:px-gutter pt-8 md:pt-12 flex flex-col items-center">
+        <div className="w-full max-w-2xl mb-6 flex justify-start">
+          <button 
+            onClick={handleNavigateBack}
+            className="inline-flex items-center text-primary hover:text-primary/80 font-body-md font-medium transition-colors bg-transparent border-none cursor-pointer p-0"
+          >
+            <span className="material-symbols-outlined mr-2">arrow_back</span>
+            {backLabel}
+          </button>
+        </div>
         <div className="w-full max-w-2xl bg-surface-container-lowest rounded-3xl shadow-sm border border-outline-variant overflow-hidden">
           <div className="p-8 md:p-12">
             <div className="mb-8 text-center">
@@ -159,8 +202,6 @@ export default function ContactPage() {
           </div>
         </div>
       </main>
-
-      <BottomNav />
     </div>
   );
 }
