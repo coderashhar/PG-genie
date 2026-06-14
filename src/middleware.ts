@@ -7,6 +7,15 @@ export default withAuth(
     const isAuth = !!token;
     const isOwnerPage = req.nextUrl.pathname.startsWith('/owner');
     const isDashboardPage = req.nextUrl.pathname.startsWith('/dashboard');
+    const isAdminPage = req.nextUrl.pathname.startsWith('/admin') && !req.nextUrl.pathname.startsWith('/admin/login');
+
+    if (isAdminPage) {
+      const adminSession = req.cookies.get('admin_session');
+      if (!adminSession) {
+        return NextResponse.redirect(new URL('/admin/login', req.url));
+      }
+      return NextResponse.next();
+    }
 
     if (isOwnerPage) {
       if (!isAuth) {
@@ -31,5 +40,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ['/owner/:path*', '/dashboard/:path*'],
+  matcher: ['/owner/:path*', '/dashboard/:path*', '/admin/:path*'],
 };
