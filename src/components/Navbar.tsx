@@ -70,7 +70,7 @@ export default function Navbar({ className, hideHome }: { className?: string, hi
     if (!session) {
       e.preventDefault();
       toast.error("Please sign in or login to continue");
-      router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
+      router.push(`/login?callbackUrl=${encodeURIComponent(path)}`);
     }
   };
 
