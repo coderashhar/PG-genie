@@ -47,3 +47,6 @@ Thumbs.db
 # Misc
 *.tsbuildinfo
 next-env.d.ts
+
+# Agents
+docs/AGENTS.md
