@@ -97,7 +97,7 @@ export default async function AdminDashboardPage() {
                     <span className={`text-[10px] uppercase tracking-wider px-2 py-1 rounded-md font-bold ${
                       ticket.status === 'open' ? 'bg-error-container text-error' : 
                       ticket.status === 'in_progress' ? 'bg-secondary-container text-secondary' : 
-                      'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                      'bg-green-600 text-white'
                     }`}>
                       {ticket.status.replace('_', ' ')}
                     </span>

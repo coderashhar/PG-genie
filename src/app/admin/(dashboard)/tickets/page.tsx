@@ -90,7 +90,7 @@ export default function AdminTicketsPage() {
                     <td className="p-4 align-top">
                       <span className={`text-[10px] uppercase tracking-wider px-2 py-1 rounded-md font-bold ${ticket.status === 'open' ? 'bg-error-container text-error' :
                         ticket.status === 'in_progress' ? 'bg-secondary-container text-secondary' :
-                          'bg-green-600 text-green-900 dark:bg-green-900/30 dark:text-green-400'
+                          'bg-green-200 text-green-800'
                         }`}>
                         {ticket.status.replace('_', ' ')}
                       </span>

@@ -483,7 +483,7 @@ function OwnerDashboardContent() {
               
               <button 
                 onClick={handleListProperty}
-                className="bg-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container px-6 py-3 rounded-xl font-h2 font-bold text-body-lg shadow-lg hover:shadow-xl transition-all hover:scale-105 flex items-center justify-center gap-2"
+                className="bg-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container px-6 py-3 rounded-xl font-h2 font-bold text-body-lg shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
               >
                 <span className="material-symbols-outlined">add_circle</span>
                 <span className="hidden sm:inline">List your PG</span>
@@ -526,8 +526,8 @@ function OwnerDashboardContent() {
               </>
             ) : (
               <>
-                <div className="bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] border border-surface-container-high relative overflow-hidden group hover:shadow-[0px_8px_30px_rgba(76,29,149,0.12)] transition-all hover:scale-[1.02]">
-                  <div className="absolute -right-6 -top-6 w-32 h-32 bg-primary-fixed rounded-full opacity-20 group-hover:scale-150 transition-transform duration-500"></div>
+                <div className="bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] border border-surface-container-high relative overflow-hidden group hover:shadow-[0px_8px_30px_rgba(76,29,149,0.12)] transition-all
+                  <div className="absolute -right-6 -top-6 w-32 h-32 bg-primary-fixed rounded-full opacity-20"></div>
                   <div className="flex justify-between items-start mb-4 relative z-10">
                     <div className="p-3 bg-surface rounded-lg text-primary">
                       <span className="material-symbols-outlined fill text-[32px]" style={{ fontVariationSettings: "'FILL' 1" }}>apartment</span>
@@ -540,8 +540,8 @@ function OwnerDashboardContent() {
                   <p className="font-display text-h1 text-on-surface relative z-10">{stats?.totalListings || 0}</p>
                 </div>
                 
-                <div className="bg-primary-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] relative overflow-hidden group hover:shadow-[0px_8px_30px_rgba(76,29,149,0.12)] transition-all text-on-primary-container hover:scale-[1.02]">
-                  <div className="absolute right-0 bottom-0 w-40 h-40 bg-primary opacity-10 rounded-tl-full group-hover:scale-125 transition-transform duration-500"></div>
+                <div className="bg-primary-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] relative overflow-hidden group hover:shadow-[0px_8px_30px_rgba(76,29,149,0.12)] transition-all text-on-primary-container
+                  <div className="absolute right-0 bottom-0 w-40 h-40 bg-primary opacity-10 rounded-tl-full"></div>
                   <div className="flex justify-between items-start mb-4 relative z-10">
                     <div className="p-3 bg-surface/20 rounded-lg text-on-primary-container">
                       <span className="material-symbols-outlined fill text-[32px]" style={{ fontVariationSettings: "'FILL' 1" }}>forum</span>
@@ -555,8 +555,8 @@ function OwnerDashboardContent() {
                   <p className="font-display text-h1 relative z-10">{stats?.activeLeads || 0}</p>
                 </div>
                 
-                <div className="bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] border border-surface-container-high relative overflow-hidden group hover:shadow-[0px_8px_30px_rgba(76,29,149,0.12)] transition-all hover:scale-[1.02]">
-                  <div className="absolute -left-6 -bottom-6 w-32 h-32 bg-secondary-fixed rounded-full opacity-20 group-hover:scale-150 transition-transform duration-500"></div>
+                <div className="bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] border border-surface-container-high relative overflow-hidden group hover:shadow-[0px_8px_30px_rgba(76,29,149,0.12)] transition-all
+                  <div className="absolute -left-6 -bottom-6 w-32 h-32 bg-secondary-fixed rounded-full opacity-20"></div>
                   <div className="flex justify-between items-start mb-4 relative z-10">
                     <div className="p-3 bg-surface rounded-lg text-secondary">
                       <span className="material-symbols-outlined fill text-[32px]" style={{ fontVariationSettings: "'FILL' 1" }}>visibility</span>
@@ -595,7 +595,7 @@ function OwnerDashboardContent() {
                   dashData.listings.map((listing) => (
                     <div
                       key={listing._id}
-                      className="rounded-xl p-4 shadow-[0px_4px_20px_rgba(76,29,149,0.05)] border border-outline-variant/30 flex flex-col sm:flex-row gap-4 hover:shadow-[0px_8px_30px_rgba(76,29,149,0.12)] transition-all bg-surface-container-low hover:scale-[1.01] hover:shadow-xl"
+                      className="rounded-xl p-4 shadow-[0px_4px_20px_rgba(76,29,149,0.05)] border border-outline-variant/30 flex flex-col sm:flex-row gap-4 hover:shadow-[0px_8px_30px_rgba(76,29,149,0.12)] transition-all bg-surface-container-low hover:shadow-xl"
                     >
                       <div className="w-full sm:w-48 h-32 rounded-lg overflow-hidden shrink-0 relative">
                         <img
@@ -681,19 +681,19 @@ function OwnerDashboardContent() {
                         <div className="flex gap-2 mt-auto">
                           <button 
                             onClick={() => handleEditProperty(listing)}
-                            className="flex-1 border-[1.5px] border-primary text-primary hover:bg-primary-container/10 px-4 py-2 rounded-lg font-label-sm text-label-sm transition-colors text-center hover:scale-105 hover:shadow-xl cursor-pointer"
+                            className="flex-1 border-[1.5px] border-primary text-primary hover:bg-primary-container/10 px-4 py-2 rounded-lg font-label-sm text-label-sm transition-colors text-center hover:shadow-xl cursor-pointer"
                           >
                             Edit
                           </button>
                           <button 
                             onClick={() => handleStatusToggle(listing._id, listing.status)}
-                            className="flex-1 border-[1.5px] border-outline-variant text-on-surface-variant hover:bg-surface-container px-4 py-2 rounded-lg font-label-sm text-label-sm transition-colors text-center hover:scale-105 hover:shadow-xl cursor-pointer"
+                            className="flex-1 border-[1.5px] border-outline-variant text-on-surface-variant hover:bg-surface-container px-4 py-2 rounded-lg font-label-sm text-label-sm transition-colors text-center hover:shadow-xl cursor-pointer"
                           >
                             {listing.status === 'active' ? 'Mark as Filled' : 'Mark Available'}
                           </button>
                           <button 
                             onClick={() => setDeletingPropertyId(listing._id)}
-                            className="border-[1.5px] border-error/40 text-error hover:bg-error hover:text-on-error px-3 py-2 rounded-lg font-label-sm text-label-sm transition-colors text-center hover:scale-105 hover:shadow-xl cursor-pointer flex items-center justify-center"
+                            className="border-[1.5px] border-error/40 text-error hover:bg-error hover:text-on-error px-3 py-2 rounded-lg font-label-sm text-label-sm transition-colors text-center hover:shadow-xl cursor-pointer flex items-center justify-center"
                             title="Delete property"
                           >
                             <span className="material-symbols-outlined text-[18px]">delete</span>
@@ -737,7 +737,7 @@ function OwnerDashboardContent() {
                     const student = inquiry.studentId;
                     const pg = inquiry.pgId;
                     return (
-                      <div key={inquiry._id} className="p-4 hover:bg-surface-container-low transition-colors hover:scale-[1.02] hover:shadow-md">
+                      <div key={inquiry._id} className="p-4 hover:bg-surface-container-low transition-colors hover:shadow-md">
                         <div className="flex items-start gap-3 mb-3">
                           <div className={`w-10 h-10 rounded-full ${color.bg} ${color.text} flex items-center justify-center font-h2 text-body-md shrink-0`}>
                             {getInitials(student?.name || 'UN')}
@@ -757,13 +757,13 @@ function OwnerDashboardContent() {
                         <div className="flex gap-2 mt-2">
                           <button 
                             onClick={() => handleInquiryAction(inquiry._id, 'accepted')}
-                            className="flex-1 bg-primary/10 text-primary hover:bg-primary hover:text-on-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm transition-colors flex items-center justify-center gap-1 hover:scale-105 cursor-pointer"
+                            className="flex-1 bg-primary/10 text-primary hover:bg-primary hover:text-on-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm transition-colors flex items-center justify-center gap-1 cursor-pointer"
                           >
                             <span className="material-symbols-outlined text-[16px]">check_circle</span> Accept
                           </button>
                           <button 
                             onClick={() => handleInquiryAction(inquiry._id, 'rejected')}
-                            className="flex-1 bg-error-container/20 text-error hover:bg-error-container hover:text-on-error-container px-3 py-1.5 rounded-lg font-label-sm text-label-sm transition-colors flex items-center justify-center gap-1 hover:scale-105 cursor-pointer"
+                            className="flex-1 bg-error-container/20 text-error hover:bg-error-container hover:text-on-error-container px-3 py-1.5 rounded-lg font-label-sm text-label-sm transition-colors flex items-center justify-center gap-1 cursor-pointer"
                           >
                             <span className="material-symbols-outlined text-[16px]">cancel</span> Reject
                           </button>

@@ -8,6 +8,7 @@ export default function AdminPGsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
+  const [pgToDelete, setPgToDelete] = useState<string | null>(null);
 
   const fetchPGs = async () => {
     try {
@@ -32,11 +33,8 @@ export default function AdminPGsPage() {
     return () => clearTimeout(delayDebounceFn);
   }, [searchQuery]);
 
-  const handleDelete = async (id: string) => {
-    if (!window.confirm("Are you ABSOLUTELY sure? This will permanently delete the PG and remove it from users' saved lists. This action cannot be undone.")) {
-      return;
-    }
-
+  const confirmDelete = async (id: string) => {
+    setPgToDelete(null);
     setIsDeleting(id);
     try {
       const res = await fetch(`/api/admin/pgs/${id}`, {
@@ -130,7 +128,7 @@ export default function AdminPGsPage() {
                       </td>
                       <td className="p-4 align-top text-right">
                         <button
-                          onClick={() => handleDelete(pg._id)}
+                          onClick={() => setPgToDelete(pg._id)}
                           disabled={isDeleting === pg._id}
                           className="px-3 py-1.5 rounded-lg bg-error/10 text-error font-medium text-body-sm hover:bg-error hover:text-white transition-colors disabled:opacity-50 inline-flex items-center gap-1 cursor-pointer"
                           title="Permanently Delete Listing"
@@ -147,6 +145,35 @@ export default function AdminPGsPage() {
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {pgToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-surface-container-lowest rounded-3xl p-8 max-w-md w-full shadow-xl border border-outline-variant animate-in zoom-in-95 duration-200">
+            <div className="w-16 h-16 bg-error-container text-error rounded-full flex items-center justify-center mx-auto mb-6">
+              <span className="material-symbols-outlined text-[32px]">warning</span>
+            </div>
+            <h3 className="text-h3 font-display font-bold text-center mb-2">Delete Listing?</h3>
+            <p className="text-body-md text-on-surface-variant text-center mb-8">
+              Are you ABSOLUTELY sure? This will permanently delete the PG and remove it from users' saved lists. This action cannot be undone.
+            </p>
+            <div className="flex gap-4">
+              <button
+                onClick={() => setPgToDelete(null)}
+                className="flex-1 h-12 rounded-full border border-outline-variant bg-surface text-on-surface font-label-lg font-bold hover:bg-surface-container transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => confirmDelete(pgToDelete)}
+                className="flex-1 h-12 rounded-full bg-error text-white font-label-lg font-bold hover:bg-error/90 transition-colors"
+              >
+                Delete Permanently
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
