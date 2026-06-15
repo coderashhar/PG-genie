@@ -56,7 +56,7 @@ function LoginContent() {
       const data = await res.json();
       
       if (res.ok) {
-        toast.success("OTP sent! (Check server console)");
+        toast.success(data.message || "OTP sent successfully!");
         setOtpSent(true);
         setStep(2);
       } else {
