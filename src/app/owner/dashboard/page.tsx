@@ -526,7 +526,7 @@ function OwnerDashboardContent() {
               </>
             ) : (
               <>
-                <div className="bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] border border-surface-container-high relative overflow-hidden group hover:shadow-[0px_8px_30px_rgba(76,29,149,0.12)] transition-all
+                <div className="bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] border border-surface-container-high relative overflow-hidden group hover:shadow-[0px_8px_30px_rgba(76,29,149,0.12)] transition-all">
                   <div className="absolute -right-6 -top-6 w-32 h-32 bg-primary-fixed rounded-full opacity-20"></div>
                   <div className="flex justify-between items-start mb-4 relative z-10">
                     <div className="p-3 bg-surface rounded-lg text-primary">
@@ -540,7 +540,7 @@ function OwnerDashboardContent() {
                   <p className="font-display text-h1 text-on-surface relative z-10">{stats?.totalListings || 0}</p>
                 </div>
                 
-                <div className="bg-primary-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] relative overflow-hidden group hover:shadow-[0px_8px_30px_rgba(76,29,149,0.12)] transition-all text-on-primary-container
+                <div className="bg-primary-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] relative overflow-hidden group hover:shadow-[0px_8px_30px_rgba(76,29,149,0.12)] transition-all text-on-primary-container">
                   <div className="absolute right-0 bottom-0 w-40 h-40 bg-primary opacity-10 rounded-tl-full"></div>
                   <div className="flex justify-between items-start mb-4 relative z-10">
                     <div className="p-3 bg-surface/20 rounded-lg text-on-primary-container">
@@ -555,7 +555,7 @@ function OwnerDashboardContent() {
                   <p className="font-display text-h1 relative z-10">{stats?.activeLeads || 0}</p>
                 </div>
                 
-                <div className="bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] border border-surface-container-high relative overflow-hidden group hover:shadow-[0px_8px_30px_rgba(76,29,149,0.12)] transition-all
+                <div className="bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] border border-surface-container-high relative overflow-hidden group hover:shadow-[0px_8px_30px_rgba(76,29,149,0.12)] transition-all">
                   <div className="absolute -left-6 -bottom-6 w-32 h-32 bg-secondary-fixed rounded-full opacity-20"></div>
                   <div className="flex justify-between items-start mb-4 relative z-10">
                     <div className="p-3 bg-surface rounded-lg text-secondary">
