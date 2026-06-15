@@ -13,6 +13,7 @@
     "@aws-sdk/client-ses": "^3.1068.0",
     "@aws-sdk/client-sns": "^3.1068.0",
     "@aws-sdk/s3-request-presigner": "^3.1053.0",
+    "@google/genai": "^2.8.0",
     "bcryptjs": "^3.0.3",
     "framer-motion": "^12.40.0",
     "leaflet": "^1.9.4",
