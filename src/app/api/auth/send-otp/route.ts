@@ -108,7 +108,9 @@ export async function POST(req: Request) {
           }
         }
       });
-      await snsClient!.send(smsCommand);
+      console.log(`[DEBUG] Attempting to send SNS SMS to ${identifier}`);
+      const snsResponse = await snsClient!.send(smsCommand);
+      console.log(`[DEBUG] SNS Send Response:`, JSON.stringify(snsResponse, null, 2));
     }
 
     return NextResponse.json({ success: true, message: 'OTP sent successfully' }, { status: 200 });
