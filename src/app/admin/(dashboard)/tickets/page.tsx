@@ -34,7 +34,7 @@ export default function AdminTicketsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),
       });
-      
+
       if (res.ok) {
         toast.success("Ticket updated");
         setTickets(tickets.map(t => t._id === id ? { ...t, status: newStatus } : t));
@@ -76,7 +76,7 @@ export default function AdminTicketsPage() {
                 tickets.map((ticket) => (
                   <tr key={ticket._id} className="hover:bg-surface-container/50 transition-colors">
                     <td className="p-4 text-body-sm align-top whitespace-nowrap">
-                      {new Date(ticket.createdAt).toLocaleDateString()}<br/>
+                      {new Date(ticket.createdAt).toLocaleDateString()}<br />
                       <span className="text-[10px] text-on-surface-variant">{new Date(ticket.createdAt).toLocaleTimeString()}</span>
                     </td>
                     <td className="p-4 text-body-sm align-top">
@@ -88,16 +88,15 @@ export default function AdminTicketsPage() {
                       <div className="text-on-surface-variant">{ticket.message}</div>
                     </td>
                     <td className="p-4 align-top">
-                      <span className={`text-[10px] uppercase tracking-wider px-2 py-1 rounded-md font-bold ${
-                        ticket.status === 'open' ? 'bg-error-container text-error' : 
-                        ticket.status === 'in_progress' ? 'bg-secondary-container text-secondary' : 
-                        'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                      }`}>
+                      <span className={`text-[10px] uppercase tracking-wider px-2 py-1 rounded-md font-bold ${ticket.status === 'open' ? 'bg-error-container text-error' :
+                        ticket.status === 'in_progress' ? 'bg-secondary-container text-secondary' :
+                          'bg-green-600 text-green-900 dark:bg-green-900/30 dark:text-green-400'
+                        }`}>
                         {ticket.status.replace('_', ' ')}
                       </span>
                     </td>
                     <td className="p-4 align-top text-right">
-                      <select 
+                      <select
                         value={ticket.status}
                         onChange={(e) => updateStatus(ticket._id, e.target.value)}
                         className="bg-surface text-on-surface border border-outline-variant text-body-sm rounded-lg px-2 py-1 outline-none focus:border-primary"

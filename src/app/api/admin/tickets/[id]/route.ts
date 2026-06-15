@@ -9,12 +9,13 @@ const isAdmin = async () => {
   return !!session;
 };
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, props: { params: Promise<{ id: string }> }) {
   if (!(await isAdmin())) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   try {
     await connectToDatabase();
     const { status } = await req.json();
+    const params = await props.params;
 
     if (!['open', 'in_progress', 'resolved'].includes(status)) {
       return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
