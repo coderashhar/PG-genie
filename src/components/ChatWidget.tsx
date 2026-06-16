@@ -311,16 +311,14 @@ export default function ChatWidget() {
         >
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-              <span className="material-symbols-outlined text-white text-[20px]">
-                magic_button
-              </span>
+              <span className="material-symbols-outlined text-white text-[20px]">auto_awesome</span>
             </div>
             <div>
               <h3 className="text-white font-semibold text-sm">
-                PG Genie Assistant
+                Genie
               </h3>
               <p className="text-white/70 text-xs">
-                {isStreaming ? 'Typing...' : 'AI-powered PG helper'}
+                {isStreaming ? 'Typing...' : 'Your AI PG assistant'}
               </p>
             </div>
           </div>
@@ -367,15 +365,13 @@ export default function ChatWidget() {
                     'linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-container) 100%)',
                 }}
               >
-                <span className="material-symbols-outlined text-white text-3xl">
-                  magic_button
-                </span>
+                <span className="material-symbols-outlined text-white text-3xl">auto_awesome</span>
               </div>
               <h4 className="font-semibold text-on-surface text-base mb-1">
-                Hi there! 👋
+                Hi there! I&apos;m Genie ✨
               </h4>
               <p className="text-on-surface-variant text-sm mb-5 max-w-[280px]">
-                I&apos;m your PG Genie assistant. Ask me anything about PGs near VIT!
+                Your personal PG search assistant. Ask me anything about PGs near VIT!
               </p>
               <div className="flex flex-wrap gap-2 justify-center">
                 {QUICK_ACTIONS.map((action) => (
@@ -404,9 +400,7 @@ export default function ChatWidget() {
                       background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-container) 100%)',
                     }}
                   >
-                    <span className="material-symbols-outlined text-white text-[14px]">
-                      magic_button
-                    </span>
+                    <span className="material-symbols-outlined text-white text-[14px]">auto_awesome</span>
                   </div>
                 )}
                 <div
@@ -505,7 +499,7 @@ export default function ChatWidget() {
             isOpen ? 'rotate-90' : 'rotate-0'
           }`}
         >
-          {isOpen ? 'close' : 'chat'}
+          {isOpen ? 'close' : 'auto_awesome'}
         </span>
 
         {/* Pulse animation for attention */}
