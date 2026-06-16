@@ -32,10 +32,8 @@ const amenityIconMap: Record<string, string> = {
   'Water Supply': 'water_drop',
   Geyser: 'heat_pump',
   'Backup Power': 'battery_charging_full',
-  CCTV: 'videocam',
   'Washing Machine': 'local_laundry_service',
   'Pet Friendly': 'pets',
-  'Shuttle to Campus': 'directions_bus',
 };
 
 interface PropertyLocation {

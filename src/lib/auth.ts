@@ -109,12 +109,12 @@ export const authOptions: NextAuthOptions = {
         if (!existingUser) {
           // Create new user if they don't exist
           const newUser = await User.create({
-            name: user.name,
-            email: user.email,
-            image: user.image,
-            role: requestedRole,
-          });
-          user.id = newUser._id.toString();
+            name: user.name || '',
+            email: user.email || '',
+            image: user.image || undefined,
+            role: requestedRole as 'student' | 'owner',
+          } as any);
+          user.id = (newUser._id as any).toString();
           (user as any).role = newUser.role;
         } else {
           if (existingUser.role !== requestedRole) {

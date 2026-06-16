@@ -5,6 +5,7 @@ import PageTransition from "@/components/PageTransition";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BottomNav from "@/components/BottomNav";
+import ChatWidget from "@/components/ChatWidget";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
@@ -46,6 +47,7 @@ export default function RootLayout({
             {children}
           </PageTransition>
           <BottomNav />
+          <ChatWidget />
           <Footer />
         </SessionProvider>
       </body>

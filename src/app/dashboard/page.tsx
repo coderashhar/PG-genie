@@ -181,6 +181,7 @@ function EditProfileForm({ profile, setProfile }: { profile: any; setProfile: (p
         email: profile.email || '',
         phone: phoneStr,
         batch: profile.batch || '',
+        password: '',
       });
     }
   }, [profile]);

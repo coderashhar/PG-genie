@@ -20,7 +20,7 @@ export async function POST(req: Request) {
 
     // Check if user is logged in to associate the ticket
     const session = await getServerSession(authOptions);
-    const userId = session?.user?.id;
+    const userId = (session?.user as any)?.id;
 
     const ticket = await Ticket.create({
       name,

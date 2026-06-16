@@ -6,6 +6,7 @@ export interface IUser extends Document {
   password?: string; // Optional if using OAuth
   role: 'student' | 'owner';
   phone?: string;
+  image?: string; // Profile image URL (from OAuth)
   university?: string; // Student-specific: university name
   batch?: string; // Student-specific: graduation batch e.g. '2026'
   bio?: string; // Short user biography
