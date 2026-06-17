@@ -606,10 +606,16 @@ function OwnerDashboardContent() {
                         <div className={`absolute top-2 left-2 px-2 py-1 rounded-md font-label-sm text-[10px] flex items-center gap-1 ${
                           listing.status === 'active'
                             ? 'bg-secondary text-on-secondary'
-                            : 'bg-error-container text-on-error-container'
+                            : listing.status === 'pending'
+                            ? 'bg-tertiary-container text-on-tertiary-container'
+                            : listing.status === 'rejected'
+                            ? 'bg-error text-white'
+                            : 'bg-surface-variant text-on-surface-variant'
                         }`}>
                           <span className="w-1.5 h-1.5 rounded-full bg-current opacity-70"></span>
-                          {listing.status === 'active' ? 'Available' : 'Inactive'}
+                          {listing.status === 'active' ? 'Available' : 
+                           listing.status === 'pending' ? 'Pending Review' :
+                           listing.status === 'rejected' ? 'Rejected' : 'Inactive'}
                         </div>
                       </div>
                       <div className="flex-1 flex flex-col justify-between">

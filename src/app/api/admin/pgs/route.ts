@@ -18,10 +18,10 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const search = searchParams.get('search') || '';
 
-    // Simple search by name or owner email/name
+    // Simple search by title or owner email/name
     let query = {};
     if (search) {
-      query = { name: { $regex: search, $options: 'i' } };
+      query = { title: { $regex: search, $options: 'i' } };
     }
 
     const properties = await Property.find(query)

@@ -25,7 +25,7 @@ export interface IProperty extends Document {
   washingMachine: boolean;
   petFriendly: boolean;
   images: string[];
-  status: 'active' | 'inactive';
+  status: 'active' | 'inactive' | 'pending' | 'rejected';
   views: number;
   monthlyViews: { month: number; year: number; count: number }[];
   createdAt: Date;
@@ -85,8 +85,8 @@ const PropertySchema: Schema<IProperty> = new mongoose.Schema(
     ],
     status: {
       type: String,
-      enum: ['active', 'inactive'],
-      default: 'active',
+      enum: ['active', 'inactive', 'pending', 'rejected'],
+      default: 'pending',
     },
     views: {
       type: Number,

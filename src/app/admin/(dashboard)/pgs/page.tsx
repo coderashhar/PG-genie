@@ -7,15 +7,16 @@ export default function AdminPGsPage() {
   const [pgs, setPgs] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isDeleting, setIsDeleting] = useState<string | null>(null);
-  const [pgToDelete, setPgToDelete] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'pending' | 'active' | 'rejected'>('pending');
+  const [isUpdating, setIsUpdating] = useState<string | null>(null);
 
   const fetchPGs = async () => {
+    setIsLoading(true);
     try {
       const res = await fetch(`/api/admin/pgs?search=${encodeURIComponent(searchQuery)}`);
       const data = await res.json();
       if (res.ok) {
-        setPgs(data.properties);
+        setPgs(data.properties || []);
       } else {
         toast.error(data.error || "Failed to fetch properties");
       }
@@ -33,32 +34,37 @@ export default function AdminPGsPage() {
     return () => clearTimeout(delayDebounceFn);
   }, [searchQuery]);
 
-  const confirmDelete = async (id: string) => {
-    setPgToDelete(null);
-    setIsDeleting(id);
+  const updateStatus = async (id: string, status: 'active' | 'rejected') => {
+    setIsUpdating(id);
     try {
-      const res = await fetch(`/api/admin/pgs/${id}`, {
-        method: "DELETE",
+      const res = await fetch(`/api/admin/pgs/${id}/status`, {
+        method: "PATCH",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status })
       });
       
       const data = await res.json();
       if (res.ok) {
-        toast.success("Listing permanently deleted");
-        setPgs(pgs.filter(pg => pg._id !== id));
+        toast.success(`Listing ${status === 'active' ? 'approved' : 'rejected'}`);
+        setPgs(pgs.map(pg => pg._id === id ? { ...pg, status } : pg));
       } else {
-        toast.error(data.error || "Failed to delete listing");
+        toast.error(data.error || "Failed to update listing status");
       }
     } catch (error) {
       toast.error("An error occurred");
     } finally {
-      setIsDeleting(null);
+      setIsUpdating(null);
     }
   };
+
+  const filteredPgs = pgs.filter(pg => pg.status === activeTab);
 
   return (
     <div className="max-w-6xl mx-auto">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-        <h1 className="text-h2 font-display font-bold text-on-surface">PG Moderation</h1>
+        <h1 className="text-h2 font-display font-bold text-on-surface">Review Queue</h1>
         
         <div className="relative w-full md:w-72">
           <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
@@ -72,8 +78,29 @@ export default function AdminPGsPage() {
         </div>
       </div>
 
+      <div className="flex gap-4 border-b border-outline-variant mb-6">
+        <button 
+          onClick={() => setActiveTab('pending')}
+          className={`pb-2 font-bold transition-colors ${activeTab === 'pending' ? 'border-b-2 border-primary text-primary' : 'text-on-surface-variant hover:text-on-surface'}`}
+        >
+          Pending Review
+        </button>
+        <button 
+          onClick={() => setActiveTab('active')}
+          className={`pb-2 font-bold transition-colors ${activeTab === 'active' ? 'border-b-2 border-primary text-primary' : 'text-on-surface-variant hover:text-on-surface'}`}
+        >
+          Approved
+        </button>
+        <button 
+          onClick={() => setActiveTab('rejected')}
+          className={`pb-2 font-bold transition-colors ${activeTab === 'rejected' ? 'border-b-2 border-primary text-primary' : 'text-on-surface-variant hover:text-on-surface'}`}
+        >
+          Rejected
+        </button>
+      </div>
+
       <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-sm overflow-hidden">
-        {isLoading && pgs.length === 0 ? (
+        {isLoading ? (
           <div className="flex items-center justify-center h-64"><span className="material-symbols-outlined animate-spin text-[32px] text-primary">progress_activity</span></div>
         ) : (
           <div className="overflow-x-auto">
@@ -88,25 +115,25 @@ export default function AdminPGsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-outline-variant">
-                {pgs.length === 0 ? (
+                {filteredPgs.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="p-8 text-center text-on-surface-variant">No listings found</td>
+                    <td colSpan={5} className="p-8 text-center text-on-surface-variant">No {activeTab} listings found</td>
                   </tr>
                 ) : (
-                  pgs.map((pg) => (
+                  filteredPgs.map((pg) => (
                     <tr key={pg._id} className="hover:bg-surface-container/50 transition-colors">
                       <td className="p-4 align-top">
                         <div className="flex items-center gap-3">
                           {pg.images && pg.images.length > 0 ? (
-                            <img src={pg.images[0]} alt={pg.name} className="w-12 h-12 rounded-lg object-cover bg-surface-container shrink-0" />
+                            <img src={pg.images[0]} alt={pg.title} className="w-12 h-12 rounded-lg object-cover bg-surface-container shrink-0" />
                           ) : (
                             <div className="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center shrink-0">
                               <span className="material-symbols-outlined text-on-surface-variant">home</span>
                             </div>
                           )}
                           <div>
-                            <a href={`/pgs/${pg._id}`} target="_blank" className="font-bold text-primary hover:underline line-clamp-1">{pg.name}</a>
-                            <div className="text-[10px] text-on-surface-variant uppercase tracking-wider mt-1">{pg.type} • {pg.gender}</div>
+                            <a href={`/pgs/${pg._id}`} target="_blank" className="font-bold text-primary hover:underline line-clamp-1">{pg.title}</a>
+                            <div className="text-[10px] text-on-surface-variant uppercase tracking-wider mt-1">{pg.roomTypes?.[0] || 'Room'} • {pg.gender || 'Any'}</div>
                           </div>
                         </div>
                       </td>
@@ -124,18 +151,33 @@ export default function AdminPGsPage() {
                         <div className="line-clamp-2">{pg.location?.address}</div>
                       </td>
                       <td className="p-4 text-body-sm font-bold align-top">
-                        ₹{pg.rent?.toLocaleString()}/mo
+                        ₹{pg.price?.toLocaleString()}/mo
                       </td>
                       <td className="p-4 align-top text-right">
-                        <button
-                          onClick={() => setPgToDelete(pg._id)}
-                          disabled={isDeleting === pg._id}
-                          className="px-3 py-1.5 rounded-lg bg-error/10 text-error font-medium text-body-sm hover:bg-error hover:text-white transition-colors disabled:opacity-50 inline-flex items-center gap-1 cursor-pointer"
-                          title="Permanently Delete Listing"
-                        >
-                          <span className="material-symbols-outlined text-[16px]">delete_forever</span>
-                          {isDeleting === pg._id ? "Deleting..." : "Delete (NSFW)"}
-                        </button>
+                        <div className="flex justify-end gap-2">
+                          {activeTab !== 'active' && (
+                            <button
+                              onClick={() => updateStatus(pg._id, 'active')}
+                              disabled={isUpdating === pg._id}
+                              className="px-3 py-1.5 rounded-lg bg-secondary/10 text-secondary font-medium text-body-sm hover:bg-secondary hover:text-white transition-colors disabled:opacity-50 inline-flex items-center gap-1 cursor-pointer"
+                              title="Approve Listing"
+                            >
+                              <span className="material-symbols-outlined text-[16px]">check_circle</span>
+                              Approve
+                            </button>
+                          )}
+                          {activeTab !== 'rejected' && (
+                            <button
+                              onClick={() => updateStatus(pg._id, 'rejected')}
+                              disabled={isUpdating === pg._id}
+                              className="px-3 py-1.5 rounded-lg bg-error/10 text-error font-medium text-body-sm hover:bg-error hover:text-white transition-colors disabled:opacity-50 inline-flex items-center gap-1 cursor-pointer"
+                              title="Reject Listing"
+                            >
+                              <span className="material-symbols-outlined text-[16px]">cancel</span>
+                              Reject
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -145,35 +187,6 @@ export default function AdminPGsPage() {
           </div>
         )}
       </div>
-
-      {/* Delete Confirmation Modal */}
-      {pgToDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-surface-container-lowest rounded-3xl p-8 max-w-md w-full shadow-xl border border-outline-variant animate-in zoom-in-95 duration-200">
-            <div className="w-16 h-16 bg-error-container text-error rounded-full flex items-center justify-center mx-auto mb-6">
-              <span className="material-symbols-outlined text-[32px]">warning</span>
-            </div>
-            <h3 className="text-h3 font-display font-bold text-center mb-2">Delete Listing?</h3>
-            <p className="text-body-md text-on-surface-variant text-center mb-8">
-              Are you ABSOLUTELY sure? This will permanently delete the PG and remove it from users' saved lists. This action cannot be undone.
-            </p>
-            <div className="flex gap-4">
-              <button
-                onClick={() => setPgToDelete(null)}
-                className="flex-1 h-12 rounded-full border border-outline-variant bg-surface text-on-surface font-label-lg font-bold hover:bg-surface-container transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => confirmDelete(pgToDelete)}
-                className="flex-1 h-12 rounded-full bg-error text-white font-label-lg font-bold hover:bg-error/90 transition-colors"
-              >
-                Delete Permanently
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
