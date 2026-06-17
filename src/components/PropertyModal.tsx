@@ -279,7 +279,7 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
         throw new Error(errorData.error || 'Failed to save property');
       }
 
-      toast.success(property ? 'Property updated successfully!' : 'Property added successfully!');
+      toast.success(property ? 'Property updated and sent for review!' : 'Property listed and sent for review!');
       onSuccess();
       onClose();
     } catch (err: any) {
