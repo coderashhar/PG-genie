@@ -100,6 +100,9 @@ export async function PUT(
     delete body.createdAt;
     delete body.updatedAt;
 
+    // Force status back to pending so admins can review the updated changes
+    body.status = 'pending';
+
     const updatedProperty = await Property.findByIdAndUpdate(id, body, {
       new: true,
       runValidators: true,
