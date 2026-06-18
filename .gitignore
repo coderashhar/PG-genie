@@ -51,4 +51,6 @@ next-env.d.ts
 # Agents
 docs/AGENTS.md
 
+# Security Checks
 SECURITY_CHECKLIST.md
+AUTHORIZATION_AUDIT.md
