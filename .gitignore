@@ -50,3 +50,5 @@ next-env.d.ts
 
 # Agents
 docs/AGENTS.md
+
+SECURITY_CHECKLIST.md

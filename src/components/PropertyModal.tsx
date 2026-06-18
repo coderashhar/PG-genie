@@ -146,12 +146,12 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ filename: file.name, contentType: file.type }),
     });
-    
+
     if (!res.ok) {
       const errorData = await res.json();
       throw new Error(errorData.error || 'Failed to get upload URL');
     }
-    
+
     const { url, fields, fileUrl } = await res.json();
 
     // 2. Upload to S3 using FormData
@@ -165,7 +165,7 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
       method: 'POST',
       body: formData,
     });
-    
+
     if (!uploadRes.ok) throw new Error('Failed to upload to S3');
 
     return fileUrl;
@@ -333,7 +333,7 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
               {/* Basic Details */}
               <div className="space-y-4">
                 <h3 className="font-h2 text-h2 text-primary border-b border-outline-variant pb-2">Basic Details</h3>
-                
+
                 <div>
                   <label className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Property Title *</label>
                   <input
@@ -377,9 +377,9 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
               {/* Location */}
               <div className="space-y-4">
                 <h3 className="font-h2 text-h2 text-primary border-b border-outline-variant pb-2">Location</h3>
-                
+
                 <div className="mb-4">
-                  <LocationPickerMap 
+                  <LocationPickerMap
                     onLocationSelect={(details) => {
                       setFormData(prev => ({
                         ...prev,
@@ -392,7 +392,7 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
                     }}
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Address *</label>
                   <input
@@ -437,7 +437,7 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
               {/* Configuration */}
               <div className="space-y-4">
                 <h3 className="font-h2 text-h2 text-primary border-b border-outline-variant pb-2">Configuration</h3>
-                
+
                 <div>
                   <label className="block text-label-sm font-label-sm text-on-surface-variant mb-2">Room Types Available</label>
                   <div className="flex flex-wrap gap-3">
@@ -487,10 +487,10 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
               {/* Media */}
               <div className="space-y-4">
                 <h3 className="font-h2 text-h2 text-primary border-b border-outline-variant pb-2">Media</h3>
-                
+
                 <div>
                   <label className="block text-label-sm font-label-sm text-on-surface-variant mb-2">Property Photos</label>
-                  
+
                   {/* Uploaded thumbnails */}
                   {formData.images.length > 0 && (
                     <div className="flex flex-wrap gap-3 mb-3">
@@ -553,7 +553,7 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
                     <p className="text-body-md text-on-surface-variant text-center">
                       {isDragging ? 'Drop images here' : 'Click to upload or drag & drop'}
                     </p>
-                    <p className="text-xs text-outline">JPG, PNG, WebP • Max 5MB each</p>
+                    <p className="text-xs text-outline">JPG, PNG, WebP • Max 10 MB each</p>
                   </div>
 
                   <input
