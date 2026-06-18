@@ -78,10 +78,10 @@ function LoginContent() {
         toast.success(data.message || "OTP sent successfully!");
         setOtpSent(true);
         setStep(2);
+        setOtpTimer(300);
       } else {
         toast.error(data.error || "Failed to send OTP");
       }
-      setOtpTimer(300);
     } catch (error) {
       toast.error("An error occurred");
     } finally {

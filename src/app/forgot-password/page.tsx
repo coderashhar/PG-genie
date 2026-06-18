@@ -54,10 +54,10 @@ export default function ForgotPasswordPage() {
       if (res.ok) {
         toast.success("OTP sent! (Check server console)");
         setStep(2);
+        setOtpTimer(300);
       } else {
         toast.error(data.error || "Failed to send OTP");
       }
-      setOtpTimer(300);
     } catch (error) {
       toast.error("An error occurred");
     } finally {
