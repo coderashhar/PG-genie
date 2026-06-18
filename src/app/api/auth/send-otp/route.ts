@@ -5,8 +5,23 @@ import { SNSClient, PublishCommand } from "@aws-sdk/client-sns";
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 import rateLimit, { getIP } from '@/lib/ratelimit';
 
-const limiter = rateLimit({
-  interval: 3 * 60 * 60 * 1000, // 3 hours
+const smsIpLimiter = rateLimit({
+  interval: 60 * 60 * 1000, // 1 hour
+  uniqueTokenPerInterval: 500,
+});
+
+const smsPhoneLimiter = rateLimit({
+  interval: 24 * 60 * 60 * 1000, // 24 hours
+  uniqueTokenPerInterval: 500,
+});
+
+const emailHourLimiter = rateLimit({
+  interval: 60 * 60 * 1000, // 1 hour
+  uniqueTokenPerInterval: 500,
+});
+
+const emailDayLimiter = rateLimit({
+  interval: 24 * 60 * 60 * 1000, // 24 hours
   uniqueTokenPerInterval: 500,
 });
 
@@ -30,12 +45,6 @@ const sesClient = hasAwsCredentials ? new SESClient({
 export async function POST(req: NextRequest) {
   try {
     const ip = getIP(req);
-    try {
-      await limiter.check(3, ip); // Limit to 3 OTP requests per 3 hours per IP
-    } catch {
-      return NextResponse.json({ error: 'please try after sometime' }, { status: 429 });
-    }
-
     let { identifier } = await req.json();
 
     if (!identifier) {
@@ -52,6 +61,18 @@ export async function POST(req: NextRequest) {
       } else if (identifier.startsWith('91') && identifier.length === 12) {
         identifier = '+' + identifier;
       }
+    }
+
+    try {
+      if (isEmail) {
+        await emailHourLimiter.check(5, identifier); // 5/hour/email
+        await emailDayLimiter.check(20, identifier); // 20/day/email
+      } else {
+        await smsIpLimiter.check(3, ip); // 3/hour/IP
+        await smsPhoneLimiter.check(5, identifier); // 5/day/phone
+      }
+    } catch {
+      return NextResponse.json({ error: 'please try after sometime' }, { status: 429 });
     }
 
     await connectToDatabase();
