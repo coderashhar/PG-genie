@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Playfair_Display, Caveat } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import SessionProvider from "@/components/SessionProvider";
 import PageTransition from "@/components/PageTransition";
 import Navbar from "@/components/Navbar";
@@ -50,6 +51,7 @@ export default function RootLayout({
           <ChatWidget />
           <Footer />
         </SessionProvider>
+        <Analytics />
       </body>
     </html>
   );
