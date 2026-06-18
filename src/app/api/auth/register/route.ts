@@ -15,7 +15,7 @@ const registerSchema = z.object({
   name: z.string().min(2).max(50),
   identifier: z.string().min(5).max(100),
   otp: z.string().length(6),
-  role: z.enum(['student', 'owner', 'admin']),
+  role: z.enum(['student', 'owner']),
   password: z.string().min(6).max(100),
 });
 
