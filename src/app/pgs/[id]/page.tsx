@@ -45,6 +45,75 @@ const amenityIconMap: Record<string, string> = {
   'Pet Friendly': 'pets',
 };
 
+// --- Skeleton Loader ---
+function PgDetailSkeleton() {
+  return (
+    <div className="bg-background min-h-screen flex flex-col font-body-md animate-pulse">
+      <main className="flex-1 w-full max-w-container-max mx-auto px-margin-mobile md:px-gutter py-stack-md">
+        {/* Breadcrumb Skeleton */}
+        <div className="h-4 w-32 bg-surface-container rounded mb-stack-sm" />
+        
+        {/* Gallery Skeleton */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-2 mb-stack-lg h-[300px] md:h-[500px] rounded-2xl overflow-hidden">
+          <div className="md:col-span-3 bg-surface-container h-full" />
+          <div className="hidden md:flex flex-col gap-2 h-full">
+            <div className="flex-1 bg-surface-container" />
+            <div className="flex-1 bg-surface-container" />
+          </div>
+        </div>
+
+        {/* Content Skeleton */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-stack-lg">
+          <div className="lg:col-span-2 space-y-stack-lg">
+            {/* Header */}
+            <div>
+              <div className="flex justify-between items-start">
+                <div className="space-y-3 w-3/4">
+                  <div className="h-10 bg-surface-container rounded w-full" />
+                  <div className="h-5 bg-surface-container rounded w-2/3" />
+                </div>
+                <div className="h-10 w-10 bg-surface-container rounded-full" />
+              </div>
+            </div>
+
+            <hr className="border-outline-variant/30" />
+
+            {/* About */}
+            <div className="space-y-3">
+              <div className="h-8 bg-surface-container rounded w-1/4" />
+              <div className="h-4 bg-surface-container rounded w-full" />
+              <div className="h-4 bg-surface-container rounded w-full" />
+              <div className="h-4 bg-surface-container rounded w-5/6" />
+            </div>
+
+            {/* Amenities Grid */}
+            <div className="space-y-4">
+              <div className="h-8 bg-surface-container rounded w-1/4" />
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="h-12 bg-surface-container rounded-xl" />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Sidebar Pricing Card Skeleton */}
+          <div className="lg:col-span-1">
+            <div className="bg-surface-container-lowest rounded-2xl p-6 border border-surface-container h-64 flex flex-col gap-4">
+              <div className="h-6 bg-surface-container rounded w-1/3" />
+              <div className="h-12 bg-surface-container rounded w-1/2" />
+              <div className="mt-auto flex gap-3">
+                <div className="h-12 flex-1 bg-surface-container rounded-lg" />
+                <div className="h-12 flex-1 bg-surface-container rounded-lg" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
+
 export default function PgDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const [property, setProperty] = useState<any>(null);
@@ -219,11 +288,7 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
   }, [id, session]);
 
   if (loading) {
-    return (
-      <div className="bg-background min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-      </div>
-    );
+    return <PgDetailSkeleton />;
   }
 
   if (error || !property) {
