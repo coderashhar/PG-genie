@@ -10,7 +10,8 @@ import NotificationDropdown from "./NotificationDropdown";
 function AccountMenu({ session, isHome }: { session: any, isHome?: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  
+  const pathname = usePathname();
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -20,8 +21,9 @@ function AccountMenu({ session, isHome }: { session: any, isHome?: boolean }) {
   const imgSize = isHome ? "w-7 h-7" : "w-6 h-6";
 
   if (!session) {
+    const loginUrl = `/login?callbackUrl=${encodeURIComponent(pathname || '/')}`;
     return (
-      <Link href="/login" className={`transition-all rounded-full cursor-pointer flex items-center justify-center ${colorClass}`}>
+      <Link href={loginUrl} className={`transition-all rounded-full cursor-pointer flex items-center justify-center ${colorClass}`}>
         <span className={`material-symbols-outlined ${iconSize}`}>account_circle</span>
       </Link>
     );
@@ -29,7 +31,7 @@ function AccountMenu({ session, isHome }: { session: any, isHome?: boolean }) {
 
   return (
     <div className="relative">
-      <button 
+      <button
         onClick={() => setIsOpen(!isOpen)}
         className={`transition-all rounded-full cursor-pointer flex items-center justify-center ${colorClass}`}
       >
@@ -46,7 +48,7 @@ function AccountMenu({ session, isHome }: { session: any, isHome?: boolean }) {
               <span className="material-symbols-outlined text-[20px] text-primary">person</span> Profile Settings
             </Link>
             <div className="h-px bg-surface-container my-1 mx-4"></div>
-            <button 
+            <button
               onClick={() => { setIsOpen(false); signOut({ callbackUrl: '/' }); }}
               className="px-4 py-2.5 font-body-sm text-body-sm text-error hover:bg-error/10 transition-colors flex items-center gap-3 text-left w-full cursor-pointer"
             >
