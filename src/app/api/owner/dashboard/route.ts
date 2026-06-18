@@ -36,31 +36,31 @@ export async function GET(req: NextRequest) {
 
     const userId = (session.user as any).id;
 
-    // Fetch owner profile
-    const owner = await User.findById(userId).select('-password');
+    // Fetch owner profile, listings, and inquiries in parallel
+    const [owner, listings, inquiries] = await Promise.all([
+      User.findById(userId).select('-password').lean(),
+      Property.find({ ownerId: userId }).sort({ createdAt: -1 }).lean(),
+      Booking.find({ ownerId: userId })
+        .populate({
+          path: 'studentId',
+          model: User,
+          select: 'name email image phone',
+        })
+        .populate({
+          path: 'pgId',
+          model: Property,
+          select: 'title',
+        })
+        .sort({ createdAt: -1 })
+        .lean()
+    ]);
+
     if (!owner) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    // Fetch owner's properties
-    const listings = await Property.find({ ownerId: userId }).sort({ createdAt: -1 });
-
     // Get property IDs for this owner
-    const propertyIds = listings.map((p) => p._id);
-
-    // Fetch bookings/inquiries for the owner's properties
-    const inquiries = await Booking.find({ ownerId: userId })
-      .populate({
-        path: 'studentId',
-        model: User,
-        select: 'name email image phone',
-      })
-      .populate({
-        path: 'pgId',
-        model: Property,
-        select: 'title',
-      })
-      .sort({ createdAt: -1 });
+    const propertyIds = listings.map((p: any) => p._id);
 
     // Compute stats
     const totalListings = listings.length;

@@ -115,8 +115,10 @@ export async function GET(req: NextRequest) {
     else if (sort === 'newest') sortObj = { createdAt: -1 };
     else if (sort === 'popular') sortObj = { views: -1 };
 
-    const total = await Property.countDocuments(query);
-    const properties = await Property.find(query).sort(sortObj).skip(skip).limit(limit);
+    const [total, properties] = await Promise.all([
+      Property.countDocuments(query),
+      Property.find(query).sort(sortObj).skip(skip).limit(limit).lean()
+    ]);
 
     return NextResponse.json({ 
       properties,

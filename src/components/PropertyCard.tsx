@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { useRouter, usePathname } from 'next/navigation';
 import toast from 'react-hot-toast';
@@ -160,9 +161,10 @@ export default function PropertyCard({ property, initialIsSaved, onSaveToggle, o
         </button>
       </div>
       <div className="h-56 w-full relative overflow-hidden">
-        <img
+        <Image
           alt={property.title}
-          className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+          fill
+          className="object-cover group-hover:scale-105 transition-transform duration-500"
           src={property.images?.[0] || '/placeholder.jpg'}
         />
       </div>

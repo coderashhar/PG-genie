@@ -25,7 +25,7 @@ export async function GET(
     }
     
     // Fetch property by ID and populate owner details (restrict to public fields only)
-    const property = await Property.findById(id).populate('ownerId', 'name image');
+    const property = await Property.findById(id).populate('ownerId', 'name image').lean();
     
     if (!property) {
       return NextResponse.json(

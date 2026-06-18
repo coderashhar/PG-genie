@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
@@ -573,10 +574,11 @@ function DashboardContent() {
                               className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-surface-container transition-colors cursor-pointer block"
                             >
                               <div className="flex items-start gap-4">
-                                <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">
-                                  <img
+                                <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 relative">
+                                  <Image
                                     alt="PG Thumbnail"
-                                    className="w-full h-full object-cover"
+                                    fill
+                                    className="object-cover"
                                     src={property?.images?.[0] || '/placeholder.jpg'}
                                   />
                                 </div>

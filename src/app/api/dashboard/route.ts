@@ -28,14 +28,25 @@ export async function GET(req: NextRequest) {
 
     const userId = (session.user as any).id;
 
-    // Fetch user with populated saved PGs
-    const user = await User.findById(userId)
-      .select('-password')
-      .populate({
-        path: 'savedPgs',
-        model: Property,
-        select: 'title description location price images status amenities roomTypes views furniture attachedBath waterSupply geyser wifi backupPower cctv washingMachine petFriendly',
-      });
+    // Fetch user with populated saved PGs and user's bookings in parallel
+    const [user, bookings] = await Promise.all([
+      User.findById(userId)
+        .select('-password')
+        .populate({
+          path: 'savedPgs',
+          model: Property,
+          select: 'title description location price images status amenities roomTypes views furniture attachedBath waterSupply geyser wifi backupPower cctv washingMachine petFriendly',
+        })
+        .lean(),
+      Booking.find({ studentId: userId })
+        .populate({
+          path: 'pgId',
+          model: Property,
+          select: 'title location images price',
+        })
+        .sort({ createdAt: -1 })
+        .lean()
+    ]);
 
     if (!user) {
       return NextResponse.json(
@@ -43,15 +54,6 @@ export async function GET(req: NextRequest) {
         { status: 404 }
       );
     }
-
-    // Fetch user's bookings with property details
-    const bookings = await Booking.find({ studentId: userId })
-      .populate({
-        path: 'pgId',
-        model: Property,
-        select: 'title location images price',
-      })
-      .sort({ createdAt: -1 });
 
     return NextResponse.json(
       {

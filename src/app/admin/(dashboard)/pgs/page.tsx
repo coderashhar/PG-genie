@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import Image from "next/image";
 
 export default function AdminPGsPage() {
   const [pgs, setPgs] = useState<any[]>([]);
@@ -125,7 +126,13 @@ export default function AdminPGsPage() {
                       <td className="p-4 align-top">
                         <div className="flex items-center gap-3">
                           {pg.images && pg.images.length > 0 ? (
-                            <img src={pg.images[0]} alt={pg.title} className="w-12 h-12 rounded-lg object-cover bg-surface-container shrink-0" />
+                            <Image 
+                              src={pg.images[0]} 
+                              alt={pg.title} 
+                              width={48}
+                              height={48}
+                              className="w-12 h-12 rounded-lg object-cover bg-surface-container shrink-0" 
+                            />
                           ) : (
                             <div className="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center shrink-0">
                               <span className="material-symbols-outlined text-on-surface-variant">home</span>

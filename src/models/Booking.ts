@@ -49,6 +49,11 @@ const BookingSchema: Schema<IBooking> = new mongoose.Schema(
   }
 );
 
+// Targeted index for querying a student's bookings
+BookingSchema.index({ studentId: 1, createdAt: -1 });
+// Targeted index for an owner's bookings
+BookingSchema.index({ ownerId: 1, createdAt: -1 });
+
 const Booking: Model<IBooking> = mongoose.models.Booking || mongoose.model<IBooking>('Booking', BookingSchema);
 
 export default Booking;

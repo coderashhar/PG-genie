@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
@@ -557,9 +558,10 @@ function PgsContent() {
                               </span>
                             </button>
                           </div>
-                          <img
+                          <Image
                             alt={property.title}
-                            className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-500"
                             src={property.images?.[0] || '/placeholder.jpg'}
                           />
                         </div>

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, use } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import { useRouter, usePathname } from 'next/navigation';
@@ -247,28 +248,28 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
         <section className={`grid gap-base h-[400px] md:h-[500px] rounded-xl overflow-hidden mb-stack-lg grid-cols-1 ${property?.images?.length === 1 ? 'md:grid-cols-1' : property?.images?.length === 2 ? 'md:grid-cols-2' : property?.images?.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-4'} grid-rows-2`}>
           {property?.images?.[0] && (
             <div className={`${property.images.length === 1 ? 'md:col-span-1 md:row-span-2' : property.images.length === 2 ? 'md:col-span-1 md:row-span-2' : 'md:col-span-2 md:row-span-2'} relative group cursor-pointer overflow-hidden`} onClick={() => openGallery(0)}>
-              <img alt="Main PG Image" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={property.images[0]} />
+              <Image fill alt="Main PG Image" className="object-cover transition-transform duration-500 group-hover:scale-105" src={property.images[0]} />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </div>
           )}
           {property?.images?.[1] && (
             <div className={`hidden md:block relative group cursor-pointer overflow-hidden ${property.images.length === 2 ? 'md:col-span-1 md:row-span-2' : ''}`} onClick={() => openGallery(1)}>
-              <img alt="PG Image 2" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={property.images[1]} />
+              <Image fill alt="PG Image 2" className="object-cover transition-transform duration-500 group-hover:scale-105" src={property.images[1]} />
             </div>
           )}
           {property?.images?.[2] && (
             <div className={`hidden md:block relative group cursor-pointer overflow-hidden ${property.images.length === 3 ? 'md:col-span-1 md:row-span-2' : ''}`} onClick={() => openGallery(2)}>
-              <img alt="PG Image 3" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={property.images[2]} />
+              <Image fill alt="PG Image 3" className="object-cover transition-transform duration-500 group-hover:scale-105" src={property.images[2]} />
             </div>
           )}
           {property?.images?.[3] && (
             <div className={`hidden md:block relative group cursor-pointer overflow-hidden ${property.images.length === 4 ? 'md:col-span-2' : ''}`} onClick={() => openGallery(3)}>
-              <img alt="PG Image 4" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={property.images[3]} />
+              <Image fill alt="PG Image 4" className="object-cover transition-transform duration-500 group-hover:scale-105" src={property.images[3]} />
             </div>
           )}
           {property?.images?.[4] && (
             <div className="hidden md:block relative group cursor-pointer overflow-hidden" onClick={() => openGallery(4)}>
-              <img alt="PG Image 5" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={property.images[4]} />
+              <Image fill alt="PG Image 5" className="object-cover transition-transform duration-500 group-hover:scale-105" src={property.images[4]} />
               <div className="absolute inset-0 bg-black/40 flex items-center justify-center transition-colors group-hover:bg-black/50">
                 <span className="text-on-primary font-h2 text-h2 flex items-center gap-2">
                   <span className="material-symbols-outlined">photo_library</span> {property.images.length > 5 ? `+${property.images.length - 5} Photos` : 'View Gallery'}
@@ -453,12 +454,15 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
           </button>
           
           <div className="relative w-full max-w-6xl h-[80vh] px-4 sm:px-16 flex items-center justify-center">
-            <img 
-              src={property.images[currentImageIndex]} 
-              alt={`Gallery image ${currentImageIndex + 1}`} 
-              className="max-w-full max-h-full object-contain select-none"
-              onClick={(e) => e.stopPropagation()}
-            />
+            <div className="relative w-full h-full">
+              <Image 
+                src={property.images[currentImageIndex]} 
+                alt={`Gallery image ${currentImageIndex + 1}`} 
+                fill
+                className="object-contain select-none"
+                onClick={(e) => e.stopPropagation()}
+              />
+            </div>
             <div className="absolute bottom-[-40px] left-1/2 -translate-x-1/2 text-white/80 font-body-md tracking-widest">
               {currentImageIndex + 1} / {property.images.length}
             </div>

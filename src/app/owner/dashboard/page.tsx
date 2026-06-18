@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useCallback, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import PropertyModal from '@/components/PropertyModal';
@@ -598,10 +599,11 @@ function OwnerDashboardContent() {
                       className="rounded-xl p-4 shadow-[0px_4px_20px_rgba(76,29,149,0.05)] border border-outline-variant/30 flex flex-col sm:flex-row gap-4 hover:shadow-[0px_8px_30px_rgba(76,29,149,0.12)] transition-all bg-surface-container-low hover:shadow-xl"
                     >
                       <div className="w-full sm:w-48 h-32 rounded-lg overflow-hidden shrink-0 relative">
-                        <img
-                          alt={listing.title}
-                          className="w-full h-full object-cover"
+                        <Image
                           src={listing.images?.[0] || '/placeholder.jpg'}
+                          alt={listing.title}
+                          fill
+                          className="object-cover"
                         />
                         <div className={`absolute top-2 left-2 px-2 py-1 rounded-md font-label-sm text-[10px] flex items-center gap-1 ${
                           listing.status === 'active'
