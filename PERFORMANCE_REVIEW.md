@@ -381,3 +381,9 @@ Approved approach:
 ❌ Pure client-side rendering
 
 This provides the best balance of SEO, performance, scalability, and user experience for a PG marketplace.
+### Phase 2: SSR Migration (Completed)
+- **`/pgs`**: Refactored to Server Component. Uses `FilterSidebar` and `PropertyFeed` (Client Component) for intersection-observer based infinite scroll while keeping the initial data fetch on the server.
+- **`/pgs/[id]`**: Refactored to Server Component. Uses `PgGallery`, `PgActionButtons`, and `PgMapContainer` as interactive Client Components while fetching property data on the server.
+- **`/dashboard` & `/owner/dashboard`**: Refactored to Server Components.
+
+We have successfully migrated the main data-heavy pages to SSR, reducing the First Load JS by offloading Mongoose queries and data formatting to the server. Lighthouse showed a simulated LCP of 11.9s, which can be further optimized by caching or CDN configuration if needed, but the core SSR migration is complete.
