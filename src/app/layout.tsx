@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import BottomNav from "@/components/BottomNav";
 import ChatWidget from "@/components/ChatWidget";
 import { Toaster } from "react-hot-toast";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -49,6 +50,7 @@ export default function RootLayout({
           <BottomNav />
           <ChatWidget />
           <Footer />
+          <Analytics />
         </SessionProvider>
       </body>
     </html>
