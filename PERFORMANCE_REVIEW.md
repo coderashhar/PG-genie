@@ -128,7 +128,7 @@ Once we have those metrics, we can determine whether the next highest-impact opt
 
 The backend now appears sufficiently optimized, so future work should be driven by frontend performance metrics.
 
-# plan to start phase 2
+## plan to start phase 2
 
 The database optimization phase appears complete.
 
@@ -152,7 +152,7 @@ using a Server Component architecture with client wrappers only where interactiv
 
 
 
-# The plan looks solid and is aligned with the bundle analysis findings.
+## The plan looks solid and is aligned with the bundle analysis findings.
 
 Approved:
 
@@ -210,3 +210,174 @@ before starting the SSR migration.
   - `/api/properties/[id]` (Detail): ~70ms
 
 **Conclusion:** The initial JavaScript payload size has been successfully decoupled from the heaviest dependencies. We are now ready to proceed to Phase 2: Server-Side Rendering (SSR) Migration.
+
+## SSR Pagination Strategy Recommendation
+
+After reviewing the proposed SSR migration, I recommend using **Hybrid SSR + Infinite Scroll (Intersection Observer)** instead of traditional pagination or a "Load More" button.
+
+## Why This Approach?
+
+### Benefits
+
+✅ SEO-friendly
+
+- The first page of properties is rendered on the server.
+- Search engines receive fully rendered HTML content.
+- Faster indexing and improved discoverability.
+
+✅ Better User Experience
+
+- Users can continuously browse properties without clicking "Next Page".
+- Feels similar to Airbnb, Booking.com, MagicBricks, and other modern property platforms.
+
+✅ Faster Initial Load
+
+- Only the first batch of properties is rendered during SSR.
+- Additional properties are fetched only when needed.
+
+✅ Reduced Server Load
+
+- Initial request remains lightweight.
+- Additional pages are fetched progressively.
+
+---
+
+## Recommended Architecture
+
+### Initial Page Load (SSR)
+
+```text
+User Visits /pgs
+        ↓
+Server Fetches Page 1
+        ↓
+HTML Sent With Properties
+        ↓
+Instant Content Display
+```
+
+### Infinite Scroll (Client Side)
+
+```text
+User Scrolls Down
+        ↓
+Intersection Observer Triggered
+        ↓
+Fetch Page 2 From API
+        ↓
+Append New Properties
+        ↓
+Continue Until No More Results
+```
+
+---
+
+## Implementation Plan
+
+### Server Component
+
+`src/app/pgs/page.tsx`
+
+- Convert to a Server Component.
+- Fetch the first page of properties.
+- Pass the initial property list to a Client Component.
+
+Example:
+
+```tsx
+const initialProperties = await getProperties({
+  page: 1,
+  limit: 12,
+});
+
+return (
+  <PropertyFeed
+    initialProperties={initialProperties}
+  />
+);
+```
+
+---
+
+### Client Component
+
+`PropertyFeed.tsx`
+
+Responsibilities:
+
+- Maintain the list of loaded properties.
+- Track the current page number.
+- Use Intersection Observer to trigger additional fetches.
+- Append new properties to the existing list.
+
+---
+
+### Intersection Observer Configuration
+
+Use a preload margin:
+
+```tsx
+const { ref, inView } = useInView({
+  rootMargin: "500px",
+});
+```
+
+This loads the next page before the user reaches the bottom of the list, creating a seamless experience.
+
+---
+
+## Filters
+
+Filters should remain URL-driven.
+
+Example:
+
+```text
+/pgs?search=boys&city=jaipur&price=5000
+```
+
+When filters change:
+
+```text
+User Applies Filters
+        ↓
+router.push(newUrl)
+        ↓
+Server Component Re-renders
+        ↓
+Fresh SSR Results
+```
+
+The infinite scroll state should reset to page 1 whenever filters change.
+
+---
+
+## Verification Requirements
+
+After implementation, please provide:
+
+- First Load JS before vs after
+- LCP before vs after
+- Total page load time before vs after
+- Property listing page load time before vs after
+- Lighthouse performance score before vs after
+
+---
+
+## Final Decision
+
+Approved approach:
+
+✅ Server-Side Render first page of properties
+
+✅ URL-based filters using `searchParams`
+
+✅ Intersection Observer for loading additional pages
+
+✅ Infinite scrolling for property discovery
+
+❌ Traditional page-by-page pagination
+
+❌ Pure client-side rendering
+
+This provides the best balance of SEO, performance, scalability, and user experience for a PG marketplace.

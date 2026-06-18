@@ -1,15 +1,19 @@
-"use client";
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useSearchParams, useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
-import toast from 'react-hot-toast';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/auth';
+import connectToDatabase from '@/lib/db';
+import User from '@/models/User';
+import Property from '@/models/Property';
+import Booking from '@/models/Booking';
 import OwnerDashboardPage from '../owner/dashboard/page';
 
 import PropertyCard from '@/components/PropertyCard';
+import EditProfileForm from '@/components/dashboard/EditProfileForm';
+import DeleteBookingButton from '@/components/dashboard/DeleteBookingButton';
 
-// --- Types for API response ---
+// --- Types for DB Data ---
 interface PropertyLocation {
   address: string;
   city: string;
@@ -55,33 +59,12 @@ interface DashboardData {
     image?: string;
     role: string;
     university?: string;
+    phone?: string;
+    batch?: string;
   };
   savedPgs: SavedPg[];
   bookings: BookingData[];
 }
-
-// --- Amenity icon map ---
-const amenityIconMap: Record<string, string> = {
-  WiFi: 'wifi',
-  'High-Speed WiFi': 'wifi',
-  'Fiber Internet': 'wifi',
-  'Basic WiFi': 'wifi',
-  AC: 'ac_unit',
-  'Central AC': 'ac_unit',
-  Laundry: 'local_laundry_service',
-  Meals: 'restaurant',
-  'Premium Meals': 'restaurant',
-  '3 Meals/Day': 'restaurant',
-  Gym: 'fitness_center',
-  'Gym Access': 'fitness_center',
-  Garden: 'park',
-  'Power Backup': 'bolt',
-  CCTV: 'videocam',
-  'Study Room': 'menu_book',
-  'Study Zone': 'menu_book',
-  Parking: 'local_parking',
-  'Shuttle to Campus': 'directions_bus',
-};
 
 // --- Status badge config ---
 const statusConfig: Record<string, { bg: string; text: string; icon: string; label: string }> = {
@@ -105,39 +88,6 @@ const statusConfig: Record<string, { bg: string; text: string; icon: string; lab
   },
 };
 
-// --- Loading skeleton ---
-function CardSkeleton() {
-  return (
-    <div className="bg-surface rounded-xl shadow-[0px_4px_20px_rgba(76,29,149,0.05)] overflow-hidden border border-surface-container animate-pulse flex flex-col">
-      <div className="w-full aspect-video bg-surface-container" />
-      <div className="p-4 flex flex-col flex-1 gap-3">
-        <div className="h-5 bg-surface-container rounded w-3/4" />
-        <div className="h-4 bg-surface-container rounded w-1/2" />
-        <div className="flex gap-2 mt-2">
-          <div className="h-6 w-14 bg-surface-container rounded" />
-          <div className="h-6 w-14 bg-surface-container rounded" />
-        </div>
-        <div className="h-8 bg-surface-container rounded mt-auto" />
-      </div>
-    </div>
-  );
-}
-
-function ListSkeleton() {
-  return (
-    <div className="p-4 flex items-center justify-between gap-4 animate-pulse">
-      <div className="flex items-center gap-4">
-        <div className="w-12 h-12 rounded-lg bg-surface-container" />
-        <div className="space-y-2">
-          <div className="h-4 w-32 bg-surface-container rounded" />
-          <div className="h-3 w-24 bg-surface-container rounded" />
-        </div>
-      </div>
-      <div className="h-6 w-20 bg-surface-container rounded-full" />
-    </div>
-  );
-}
-
 // --- Helper: format date ---
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
@@ -159,304 +109,79 @@ function formatVisitDate(dateString: string): string {
   return date.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' });
 }
 
-// --- Edit Profile Form Component ---
-function EditProfileForm({ profile, setProfile }: { profile: any; setProfile: (p: any) => void }) {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    batch: '',
-    password: '',
-  });
-  const [saving, setSaving] = useState(false);
+export default async function DashboardPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | undefined }> }) {
+  const session = await getServerSession(authOptions);
 
-  useEffect(() => {
-    if (profile) {
-      let phoneStr = profile.phone || '';
-      if (phoneStr.startsWith('+91')) {
-        phoneStr = phoneStr.slice(3).trim();
-      }
+  if (!session?.user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center font-display text-primary text-2xl">
+        Please log in to view your dashboard.
+      </div>
+    );
+  }
 
-      setFormData({
-        name: profile.name || '',
-        email: profile.email || '',
-        phone: phoneStr,
-        batch: profile.batch || '',
-        password: '',
-      });
-    }
-  }, [profile]);
+  const isOwner = (session.user as any).role === 'owner';
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value;
-    if (e.target.name === 'phone') {
-      value = value.replace(/\D/g, '').slice(0, 10);
-    }
-    setFormData(prev => ({ ...prev, [e.target.name]: value }));
+  if (isOwner) {
+    // If owner, return Owner Dashboard Server Component directly
+    // @ts-ignore
+    return <OwnerDashboardPage searchParams={searchParams} />;
+  }
+
+  const resolvedParams = await searchParams;
+  const activeTab = resolvedParams.tab === 'profile' ? 'profile' : 'overview';
+
+  await connectToDatabase();
+  const userId = (session.user as any).id;
+
+  // Fetch Dashboard Data directly
+  const [user, bookings] = await Promise.all([
+    User.findById(userId)
+      .select('-password')
+      .populate({
+        path: 'savedPgs',
+        model: Property,
+        select: 'title description location price images status amenities roomTypes views furniture attachedBath waterSupply geyser wifi backupPower cctv washingMachine petFriendly',
+      })
+      .lean(),
+    Booking.find({ studentId: userId })
+      .populate({
+        path: 'pgId',
+        model: Property,
+        select: 'title location images price',
+      })
+      .sort({ createdAt: -1 })
+      .lean()
+  ]);
+
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center font-display text-primary text-2xl">
+        User not found.
+      </div>
+    );
+  }
+
+  const dashData: DashboardData = {
+    user: {
+      id: user._id.toString(),
+      name: user.name,
+      email: user.email,
+      image: user.image,
+      role: user.role,
+      university: user.university,
+      phone: user.phone,
+      batch: user.batch,
+    },
+    savedPgs: JSON.parse(JSON.stringify(user.savedPgs || [])),
+    bookings: JSON.parse(JSON.stringify(bookings || [])),
   };
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSaving(true);
-
-    // Client-side validations
-    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-    if (formData.email && !emailRegex.test(formData.email)) {
-      toast.error('Please enter a valid email address');
-      setSaving(false);
-      return;
-    }
-
-    const phoneFull = formData.phone ? `+91${formData.phone}` : '';
-    if (formData.phone && formData.phone.length !== 10) {
-      toast.error('Phone number must be exactly 10 digits');
-      setSaving(false);
-      return;
-    }
-
-    if (formData.batch && !/^(20|21)\d{2}$/.test(formData.batch)) {
-      toast.error('Batch must be a valid 4-digit year (e.g. 2026)');
-      setSaving(false);
-      return;
-    }
-
-    // Only send changed fields
-    const updates: Record<string, string> = {};
-    if (formData.name && formData.name !== profile?.name) updates.name = formData.name;
-    if (formData.email && formData.email !== profile?.email) updates.email = formData.email;
-    if (phoneFull !== (profile?.phone || '')) updates.phone = phoneFull;
-    if (formData.batch !== (profile?.batch || '')) updates.batch = formData.batch;
-
-    if (Object.keys(updates).length === 0) {
-      toast.error('No changes to save');
-      setSaving(false);
-      return;
-    }
-
-    try {
-      const res = await fetch('/api/users/profile', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updates),
-      });
-      const data = await res.json();
-
-      if (res.ok) {
-        toast.success('Profile updated successfully!');
-        setProfile(data.user);
-      } else {
-        const errorMsg = data.details ? data.details.join(', ') : data.error;
-        toast.error(errorMsg || 'Failed to update profile');
-      }
-    } catch {
-      toast.error('An error occurred while saving');
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const inputClass = "w-full bg-surface-container border border-outline-variant rounded-lg pl-12 pr-4 py-3 text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors";
-
-  return (
-    <div className="bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)]">
-      <h2 className="font-h2 text-h2 text-on-background flex items-center gap-2 mb-stack-md">
-        <span className="material-symbols-outlined text-primary">edit</span>
-        Edit Profile
-      </h2>
-
-      <form onSubmit={handleSave} className="space-y-5">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {/* Name */}
-          <div>
-            <label className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Full Name</label>
-            <div className="relative">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant">
-                <span className="material-symbols-outlined text-[20px]">person</span>
-              </span>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className={inputClass}
-                placeholder="Your full name"
-              />
-            </div>
-          </div>
-
-          {/* Email */}
-          <div>
-            <label className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Email</label>
-            <div className="relative">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant">
-                <span className="material-symbols-outlined text-[20px]">mail</span>
-              </span>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className={inputClass}
-                placeholder="your@email.com"
-              />
-            </div>
-          </div>
-
-          {/* Phone */}
-          <div>
-            <label className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Phone Number</label>
-            <div className="relative">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant font-body-md border-r border-outline-variant pr-3">
-                +91
-              </span>
-              <input
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                className="w-full bg-surface-container border border-outline-variant rounded-lg pl-16 pr-4 py-3 text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
-                placeholder="9876543210"
-              />
-            </div>
-          </div>
-
-          {/* Batch */}
-          <div>
-            <label className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Batch</label>
-            <div className="relative">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant">
-                <span className="material-symbols-outlined text-[20px]">calendar_month</span>
-              </span>
-              <input
-                type="text"
-                name="batch"
-                value={formData.batch}
-                onChange={handleChange}
-                className={inputClass}
-                placeholder="e.g. 2026"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Save Button */}
-        <div className="pt-2 flex justify-end">
-          <button
-            type="submit"
-            disabled={saving}
-            className="bg-primary text-on-primary hover:bg-primary/90 px-8 py-3 rounded-xl font-h2 font-bold text-body-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:pointer-events-none flex items-center gap-2 cursor-pointer"
-          >
-            {saving && <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>}
-            {saving ? 'Saving...' : 'Save Changes'}
-          </button>
-        </div>
-      </form>
-    </div>
-  );
-}
-
-function DashboardContent() {
-  const { data: session, status: sessionStatus, update } = useSession();
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const initialTab = searchParams.get('tab') === 'profile' ? 'profile' : 'overview';
-  const [activeTab, setActiveTab] = useState(initialTab);
-  
-  const [dashData, setDashData] = useState<DashboardData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  
-  const [profile, setProfile] = useState<any>(null);
-  const [profileLoading, setProfileLoading] = useState(true);
-
-  // Sync tab with URL parameter
-  useEffect(() => {
-    const tab = searchParams.get('tab');
-    if (tab === 'profile' || tab === 'overview') {
-      setActiveTab(tab);
-    }
-  }, [searchParams]);
-
-  const handleTabChange = (tab: 'overview' | 'profile') => {
-    setActiveTab(tab);
-    router.push(`/dashboard${tab === 'profile' ? '?tab=profile' : ''}`);
-  };
-
-  useEffect(() => {
-    async function fetchDashboard() {
-      try {
-        const res = await fetch('/api/dashboard');
-        if (!res.ok) {
-          if (res.status === 401) {
-            setError('Please log in to view your dashboard.');
-            return;
-          }
-          throw new Error('Failed to fetch dashboard data');
-        }
-        const data = await res.json();
-        setDashData(data);
-      } catch (err: any) {
-        setError(err.message || 'Something went wrong');
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    if (sessionStatus !== 'loading') {
-      fetchDashboard();
-    }
-  }, [sessionStatus]);
-
-  useEffect(() => {
-    if (sessionStatus === 'unauthenticated') {
-      router.push('/login');
-    }
-  }, [sessionStatus, router]);
-
-  const handleDeleteBooking = async (id: string) => {
-    try {
-      const res = await fetch(`/api/bookings/${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        toast.success('Booking removed successfully');
-        setDashData(prev => prev ? {
-          ...prev,
-          bookings: prev.bookings.filter(b => b._id !== id)
-        } : prev);
-        setActiveDropdown(null);
-      } else {
-        const data = await res.json();
-        toast.error(data.error || 'Failed to remove booking');
-      }
-    } catch (err) {
-      toast.error('An error occurred');
-    }
-  };
-
-  // Fetch Profile data
-  useEffect(() => {
-    async function loadProfile() {
-      try {
-        const res = await fetch('/api/users/profile');
-        if (res.ok) {
-          const data = await res.json();
-          setProfile(data.user);
-        }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setProfileLoading(false);
-      }
-    }
-    loadProfile();
-  }, []);
-
-  // Derive user info
-  const userName = profile?.name || dashData?.user?.name || session?.user?.name || 'Student';
+  const userName = dashData.user.name || 'Student';
   const userInitial = userName.charAt(0).toUpperCase();
 
   // Filter upcoming visits
-  const upcomingVisits = (dashData?.bookings || []).filter((b) => {
+  const upcomingVisits = dashData.bookings.filter((b) => {
     if (!b.visitDate) return false;
     return new Date(b.visitDate) >= new Date();
   });
@@ -465,43 +190,30 @@ function DashboardContent() {
     <div className="bg-background text-on-background font-body-md text-body-md antialiased min-h-screen">
       {/* Main Content Canvas */}
       <main className="w-full flex flex-col min-h-screen">
-        
         <div className="flex-1 w-full px-margin-mobile md:px-gutter max-w-container-max mx-auto py-stack-md md:py-stack-lg">
           {/* Header Section */}
           <header className="mb-stack-lg">
             <h1 className="font-display text-display text-primary mb-2">
-              {loading ? (
-                <span className="inline-block h-10 w-72 bg-surface-container rounded animate-pulse" />
-              ) : (
-                `Welcome back, ${userName.split(' ')[0]}`
-              )}
+              Welcome back, {userName.split(' ')[0]}
             </h1>
             <p className="font-body-lg text-body-lg text-on-surface-variant">Here is an overview of your housing search.</p>
           </header>
 
           {/* Tab Navigation */}
           <div className="flex border-b border-surface-container mb-stack-lg gap-8 overflow-x-auto whitespace-nowrap hide-scrollbar">
-            <button
-              onClick={() => handleTabChange('overview')}
+            <Link
+              href="/dashboard?tab=overview"
               className={`pb-3 font-h2 text-h2 transition-colors border-b-2 ${activeTab === 'overview' ? 'border-primary text-primary' : 'border-transparent text-on-surface-variant hover:text-on-surface cursor-pointer'}`}
             >
               Overview
-            </button>
-            <button
-              onClick={() => handleTabChange('profile')}
+            </Link>
+            <Link
+              href="/dashboard?tab=profile"
               className={`pb-3 font-h2 text-h2 transition-colors border-b-2 ${activeTab === 'profile' ? 'border-primary text-primary' : 'border-transparent text-on-surface-variant hover:text-on-surface cursor-pointer'}`}
             >
               Profile & Settings
-            </button>
+            </Link>
           </div>
-
-          {/* Error State */}
-          {error && (
-            <div className="bg-error-container text-on-error-container p-6 rounded-xl mb-stack-lg flex items-center gap-3">
-              <span className="material-symbols-outlined">error</span>
-              <p>{error}</p>
-            </div>
-          )}
 
           {activeTab === 'overview' ? (
             /* Dashboard Overview Grid Layout */
@@ -513,32 +225,19 @@ function DashboardContent() {
                 <section>
                   <div className="flex justify-between items-center mb-stack-md">
                     <h2 className="font-h1 text-h1 text-on-surface">Saved PGs</h2>
-                    {dashData && dashData.savedPgs.length > 2 && (
+                    {dashData.savedPgs.length > 2 && (
                       <Link href="/dashboard/saved" className="text-primary hover:text-primary-fixed-dim hover:translate-x-1 transition-all duration-300 font-label-sm text-label-sm flex items-center gap-1 cursor-pointer">
                         View All <span className="material-symbols-outlined text-sm">arrow_forward</span>
                       </Link>
                     )}
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
-                    {loading ? (
-                      <>
-                        <CardSkeleton />
-                        <CardSkeleton />
-                      </>
-                    ) : dashData && dashData.savedPgs.length > 0 ? (
+                    {dashData.savedPgs.length > 0 ? (
                       dashData.savedPgs.slice(0, 2).map((pg) => (
                         <PropertyCard
                           key={pg._id}
                           property={pg}
                           initialIsSaved={true}
-                          onSaveToggle={(pgId, isSaved) => {
-                            if (!isSaved) {
-                              setDashData(prev => prev ? {
-                                ...prev,
-                                savedPgs: prev.savedPgs.filter(p => p._id !== pgId)
-                              } : prev);
-                            }
-                          }}
                         />
                       ))
                     ) : (
@@ -557,23 +256,14 @@ function DashboardContent() {
                 <section>
                   <h2 className="font-h1 text-h1 text-on-surface mb-stack-md">Booked Visits</h2>
                   <div className="bg-surface rounded-xl shadow-[0px_4px_20px_rgba(76,29,149,0.05)] border border-surface-container overflow-hidden">
-                    {loading ? (
-                      <ul className="divide-y divide-surface-container">
-                        <li><ListSkeleton /></li>
-                        <li><ListSkeleton /></li>
-                      </ul>
-                    ) : dashData && dashData.bookings.length > 0 ? (
+                    {dashData.bookings.length > 0 ? (
                       <ul className="divide-y divide-surface-container">
                         {dashData.bookings.map((booking) => {
                           const config = statusConfig[booking.status];
                           const property = booking.pgId;
                           return (
-                            <Link
-                              key={booking._id}
-                              href={`/pgs/${property?._id || '#'}`}
-                              className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-surface-container transition-colors cursor-pointer block"
-                            >
-                              <div className="flex items-start gap-4">
+                            <div key={booking._id} className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-surface-container transition-colors">
+                              <Link href={`/pgs/${property?._id || '#'}`} className="flex items-start gap-4 flex-1">
                                 <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 relative">
                                   <Image
                                     alt="PG Thumbnail"
@@ -583,30 +273,20 @@ function DashboardContent() {
                                   />
                                 </div>
                                 <div>
-                                  <h3 className="font-h2 text-h2 text-on-surface">{property?.title || 'Unknown PG'}</h3>
+                                  <h3 className="font-h2 text-h2 text-on-surface hover:underline">{property?.title || 'Unknown PG'}</h3>
                                   <p className="font-body-md text-body-md text-on-surface-variant">
                                     Booked on {formatDate(booking.createdAt)}
                                   </p>
                                 </div>
-                              </div>
+                              </Link>
                               <div className="flex items-center gap-3">
                                 <span className={`${config.bg} ${config.text} px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1`}>
                                   <span className="material-symbols-outlined text-xs">{config.icon}</span>
                                   {config.label}
                                 </span>
-                                <button
-                                  className="w-8 h-8 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:bg-error/10 hover:text-error hover:border-error transition-colors cursor-pointer group"
-                                  title="Remove"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    handleDeleteBooking(booking._id);
-                                  }}
-                                >
-                                  <span className="material-symbols-outlined text-sm">delete</span>
-                                </button>
+                                <DeleteBookingButton bookingId={booking._id} />
                               </div>
-                            </Link>
+                            </div>
                           );
                         })}
                       </ul>
@@ -629,12 +309,7 @@ function DashboardContent() {
                     <span className="material-symbols-outlined text-primary">event_available</span>
                     Upcoming Visits
                   </h2>
-                  {loading ? (
-                    <div className="space-y-4">
-                      <div className="h-24 bg-surface-container rounded-lg animate-pulse" />
-                      <div className="h-24 bg-surface-container rounded-lg animate-pulse" />
-                    </div>
-                  ) : upcomingVisits.length > 0 ? (
+                  {upcomingVisits.length > 0 ? (
                     <div className="space-y-4 relative before:absolute before:inset-y-0 before:left-[11px] before:w-[2px] before:bg-surface-container">
                       {upcomingVisits.map((visit, index) => {
                         const property = visit.pgId;
@@ -703,11 +378,11 @@ function DashboardContent() {
                   <h1 className="font-h1 text-h1 text-on-background mb-1">{userName}</h1>
                   <p className="font-body-md text-body-md text-on-surface-variant flex items-center justify-center gap-1">
                     <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>school</span>
-                    {profile?.university || 'University'}
+                    {dashData.user.university || 'University'}
                   </p>
-                  {profile?.batch && (
+                  {dashData.user.batch && (
                     <div className="mt-4 inline-block bg-primary-container/10 text-primary rounded-full px-4 py-1 font-label-sm text-label-sm">
-                      Batch of {profile.batch}
+                      Batch of {dashData.user.batch}
                     </div>
                   )}
                 </div>
@@ -723,28 +398,28 @@ function DashboardContent() {
                       <span className="material-symbols-outlined text-primary">mail</span>
                       <div>
                         <p className="font-label-sm text-label-sm text-on-surface-variant">Email</p>
-                        <p className="font-body-md text-body-md text-on-surface">{profile?.email || '—'}</p>
+                        <p className="font-body-md text-body-md text-on-surface">{dashData.user.email || '—'}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 bg-surface p-4 rounded-lg border border-surface-variant">
                       <span className="material-symbols-outlined text-primary">call</span>
                       <div>
                         <p className="font-label-sm text-label-sm text-on-surface-variant">Phone</p>
-                        <p className="font-body-md text-body-md text-on-surface">{profile?.phone || '—'}</p>
+                        <p className="font-body-md text-body-md text-on-surface">{dashData.user.phone || '—'}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 bg-surface p-4 rounded-lg border border-surface-variant">
                       <span className="material-symbols-outlined text-primary">badge</span>
                       <div>
                         <p className="font-label-sm text-label-sm text-on-surface-variant">Role</p>
-                        <p className="font-body-md text-body-md text-on-surface capitalize">{profile?.role || '—'}</p>
+                        <p className="font-body-md text-body-md text-on-surface capitalize">{dashData.user.role || '—'}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 bg-surface p-4 rounded-lg border border-surface-variant">
                       <span className="material-symbols-outlined text-primary">calendar_month</span>
                       <div>
                         <p className="font-label-sm text-label-sm text-on-surface-variant">Batch</p>
-                        <p className="font-body-md text-body-md text-on-surface">{profile?.batch || '—'}</p>
+                        <p className="font-body-md text-body-md text-on-surface">{dashData.user.batch || '—'}</p>
                       </div>
                     </div>
                   </div>
@@ -752,31 +427,11 @@ function DashboardContent() {
               </div>
 
               {/* Edit Profile Form */}
-              <EditProfileForm profile={profile} setProfile={setProfile} />
+              <EditProfileForm profile={dashData.user} />
             </div>
           )}
         </div>
       </main>
     </div>
-  );
-}
-
-export default function StudentDashboardPage() {
-  const { data: session, status } = useSession();
-
-  if (status === "loading") {
-    return <div className="min-h-screen flex items-center justify-center font-display text-primary text-2xl">Loading Dashboard...</div>;
-  }
-
-  const isOwner = (session?.user as any)?.role === 'owner';
-
-  if (isOwner) {
-    return <OwnerDashboardPage />;
-  }
-
-  return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center font-display text-primary text-2xl">Loading Dashboard...</div>}>
-      <DashboardContent />
-    </Suspense>
   );
 }
