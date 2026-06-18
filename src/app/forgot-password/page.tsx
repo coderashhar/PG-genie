@@ -15,6 +15,14 @@ export default function ForgotPasswordPage() {
   
   const [isSendingOtp, setIsSendingOtp] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [otpTimer, setOtpTimer] = useState(0);
+
+  React.useEffect(() => {
+    if (otpTimer > 0) {
+      const interval = setInterval(() => setOtpTimer((prev) => prev - 1), 1000);
+      return () => clearInterval(interval);
+    }
+  }, [otpTimer]);
 
   const handleSendOtp = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -35,6 +43,7 @@ export default function ForgotPasswordPage() {
       if (res.ok) {
         toast.success("OTP sent! (Check server console)");
         setStep(2);
+        setOtpTimer(300);
       } else {
         toast.error(data.error || "Failed to send OTP");
       }
@@ -122,7 +131,12 @@ export default function ForgotPasswordPage() {
             </div>
 
             <div className="space-y-1">
-              <label className="font-label text-xs font-semibold tracking-wider text-on-surface uppercase" htmlFor="otp">Enter OTP</label>
+              <div className="flex justify-between items-center">
+                <label className="font-label text-xs font-semibold tracking-wider text-on-surface uppercase" htmlFor="otp">Enter OTP</label>
+                <button type="button" onClick={handleSendOtp} disabled={otpTimer > 0} className={`text-xs font-bold hover:underline cursor-pointer ${otpTimer > 0 ? 'text-on-surface-variant' : 'text-primary'}`}>
+                  {otpTimer > 0 ? `Resend OTP in ${Math.floor(otpTimer / 60)}:${(otpTimer % 60).toString().padStart(2, '0')}` : 'Resend OTP'}
+                </button>
+              </div>
               <div className="relative">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant">
                   <span className="material-symbols-outlined">password</span>

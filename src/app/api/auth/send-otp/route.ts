@@ -6,7 +6,7 @@ import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 import rateLimit, { getIP } from '@/lib/ratelimit';
 
 const limiter = rateLimit({
-  interval: 60 * 1000, // 60 seconds
+  interval: 3 * 60 * 60 * 1000, // 3 hours
   uniqueTokenPerInterval: 500,
 });
 
@@ -31,9 +31,9 @@ export async function POST(req: NextRequest) {
   try {
     const ip = getIP(req);
     try {
-      await limiter.check(3, ip); // Limit to 3 OTP requests per minute per IP to prevent OTP bombing
+      await limiter.check(3, ip); // Limit to 3 OTP requests per 3 hours per IP
     } catch {
-      return NextResponse.json({ error: 'Too many OTP requests, please wait a minute' }, { status: 429 });
+      return NextResponse.json({ error: 'please try after sometime' }, { status: 429 });
     }
 
     let { identifier } = await req.json();

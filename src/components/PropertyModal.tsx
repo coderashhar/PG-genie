@@ -140,21 +140,32 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
 
   // --- Image Upload Handlers ---
   const uploadFileToS3 = async (file: File): Promise<string> => {
-    // 1. Get presigned URL
+    // 1. Get presigned POST fields
     const res = await fetch('/api/upload', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ filename: file.name, contentType: file.type }),
     });
-    if (!res.ok) throw new Error('Failed to get upload URL');
-    const { signedUrl, fileUrl } = await res.json();
+    
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.error || 'Failed to get upload URL');
+    }
+    
+    const { url, fields, fileUrl } = await res.json();
 
-    // 2. Upload to S3
-    const uploadRes = await fetch(signedUrl, {
-      method: 'PUT',
-      headers: { 'Content-Type': file.type },
-      body: file,
+    // 2. Upload to S3 using FormData
+    const formData = new FormData();
+    Object.entries(fields).forEach(([key, value]) => {
+      formData.append(key, value as string);
     });
+    formData.append('file', file); // file must be the last field
+
+    const uploadRes = await fetch(url, {
+      method: 'POST',
+      body: formData,
+    });
+    
     if (!uploadRes.ok) throw new Error('Failed to upload to S3');
 
     return fileUrl;

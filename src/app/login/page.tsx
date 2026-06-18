@@ -27,6 +27,7 @@ function LoginContent() {
   const [isSendingOtp, setIsSendingOtp] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
+  const [otpTimer, setOtpTimer] = useState(0);
 
   useEffect(() => {
     const errorParam = searchParams.get("error");
@@ -38,6 +39,13 @@ function LoginContent() {
       setSelectedRole(registeredRole as 'student' | 'owner');
     }
   }, [searchParams]);
+
+  useEffect(() => {
+    if (otpTimer > 0) {
+      const interval = setInterval(() => setOtpTimer((prev) => prev - 1), 1000);
+      return () => clearInterval(interval);
+    }
+  }, [otpTimer]);
 
   const handleSendOtp = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -59,6 +67,7 @@ function LoginContent() {
         toast.success(data.message || "OTP sent successfully!");
         setOtpSent(true);
         setStep(2);
+        setOtpTimer(300);
       } else {
         toast.error(data.error || "Failed to send OTP");
       }
@@ -373,7 +382,9 @@ function LoginContent() {
                 <div className="space-y-1">
                   <div className="flex justify-between items-center">
                     <label className="font-label text-xs font-semibold tracking-wider text-on-surface uppercase" htmlFor="otp">Enter OTP</label>
-                    <button type="button" onClick={handleSendOtp} className="text-xs font-bold text-primary hover:underline cursor-pointer">Resend OTP</button>
+                    <button type="button" onClick={handleSendOtp} disabled={otpTimer > 0} className={`text-xs font-bold hover:underline cursor-pointer ${otpTimer > 0 ? 'text-on-surface-variant' : 'text-primary'}`}>
+                      {otpTimer > 0 ? `Resend OTP in ${Math.floor(otpTimer / 60)}:${(otpTimer % 60).toString().padStart(2, '0')}` : 'Resend OTP'}
+                    </button>
                   </div>
                   <div className="relative">
                     <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant">

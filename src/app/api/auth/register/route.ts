@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     try {
       await limiter.check(5, ip); // 5 requests per minute per IP
     } catch {
-      return NextResponse.json({ error: 'Too many requests, please try again later' }, { status: 429 });
+      return NextResponse.json({ error: 'please try after sometime' }, { status: 429 });
     }
 
     const body = await req.json();
