@@ -24,7 +24,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.amazonaws.com https://images.unsplash.com; connect-src 'self' https://*.amazonaws.com;"
+            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://maps.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.amazonaws.com https://images.unsplash.com https://maps.googleapis.com https://maps.gstatic.com https://*.google.com; connect-src 'self' https://*.amazonaws.com https://maps.googleapis.com;"
           },
           {
             key: 'Strict-Transport-Security',
@@ -48,7 +48,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()'
+            value: 'camera=(), microphone=()'
           }
         ]
       }

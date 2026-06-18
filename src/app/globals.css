@@ -161,3 +161,8 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+/* Fix for Leaflet tiles in Tailwind CSS */
+.leaflet-container img {
+  max-width: none !important;
+}

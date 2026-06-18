@@ -1,11 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css';
-import 'leaflet-defaulticon-compatibility';
+import React, { useState, useRef, useMemo, useCallback } from 'react';
+import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import toast from 'react-hot-toast';
 
 interface LocationPickerMapProps {
@@ -13,38 +9,51 @@ interface LocationPickerMapProps {
   initialAddress?: string;
 }
 
-export default function LocationPickerMap({ onLocationSelect, initialAddress }: LocationPickerMapProps) {
-  // Default to a central location (e.g., New Delhi or Bhopal depending on the user's focus)
-  const defaultCenter: L.LatLngExpression = [23.0763, 76.8523]; // Approximate center near VIT Bhopal
-  
-  const [position, setPosition] = useState<L.LatLngExpression>(defaultCenter);
-  const [loading, setLoading] = useState(false);
-  const mapRef = useRef<any>(null);
+const containerStyle = {
+  width: '100%',
+  height: '100%'
+};
 
-  // Helper to reverse geocode
+export default function LocationPickerMap({ onLocationSelect, initialAddress }: LocationPickerMapProps) {
+  const { isLoaded, loadError } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''
+  });
+
+  const isMapReady = isLoaded || (typeof window !== 'undefined' && !!window.google?.maps);
+
+  if (loadError && !isMapReady) {
+    console.error("Map load error", loadError);
+  }
+
+  const defaultCenter = useMemo(() => ({ lat: 23.0763, lng: 76.8523 }), []);
+  const [position, setPosition] = useState(defaultCenter);
+  const [loading, setLoading] = useState(false);
+  
+  const mapRef = useRef<google.maps.Map | null>(null);
+
   const fetchAddressFromCoords = async (lat: number, lng: number) => {
     setLoading(true);
     try {
-      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
-      const data = await res.json();
+      const geocoder = new window.google.maps.Geocoder();
+      const response = await geocoder.geocode({ location: { lat, lng } });
       
-      if (data && data.address) {
-        const addr = data.address;
+      if (response.results && response.results[0]) {
+        const addressComponents = response.results[0].address_components;
+        let city = '';
+        let state = '';
         
-        // Construct a sensible address string
-        const parts = [];
-        if (addr.house_number) parts.push(addr.house_number);
-        if (addr.road) parts.push(addr.road);
-        if (addr.suburb) parts.push(addr.suburb);
-        if (addr.neighbourhood) parts.push(addr.neighbourhood);
+        for (const component of addressComponents) {
+          if (component.types.includes('locality') || component.types.includes('administrative_area_level_2')) {
+            city = component.long_name;
+          }
+          if (component.types.includes('administrative_area_level_1')) {
+            state = component.long_name;
+          }
+        }
         
-        const fullAddress = parts.join(', ') || data.display_name.split(',').slice(0, 2).join(', ');
-        
-        const city = addr.city || addr.town || addr.village || addr.county || '';
-        const state = addr.state || '';
-
         onLocationSelect({
-          address: fullAddress,
+          address: response.results[0].formatted_address,
           city,
           state,
           lat,
@@ -59,31 +68,23 @@ export default function LocationPickerMap({ onLocationSelect, initialAddress }: 
     }
   };
 
-  // Draggable marker logic
-  const eventHandlers = useMemo(
-    () => ({
-      dragend(e: any) {
-        const marker = e.target;
-        if (marker != null) {
-          const latLng = marker.getLatLng();
-          setPosition([latLng.lat, latLng.lng]);
-          fetchAddressFromCoords(latLng.lat, latLng.lng);
-        }
-      },
-    }),
-    []
-  );
+  const handleDragEnd = (e: google.maps.MapMouseEvent) => {
+    if (e.latLng) {
+      const lat = e.latLng.lat();
+      const lng = e.latLng.lng();
+      setPosition({ lat, lng });
+      fetchAddressFromCoords(lat, lng);
+    }
+  };
 
-  // Map clicks
-  function MapEvents() {
-    useMapEvents({
-      click(e) {
-        setPosition([e.latlng.lat, e.latlng.lng]);
-        fetchAddressFromCoords(e.latlng.lat, e.latlng.lng);
-      },
-    });
-    return null;
-  }
+  const handleMapClick = (e: google.maps.MapMouseEvent) => {
+    if (e.latLng) {
+      const lat = e.latLng.lat();
+      const lng = e.latLng.lng();
+      setPosition({ lat, lng });
+      fetchAddressFromCoords(lat, lng);
+    }
+  };
 
   const handleDetectLocation = () => {
     if (!navigator.geolocation) {
@@ -96,10 +97,11 @@ export default function LocationPickerMap({ onLocationSelect, initialAddress }: 
       (pos) => {
         const lat = pos.coords.latitude;
         const lng = pos.coords.longitude;
-        setPosition([lat, lng]);
+        setPosition({ lat, lng });
         
         if (mapRef.current) {
-          mapRef.current.flyTo([lat, lng], 15);
+          mapRef.current.panTo({ lat, lng });
+          mapRef.current.setZoom(15);
         }
 
         fetchAddressFromCoords(lat, lng);
@@ -113,26 +115,47 @@ export default function LocationPickerMap({ onLocationSelect, initialAddress }: 
     );
   };
 
+  const onLoad = useCallback((map: google.maps.Map) => {
+    mapRef.current = map;
+  }, []);
+
+  const onUnmount = useCallback((map: google.maps.Map) => {
+    mapRef.current = null;
+  }, []);
+
   return (
     <div className="relative w-full h-[300px] bg-surface-container rounded-xl overflow-hidden border border-outline-variant">
-      <MapContainer 
-        center={position} 
-        zoom={13} 
-        scrollWheelZoom={false} 
-        style={{ height: '100%', width: '100%' }}
-        ref={mapRef}
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <MapEvents />
-        <Marker 
-          position={position}
-          draggable={true}
-          eventHandlers={eventHandlers}
-        />
-      </MapContainer>
+      {isMapReady ? (
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={position}
+          zoom={13}
+          onClick={handleMapClick}
+          onLoad={onLoad}
+          onUnmount={onUnmount}
+          options={{
+            disableDefaultUI: false,
+            mapTypeControl: true,
+            styles: [
+              {
+                featureType: "poi",
+                elementType: "labels",
+                stylers: [{ visibility: "off" }]
+              }
+            ]
+          }}
+        >
+          <Marker 
+            position={position}
+            draggable={true}
+            onDragEnd={handleDragEnd}
+          />
+        </GoogleMap>
+      ) : (
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-surface-container/80 backdrop-blur-sm text-center p-6">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
+        </div>
+      )}
 
       {/* Overlay UI */}
       <div className="absolute top-4 right-4 z-[400] flex flex-col gap-2">
