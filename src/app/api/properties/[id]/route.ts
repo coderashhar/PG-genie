@@ -24,8 +24,8 @@ export async function GET(
       return NextResponse.json({ error: 'Invalid property ID format' }, { status: 400 });
     }
     
-    // Fetch property by ID and populate owner details
-    const property = await Property.findById(id).populate('ownerId', 'name email phone image');
+    // Fetch property by ID and populate owner details (restrict to public fields only)
+    const property = await Property.findById(id).populate('ownerId', 'name image');
     
     if (!property) {
       return NextResponse.json(
