@@ -1,11 +1,24 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import connectToDatabase from '@/lib/db';
 import User from '@/models/User';
 import Otp from '@/models/Otp';
 import bcrypt from 'bcryptjs';
+import rateLimit, { getIP } from '@/lib/ratelimit';
 
-export async function POST(req: Request) {
+const limiter = rateLimit({
+  interval: 60 * 1000, // 60 seconds
+  uniqueTokenPerInterval: 500, // Max 500 users per second
+});
+
+export async function POST(req: NextRequest) {
   try {
+    const ip = getIP(req);
+    try {
+      await limiter.check(5, ip); // 5 requests per minute per IP
+    } catch {
+      return NextResponse.json({ error: 'Too many requests, please try again later' }, { status: 429 });
+    }
+
     let { name, identifier, otp, role, password } = await req.json();
 
     if (!name || !identifier || !otp || !role || !password) {

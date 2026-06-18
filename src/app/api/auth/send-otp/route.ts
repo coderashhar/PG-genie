@@ -1,8 +1,14 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import connectToDatabase from '@/lib/db';
 import Otp from '@/models/Otp';
 import { SNSClient, PublishCommand } from "@aws-sdk/client-sns";
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
+import rateLimit, { getIP } from '@/lib/ratelimit';
+
+const limiter = rateLimit({
+  interval: 60 * 1000, // 60 seconds
+  uniqueTokenPerInterval: 500,
+});
 
 const awsRegion = process.env.AWS_REGION || 'ap-south-1';
 const awsAccessKey = process.env.AWS_ACCESS_KEY_ID || '';
@@ -21,8 +27,15 @@ const sesClient = hasAwsCredentials ? new SESClient({
   credentials: { accessKeyId: awsAccessKey, secretAccessKey: awsSecretKey }
 }) : null;
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
+    const ip = getIP(req);
+    try {
+      await limiter.check(3, ip); // Limit to 3 OTP requests per minute per IP to prevent OTP bombing
+    } catch {
+      return NextResponse.json({ error: 'Too many OTP requests, please wait a minute' }, { status: 429 });
+    }
+
     let { identifier } = await req.json();
 
     if (!identifier) {
