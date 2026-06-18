@@ -3,6 +3,33 @@ import connectToDatabase from '@/lib/db';
 import Property from '@/models/Property';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
+import { z } from 'zod';
+
+const propertySchema = z.object({
+  title: z.string().min(5).max(100),
+  description: z.string().min(20).max(2000),
+  location: z.object({
+    address: z.string().min(5),
+    city: z.string().min(2),
+    state: z.string().min(2),
+    zipCode: z.string().optional(),
+    lat: z.number().optional(),
+    lng: z.number().optional(),
+  }),
+  price: z.number().min(500),
+  roomTypes: z.array(z.string()).min(1),
+  amenities: z.array(z.string()),
+  furniture: z.boolean().optional(),
+  attachedBath: z.boolean().optional(),
+  waterSupply: z.boolean().optional(),
+  geyser: z.boolean().optional(),
+  wifi: z.boolean().optional(),
+  backupPower: z.boolean().optional(),
+  cctv: z.boolean().optional(),
+  washingMachine: z.boolean().optional(),
+  petFriendly: z.boolean().optional(),
+  images: z.array(z.string().url()).min(1, 'At least one image is required'),
+});
 
 export async function GET(req: NextRequest) {
   try {
@@ -125,14 +152,16 @@ export async function POST(req: NextRequest) {
     
     const body = await req.json();
     
-    // Validate images
-    if (!body.images || !Array.isArray(body.images) || body.images.length === 0) {
-      return NextResponse.json({ error: 'At least one image is required.' }, { status: 400 });
+    const result = propertySchema.safeParse(body);
+    if (!result.success) {
+      return NextResponse.json({ error: 'Invalid input data', details: result.error.format() }, { status: 400 });
     }
+    
+    const validatedBody = result.data;
     
     // Add the ownerId from the session
     const propertyData = {
-      ...body,
+      ...validatedBody,
       ownerId: (session.user as any).id,
     };
     

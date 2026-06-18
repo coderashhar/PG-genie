@@ -4,10 +4,19 @@ import User from '@/models/User';
 import Otp from '@/models/Otp';
 import bcrypt from 'bcryptjs';
 import rateLimit, { getIP } from '@/lib/ratelimit';
+import { z } from 'zod';
 
 const limiter = rateLimit({
   interval: 60 * 1000, // 60 seconds
   uniqueTokenPerInterval: 500, // Max 500 users per second
+});
+
+const registerSchema = z.object({
+  name: z.string().min(2).max(50),
+  identifier: z.string().min(5).max(100),
+  otp: z.string().length(6),
+  role: z.enum(['student', 'owner', 'admin']),
+  password: z.string().min(6).max(100),
 });
 
 export async function POST(req: NextRequest) {
@@ -19,11 +28,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Too many requests, please try again later' }, { status: 429 });
     }
 
-    let { name, identifier, otp, role, password } = await req.json();
+    const body = await req.json();
+    const result = registerSchema.safeParse(body);
 
-    if (!name || !identifier || !otp || !role || !password) {
-      return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
+    if (!result.success) {
+      return NextResponse.json({ error: 'Invalid input format', details: result.error.format() }, { status: 400 });
     }
+
+    let { name, identifier, otp, role, password } = result.data;
 
     // Normalize identifier
     identifier = identifier.trim();
