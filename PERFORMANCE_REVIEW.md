@@ -413,6 +413,7 @@ Before making further code changes, please provide:
 5. TTFB measurements after SSR migration.
 
 The architecture now appears sound, so I would like to identify the specific resource responsible for the remaining 11.9s LCP before making additional optimizations.
+
 ### 1. Exact Largest Contentful Paint (LCP) Element
 The LCP element is the first property's main thumbnail image in the `PropertyCard`:
 `<img alt="Property Title" decoding="async" data-nimg="fill" ... srcset="/_next/image?url=..." />`
@@ -450,3 +451,87 @@ The 11.9s LCP is caused by frontend asset loading, not the database or server.
 2. Optimize `icon.png`.
 3. (Fixed) Ensure `priority={true}` is set on above-the-fold images in the property feed.
 
+# Phase 3 Approval
+
+The audit clearly shows that the backend and SSR migration are no longer the bottleneck.
+
+Key findings:
+
+- TTFB is excellent (~90ms).
+- TBT is 0ms.
+- CLS is 0.
+- Database performance is no longer a concern.
+
+The remaining issues are frontend asset related.
+
+## Approved Changes
+
+### 1. Material Symbols Optimization (Highest Priority)
+
+Please identify exactly where the 1.1MB Material Symbols font is being imported.
+
+Evaluate:
+
+- Replacing with Lucide React icons.
+- Replacing with Heroicons.
+- Using SVG icons directly.
+- Subsetting the font to only required glyphs.
+
+### 2. LCP Image Prioritization
+
+Keep the SSR architecture.
+
+For the above-the-fold property card image:
+
+```tsx
+priority={index === 0}
+```
+
+rather than prioritizing multiple images.
+
+### 3. Icon Optimization
+
+Optimize or replace:
+
+```text
+icon.png (391 KB)
+```
+
+with a significantly smaller favicon/icon asset.
+
+## Verification
+
+After implementing these changes, please provide:
+
+- Updated Lighthouse report
+- LCP
+- FCP
+- Speed Index
+- Largest network requests
+
+before making any further architectural changes.
+### Phase 3 Initial Implementation Results
+
+I have implemented the approved quick wins for Phase 3:
+1. **LCP Image Prioritization**: Changed `priority={index === 0}` on the `PropertyCard` in `PropertyFeed`.
+2. **Icon Optimization**: Resized `icon.png` from 1024x1024 (391 KB) down to 192x192 (7.2 KB). 
+
+**Verification Lighthouse Run (Simulated Mobile 3G / 4x CPU Slowdown):**
+- **LCP**: 10.6 s (Improved from 11.9s)
+- **FCP**: 7.9 s
+- **Speed Index**: 7.9 s
+
+**Largest Network Requests:**
+1. `materialsymbolsoutlined.woff2`: **1.1 MB**
+2. Next.js App Font (`.woff2`): 75 KB
+3. Client JS Chunks (`0_~orap1yjqum.js`): 72 KB
+
+*Note: `icon.png` has completely dropped off the largest network requests list!*
+
+### Material Symbols Evaluation Conclusion
+There are currently **66 unique Material Symbol icons** used across the app (`ac_unit`, `apartment`, `verified`, `wifi`, etc.). 
+
+**Recommendation:**
+Replacing all 66 icons across the app with `lucide-react` or SVG components would be a massive structural change. Instead, the most performant and low-risk solution is to **subset the Google Font** using the `&icon_names=` query parameter in `src/app/layout.tsx`. By passing exactly the 66 icon names we need, we can reduce the font payload from 1.1MB down to under 30KB without needing to touch a single component's JSX. 
+
+Would you like me to proceed with implementing this Material Symbols font subsetting?
