@@ -4,9 +4,10 @@ import React, { useMemo } from 'react';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 
 interface PropertyDisplayMapProps {
-  lat?: number;
-  lng?: number;
+  lat?: number | string;
+  lng?: number | string;
   address?: string;
+  title?: string;
 }
 
 const containerStyle = {
@@ -14,7 +15,7 @@ const containerStyle = {
   height: '100%'
 };
 
-export default function PropertyDisplayMap({ lat, lng, address }: PropertyDisplayMapProps) {
+export default function PropertyDisplayMap({ lat, lng, address, title }: PropertyDisplayMapProps) {
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''
@@ -42,7 +43,7 @@ export default function PropertyDisplayMap({ lat, lng, address }: PropertyDispla
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={center}
-          zoom={parsedLat && parsedLng ? 16 : 12}
+          zoom={parsedLat && parsedLng ? 15 : 12}
           options={{
             disableDefaultUI: false,
             mapTypeControl: true,
@@ -50,8 +51,17 @@ export default function PropertyDisplayMap({ lat, lng, address }: PropertyDispla
             styles: [
               {
                 featureType: "poi",
-                elementType: "labels",
-                stylers: [{ visibility: "off" }]
+                stylers: [
+                  { saturation: 10 },
+                  { lightness: 40 }
+                ]
+              },
+              {
+                featureType: "poi",
+                elementType: "labels.text.fill",
+                stylers: [
+                  { color: "#8a8a8a" }
+                ]
               }
             ]
           }}

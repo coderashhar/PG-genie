@@ -3,7 +3,7 @@ import mongoose, { Document, Model, Schema } from 'mongoose';
 export interface IProperty extends Document {
   ownerId: mongoose.Types.ObjectId;
   title: string;
-  description: string;
+  description?: string;
   location: {
     address: string;
     city: string;
@@ -45,7 +45,7 @@ const PropertySchema: Schema<IProperty> = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: [true, 'Please provide a description'],
+      default: '',
     },
     location: {
       address: { type: String, required: true },

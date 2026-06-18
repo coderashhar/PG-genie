@@ -7,7 +7,7 @@ import { z } from 'zod';
 
 const propertySchema = z.object({
   title: z.string().min(5).max(100),
-  description: z.string().min(20).max(2000),
+  description: z.string().max(2000).optional().or(z.literal('')),
   location: z.object({
     address: z.string().min(5),
     city: z.string().min(2),

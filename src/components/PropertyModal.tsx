@@ -287,6 +287,37 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
 
       if (!res.ok) {
         const errorData = await res.json();
+        
+        // Handle Zod validation errors
+        if (errorData.details) {
+          const formattedErrors = Object.entries(errorData.details)
+            .filter(([key]) => key !== '_errors')
+            .map(([key, value]: [string, any]) => {
+              if (value && value._errors && value._errors.length > 0) {
+                return `${key}: ${value._errors[0]}`;
+              }
+              // Handle nested object errors (like location)
+              if (typeof value === 'object' && value !== null) {
+                const nestedErrors = Object.entries(value)
+                  .filter(([nKey]) => nKey !== '_errors')
+                  .map(([nKey, nValue]: [string, any]) => {
+                    if (nValue && nValue._errors && nValue._errors.length > 0) {
+                      return `${key}.${nKey}: ${nValue._errors[0]}`;
+                    }
+                    return null;
+                  })
+                  .filter(Boolean);
+                if (nestedErrors.length > 0) return nestedErrors.join(', ');
+              }
+              return null;
+            })
+            .filter(Boolean);
+            
+          if (formattedErrors.length > 0) {
+            throw new Error(formattedErrors.join(' | '));
+          }
+        }
+        
         throw new Error(errorData.error || 'Failed to save property');
       }
 
@@ -348,9 +379,8 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
                 </div>
 
                 <div>
-                  <label className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Description *</label>
+                  <label className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Description (Optional)</label>
                   <textarea
-                    required
                     name="description"
                     value={formData.description}
                     onChange={handleChange}

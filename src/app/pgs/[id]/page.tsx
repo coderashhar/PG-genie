@@ -371,6 +371,7 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
                 lat={property.location?.lat} 
                 lng={property.location?.lng} 
                 address={`${property.location?.address || ''}, ${property.location?.city || ''}, ${property.location?.state || ''}`} 
+                title={property.title}
               />
             </div>
           </div>
