@@ -41,11 +41,22 @@ function LoginContent() {
   }, [searchParams]);
 
   useEffect(() => {
+    let interval: NodeJS.Timeout;
     if (otpTimer > 0) {
-      const interval = setInterval(() => setOtpTimer((prev) => prev - 1), 1000);
-      return () => clearInterval(interval);
+      interval = setInterval(() => {
+        setOtpTimer((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
     }
-  }, [otpTimer]);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [otpTimer > 0]);
 
   const handleSendOtp = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -67,10 +78,10 @@ function LoginContent() {
         toast.success(data.message || "OTP sent successfully!");
         setOtpSent(true);
         setStep(2);
-        setOtpTimer(300);
       } else {
         toast.error(data.error || "Failed to send OTP");
       }
+      setOtpTimer(300);
     } catch (error) {
       toast.error("An error occurred");
     } finally {
@@ -382,7 +393,7 @@ function LoginContent() {
                 <div className="space-y-1">
                   <div className="flex justify-between items-center">
                     <label className="font-label text-xs font-semibold tracking-wider text-on-surface uppercase" htmlFor="otp">Enter OTP</label>
-                    <button type="button" onClick={handleSendOtp} disabled={otpTimer > 0} className={`text-xs font-bold hover:underline cursor-pointer ${otpTimer > 0 ? 'text-on-surface-variant' : 'text-primary'}`}>
+                    <button type="button" onClick={handleSendOtp} disabled={otpTimer > 0} className={`text-xs font-bold ${otpTimer > 0 ? 'text-on-surface-variant opacity-50 cursor-not-allowed' : 'text-primary hover:underline cursor-pointer'}`}>
                       {otpTimer > 0 ? `Resend OTP in ${Math.floor(otpTimer / 60)}:${(otpTimer % 60).toString().padStart(2, '0')}` : 'Resend OTP'}
                     </button>
                   </div>
