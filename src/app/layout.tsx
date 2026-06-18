@@ -39,7 +39,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${plusJakartaSans.variable} ${playfairDisplay.variable} ${caveat.variable} font-sans`}>
       <head>
-        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;icon_names=ac_unit,account_circle,admin_panel_settings,apartment,arrow_back,arrow_forward,assignment,auto_awesome,badge,bathtub,battery_charging_full,bolt,business,calendar_month,call,cancel,chair,chat,check_circle,chevron_left,chevron_right,close,cloud_upload,dashboard,delete,directions,edit,error,event_available,event_busy,exit_to_app,expand_more,favorite,favorite_border,forum,gpp_maybe,group,heat_pump,home,inbox,info,local_laundry_service,local_offer,location_off,location_on,lock,logout,magic_button,mail,map,mark_email_unread,my_location,notifications,notifications_off,open_in_new,password,person,pets,photo_library,progress_activity,receipt_long,restaurant,school,search,search_off,send,star,star_half,store,support_agent,trending_flat,tune,verified,videocam,visibility,water_drop,wifi&amp;display=swap" rel="stylesheet" />
       </head>
       <body className="bg-surface-container-lowest text-on-background font-body-md antialiased overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col relative">
         <SessionProvider>
