@@ -16,9 +16,33 @@ export default async function PgsPage({ searchParams }: PgsPageProps) {
   const resolvedParams = await searchParams;
 
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading PGs...</div>}>
+    <Suspense fallback={<PgListSkeleton />}>
       <PgsContent resolvedParams={resolvedParams} />
     </Suspense>
+  );
+}
+
+function PgListSkeleton() {
+  return (
+    <div className="bg-background min-h-screen flex flex-col font-body-md animate-pulse">
+      <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-gutter py-stack-lg flex flex-col md:flex-row gap-stack-lg">
+        {/* Sidebar Skeleton */}
+        <div className="w-full md:w-[320px] shrink-0 space-y-4">
+          <div className="h-10 bg-surface-container rounded-lg w-full" />
+          <div className="h-[400px] bg-surface-container rounded-xl w-full" />
+        </div>
+        
+        {/* Feed Skeleton */}
+        <div className="flex-1 w-full space-y-6">
+          <div className="h-8 bg-surface-container rounded w-48" />
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-stack-md">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="h-[300px] bg-surface-container rounded-xl w-full" />
+            ))}
+          </div>
+        </div>
+      </main>
+    </div>
   );
 }
 

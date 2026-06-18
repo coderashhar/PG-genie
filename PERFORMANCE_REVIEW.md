@@ -381,9 +381,72 @@ Approved approach:
 ❌ Pure client-side rendering
 
 This provides the best balance of SEO, performance, scalability, and user experience for a PG marketplace.
+
 ### Phase 2: SSR Migration (Completed)
 - **`/pgs`**: Refactored to Server Component. Uses `FilterSidebar` and `PropertyFeed` (Client Component) for intersection-observer based infinite scroll while keeping the initial data fetch on the server.
 - **`/pgs/[id]`**: Refactored to Server Component. Uses `PgGallery`, `PgActionButtons`, and `PgMapContainer` as interactive Client Components while fetching property data on the server.
 - **`/dashboard` & `/owner/dashboard`**: Refactored to Server Components.
 
 We have successfully migrated the main data-heavy pages to SSR, reducing the First Load JS by offloading Mongoose queries and data formatting to the server. Lighthouse showed a simulated LCP of 11.9s, which can be further optimized by caching or CDN configuration if needed, but the core SSR migration is complete.
+
+## Post-SSR (phase 2) Audit Request
+
+The SSR migration appears complete, but the reported Lighthouse LCP of 11.9s is still significantly higher than expected.
+
+Before making further code changes, please provide:
+
+1. The exact Largest Contentful Paint (LCP) element.
+2. Lighthouse report screenshots or metrics for:
+   - LCP
+   - FCP
+   - TBT
+   - CLS
+   - Speed Index
+3. Network waterfall showing:
+   - Largest requests
+   - Slowest requests
+   - Image loading times
+4. Image analysis:
+   - Largest image dimensions
+   - Actual file sizes
+   - Whether WebP/AVIF is being served
+5. TTFB measurements after SSR migration.
+
+The architecture now appears sound, so I would like to identify the specific resource responsible for the remaining 11.9s LCP before making additional optimizations.
+### 1. Exact Largest Contentful Paint (LCP) Element
+The LCP element is the first property's main thumbnail image in the `PropertyCard`:
+`<img alt="Property Title" decoding="async" data-nimg="fill" ... srcset="/_next/image?url=..." />`
+
+**Root Cause for 11.9s:** By default, Next.js `<Image>` tags are lazy-loaded (`loading="lazy"`). Because this image is immediately visible in the viewport when the page loads, lazy loading causes the browser to defer fetching it until after the initial render finishes, severely delaying the LCP. (I have just patched this locally by adding `priority={index < 4}` to the first four property cards).
+
+### 2. Lighthouse Metrics (Simulated Mobile 3G / 4x CPU Slowdown)
+- **LCP (Largest Contentful Paint)**: 11.9 s
+- **FCP (First Contentful Paint)**: 7.9 s
+- **TBT (Total Blocking Time)**: 0 ms
+- **CLS (Cumulative Layout Shift)**: 0
+- **Speed Index**: 8.0 s
+
+### 3. Network Waterfall Insights
+**Largest Requests:**
+1. `materialsymbolsoutlined.woff2` (from fonts.gstatic.com): **1.1 MB** (This is massive and blocks rendering because icon fonts are required for layout).
+2. `icon.png`: **391 KB** (The app icon/favicon is unoptimized and too large).
+3. Next.js App Font (`.woff2`): 75 KB
+4. Client JS Chunks (`0_~orap1yjqum.js`): 72 KB
+
+**Slowest Phase:** The "Resource Load Delay" for the LCP image was **1,207 ms**, meaning the browser waited over a second before even attempting to download the hero image. 
+
+### 4. Image Analysis
+- **Format**: Yes, WebP is being served correctly by the Next.js `/_next/image` optimizer.
+- **Sizes**: The transfer sizes for the PG images are quite small (typically under 20-30KB after WebP compression). The problem is not the size of the property images, but the delay in starting their download.
+- **Icon.png**: 391 KB is extremely large for an icon. It should be compressed or replaced with an `.ico`/`.svg`.
+
+### 5. Server TTFB Measurements
+- **Time To First Byte (TTFB)**: **86 - 93 ms**
+- **Conclusion**: The SSR migration was highly successful for database querying. The server responds almost instantly (< 100ms) with the fully populated HTML!
+
+### Immediate Next Steps (Phase 3)
+The 11.9s LCP is caused by frontend asset loading, not the database or server.
+1. Self-host or subset the 1.1MB Material Symbols font.
+2. Optimize `icon.png`.
+3. (Fixed) Ensure `priority={true}` is set on above-the-fold images in the property feed.
+

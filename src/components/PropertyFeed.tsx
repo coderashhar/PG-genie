@@ -337,6 +337,7 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
                       <Image
                         alt={property.title}
                         fill
+                        priority={index < 4}
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
                         src={property.images?.[0] || '/placeholder.jpg'}
                       />
@@ -434,6 +435,7 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
                     return next;
                   });
                 }}
+                priority={index < 4}
                 onClick={() => trackView(property._id)}
               />
             );

@@ -57,9 +57,10 @@ interface PropertyCardProps {
   initialIsSaved: boolean;
   onSaveToggle?: (pgId: string, newIsSaved: boolean) => void;
   onClick?: () => void;
+  priority?: boolean;
 }
 
-export default function PropertyCard({ property, initialIsSaved, onSaveToggle, onClick }: PropertyCardProps) {
+export default function PropertyCard({ property, initialIsSaved, onSaveToggle, onClick, priority = false }: PropertyCardProps) {
   const { data: session } = useSession();
   const router = useRouter();
   const pathname = usePathname();
@@ -164,6 +165,7 @@ export default function PropertyCard({ property, initialIsSaved, onSaveToggle, o
         <Image
           alt={property.title}
           fill
+          priority={priority}
           className="object-cover group-hover:scale-105 transition-transform duration-500"
           src={property.images?.[0] || '/placeholder.jpg'}
         />
