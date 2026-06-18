@@ -569,6 +569,7 @@ Target:
 - Material Symbols payload under 30 KB.
 - Removal of the 1.1 MB request from the network waterfall.
 - Meaningful improvement in FCP and LCP.
+
 ### Phase 3.2 Implementation Results: Material Symbols Subsetting
 
 The Material Symbols font has been successfully subsetted via the Google Fonts URL `&icon_names=` API.
