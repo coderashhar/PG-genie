@@ -7,6 +7,7 @@ import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import { useRouter, usePathname } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import { useInView } from 'react-intersection-observer';
 
 const PropertyDisplayMap = dynamic(() => import('@/components/PropertyDisplayMap'), {
   ssr: false,
@@ -61,6 +62,11 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
   const { data: session } = useSession();
   const router = useRouter();
   const pathname = usePathname();
+
+  const { ref: mapRef, inView: isMapInView } = useInView({
+    triggerOnce: true,
+    rootMargin: '400px 0px',
+  });
 
   const handleSaveClick = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -366,14 +372,18 @@ export default function PgDetailPage({ params }: { params: Promise<{ id: string 
             <hr className="border-outline-variant" />
 
             {/* Map Section */}
-            <div className="mb-stack-lg">
+            <div className="mb-stack-lg" ref={mapRef}>
               <h2 className="font-h2 text-h2 text-on-surface mb-stack-sm">Location</h2>
-              <PropertyDisplayMap 
-                lat={property.location?.lat} 
-                lng={property.location?.lng} 
-                address={`${property.location?.address || ''}, ${property.location?.city || ''}, ${property.location?.state || ''}`} 
-                title={property.title}
-              />
+              {isMapInView ? (
+                <PropertyDisplayMap 
+                  lat={property.location?.lat} 
+                  lng={property.location?.lng} 
+                  address={`${property.location?.address || ''}, ${property.location?.city || ''}, ${property.location?.state || ''}`} 
+                  title={property.title}
+                />
+              ) : (
+                <div className="w-full h-[300px] md:h-[400px] bg-surface-container rounded-xl flex items-center justify-center border border-outline-variant"></div>
+              )}
             </div>
           </div>
 

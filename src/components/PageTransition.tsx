@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence, Variants } from "framer-motion";
+import { LazyMotion, domAnimation, m, AnimatePresence, Variants } from "framer-motion";
 
 export default function PageTransition({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -44,20 +44,21 @@ export default function PageTransition({ children }: { children: React.ReactNode
 
   return (
     <div className="w-full relative overflow-hidden min-h-screen bg-background">
-      {/* mode="popLayout" automatically pulls the exiting element out of the document flow (making it absolute) so the new element can take its place instantly and animate simultaneously! */}
-      <AnimatePresence mode="popLayout" initial={false} custom={customData}>
-        <motion.div
-          key={pathname}
-          custom={customData}
-          variants={variants}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          className="w-full bg-background min-h-screen"
-        >
-          {children}
-        </motion.div>
-      </AnimatePresence>
+      <LazyMotion features={domAnimation}>
+        <AnimatePresence mode="popLayout" initial={false} custom={customData}>
+          <m.div
+            key={pathname}
+            custom={customData}
+            variants={variants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            className="w-full bg-background min-h-screen"
+          >
+            {children}
+          </m.div>
+        </AnimatePresence>
+      </LazyMotion>
     </div>
   );
 }

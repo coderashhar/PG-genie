@@ -6,7 +6,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
-import PropertyModal from '@/components/PropertyModal';
+import dynamic from 'next/dynamic';
+
+const PropertyModal = dynamic(() => import('@/components/PropertyModal'), {
+  ssr: false,
+});
 
 // --- Types ---
 interface PropertyLocation {
@@ -854,12 +858,17 @@ function OwnerDashboardContent() {
         </div>
       </main>
 
-      <PropertyModal 
-        isOpen={isPropertyModalOpen} 
-        onClose={() => setIsPropertyModalOpen(false)} 
-        property={editingProperty}
-        onSuccess={() => setRefreshKey(k => k + 1)}
-      />
+      {isPropertyModalOpen && (
+        <PropertyModal 
+          isOpen={isPropertyModalOpen} 
+          onClose={() => setIsPropertyModalOpen(false)} 
+          property={editingProperty}
+          onSuccess={() => {
+            setRefreshKey(k => k + 1);
+            setIsPropertyModalOpen(false);
+          }}
+        />
+      )}
 
       {/* Delete Confirmation Modal */}
       {deletingPropertyId && (

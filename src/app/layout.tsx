@@ -5,7 +5,7 @@ import PageTransition from "@/components/PageTransition";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BottomNav from "@/components/BottomNav";
-import ChatWidget from "@/components/ChatWidget";
+import ChatWidgetWrapper from "@/components/ChatWidgetWrapper";
 import { Toaster } from "react-hot-toast";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -49,7 +49,7 @@ export default function RootLayout({
             {children}
           </PageTransition>
           <BottomNav />
-          <ChatWidget />
+          <ChatWidgetWrapper />
           <Footer />
           <Analytics />
           <SpeedInsights />
