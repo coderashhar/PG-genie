@@ -136,6 +136,20 @@ export default function ChatWidget() {
     }
   }, [messages]);
 
+  // Disable background scrolling when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
   // Auto-scroll to bottom on new messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -232,10 +246,10 @@ export default function ChatWidget() {
                     prev.map((m) =>
                       m.id === assistantId
                         ? {
-                            ...m,
-                            content:
-                              "I'm sorry, I encountered an error. Please try again.",
-                          }
+                          ...m,
+                          content:
+                            "I'm sorry, I encountered an error. Please try again.",
+                        }
                         : m
                     )
                   );
@@ -252,10 +266,10 @@ export default function ChatWidget() {
           prev.map((m) =>
             m.id === assistantId
               ? {
-                  ...m,
-                  content:
-                    "I'm sorry, I couldn't connect to the server. Please check your connection and try again.",
-                }
+                ...m,
+                content:
+                  "I'm sorry, I couldn't connect to the server. Please check your connection and try again.",
+              }
               : m
           )
         );
@@ -291,11 +305,10 @@ export default function ChatWidget() {
     <>
       {/* Chat Window */}
       <div
-        className={`fixed z-[9998] transition-all duration-300 ease-out ${
-          isOpen
-            ? 'opacity-100 translate-y-0 pointer-events-auto'
-            : 'opacity-0 translate-y-4 pointer-events-none'
-        } bottom-[90px] right-4 md:bottom-24 md:right-6 w-[calc(100vw-2rem)] sm:w-[400px] max-h-[70vh] sm:max-h-[600px] flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-outline-variant/20`}
+        className={`fixed z-[9998] transition-all duration-300 ease-out ${isOpen
+          ? 'opacity-100 translate-y-0 pointer-events-auto'
+          : 'opacity-0 translate-y-4 pointer-events-none'
+          } bottom-[140px] right-4 md:bottom-24 md:right-6 w-[calc(100vw-2rem)] sm:w-[400px] max-h-[55vh] sm:max-h-[600px] flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-outline-variant/20`}
         style={{
           background: 'var(--color-surface-container-lowest)',
           boxShadow:
@@ -303,21 +316,16 @@ export default function ChatWidget() {
         }}
       >
         {/* Header */}
-        <div
-          className="flex items-center justify-between px-5 py-4 flex-shrink-0"
-          style={{
-            background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-container) 100%)',
-          }}
-        >
+        <div className="flex items-center justify-between px-5 pt-3 pb-2 flex-shrink-0 bg-surface-container-lowest">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-              <span className="material-symbols-outlined text-white text-[20px]">auto_awesome</span>
+            <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+              <span className="material-symbols-outlined text-primary text-[20px]">auto_awesome</span>
             </div>
             <div>
-              <h3 className="text-white font-semibold text-sm">
+              <h3 className="text-primary font-semibold text-sm">
                 Genie
               </h3>
-              <p className="text-white/70 text-xs">
+              <p className="text-primary/80 text-xs">
                 {isStreaming ? 'Typing...' : 'Your AI PG assistant'}
               </p>
             </div>
@@ -326,17 +334,17 @@ export default function ChatWidget() {
             {messages.length > 0 && (
               <button
                 onClick={clearChat}
-                className="text-white/60 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
+                className="text-on-surface-variant hover:text-on-surface p-1.5 rounded-lg hover:bg-surface-container transition-colors cursor-pointer"
                 title="Clear chat"
               >
                 <span className="material-symbols-outlined text-[18px]">
-                  delete_sweep
+                  delete
                 </span>
               </button>
             )}
             <button
               onClick={() => setIsOpen(false)}
-              className="text-white/60 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
+              className="text-on-surface-variant hover:text-on-surface p-1.5 rounded-lg hover:bg-surface-container transition-colors cursor-pointer"
             >
               <span className="material-symbols-outlined text-[18px]">
                 close
@@ -357,9 +365,9 @@ export default function ChatWidget() {
         >
           {messages.length === 0 ? (
             // Welcome state
-            <div className="flex flex-col items-center justify-center h-full py-6 text-center">
+            <div className="flex flex-col items-center justify-center h-full py-2 md:py-6 text-center">
               <div
-                className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 shadow-lg"
+                className="hidden md:flex w-16 h-16 rounded-2xl items-center justify-center mb-4 shadow-lg"
                 style={{
                   background:
                     'linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-container) 100%)',
@@ -370,7 +378,7 @@ export default function ChatWidget() {
               <h4 className="font-semibold text-on-surface text-base mb-1">
                 Hi there! I&apos;m Genie ✨
               </h4>
-              <p className="text-on-surface-variant text-sm mb-5 max-w-[280px]">
+              <p className="text-on-surface-variant text-sm mb-3 md:mb-5 max-w-[280px]">
                 Your personal PG search assistant. Ask me anything about PGs near VIT!
               </p>
               <div className="flex flex-wrap gap-2 justify-center">
@@ -378,7 +386,7 @@ export default function ChatWidget() {
                   <button
                     key={action.label}
                     onClick={() => handleQuickAction(action.prompt)}
-                    className="bg-primary/5 text-primary border border-primary/15 px-3 py-1.5 rounded-full text-xs font-medium hover:bg-primary/10 hover:border-primary/30 transition-all cursor-pointer whitespace-nowrap"
+                    className="bg-primary/5 text-primary border border-primary/15 px-3 py-1 rounded-full text-xs font-medium hover:bg-primary/10 hover:border-primary/30 transition-all cursor-pointer whitespace-nowrap"
                   >
                     {action.label}
                   </button>
@@ -390,9 +398,8 @@ export default function ChatWidget() {
             messages.map((msg) => (
               <div
                 key={msg.id}
-                className={`flex ${
-                  msg.role === 'user' ? 'justify-end' : 'justify-start'
-                }`}
+                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'
+                  }`}
               >
                 {msg.role === 'model' && (
                   <div className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center mr-2 mt-1"
@@ -404,11 +411,10 @@ export default function ChatWidget() {
                   </div>
                 )}
                 <div
-                  className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
-                    msg.role === 'user'
-                      ? 'bg-primary text-on-primary rounded-br-md'
-                      : 'bg-surface-container text-on-surface rounded-bl-md'
-                  }`}
+                  className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${msg.role === 'user'
+                    ? 'bg-primary text-on-primary rounded-br-md'
+                    : 'bg-surface-container text-on-surface rounded-bl-md'
+                    }`}
                 >
                   {msg.role === 'model' && msg.content === '' && isStreaming ? (
                     // Typing indicator
@@ -441,8 +447,7 @@ export default function ChatWidget() {
         {/* Input Area */}
         <form
           onSubmit={handleSubmit}
-          className="flex-shrink-0 border-t px-4 py-3 flex items-end gap-2"
-          style={{ borderColor: 'var(--color-outline-variant)', background: 'var(--color-surface)' }}
+          className="flex-shrink-0 px-4 py-3 flex items-end gap-2"
         >
           <textarea
             ref={inputRef}
@@ -484,9 +489,8 @@ export default function ChatWidget() {
       <button
         id="chat-widget-fab"
         onClick={() => setIsOpen(!isOpen)}
-        className={`fixed z-[9999] bottom-20 right-4 md:bottom-6 md:right-6 w-14 h-14 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 cursor-pointer hover:scale-110 active:scale-95 ${
-          isOpen ? 'rotate-0' : 'rotate-0'
-        }`}
+        className={`fixed z-[9999] bottom-20 right-4 md:bottom-6 md:right-6 w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 cursor-pointer hover:scale-110 active:scale-95 ${isOpen ? 'rotate-0' : 'rotate-0'
+          }`}
         style={{
           background:
             'linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-container) 100%)',
@@ -495,9 +499,8 @@ export default function ChatWidget() {
         }}
       >
         <span
-          className={`material-symbols-outlined text-white text-[26px] transition-transform duration-300 ${
-            isOpen ? 'rotate-90' : 'rotate-0'
-          }`}
+          className={`material-symbols-outlined text-white text-[22px] md:text-[26px] transition-transform duration-300 ${isOpen ? 'rotate-90' : 'rotate-0'
+            }`}
         >
           {isOpen ? 'close' : 'auto_awesome'}
         </span>
