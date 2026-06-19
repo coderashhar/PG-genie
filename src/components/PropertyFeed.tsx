@@ -73,7 +73,7 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
   const [hasMore, setHasMore] = useState(initialHasMore);
   const [page, setPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  
+
   const [savedPgIds, setSavedPgIds] = useState<Set<string>>(new Set(initialSavedPgIds));
   const [isSavingMap, setIsSavingMap] = useState<Record<string, boolean>>({});
 
@@ -187,7 +187,7 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
       router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
       return;
     }
-    
+
     if (isSavingMap[`book_${pgId}`]) return;
     setIsSavingMap(prev => ({ ...prev, [`book_${pgId}`]: true }));
 
@@ -198,7 +198,7 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
       const res = await fetch('/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           pgId,
           message: "I am interested in visiting this PG.",
           visitDate: visitDate.toISOString()
@@ -238,7 +238,7 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
   };
 
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
-  
+
   const submitSearch = () => {
     const params = new URLSearchParams(searchParams.toString());
     if (searchQuery) {
@@ -304,7 +304,7 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
       </div>
 
       {/* Property Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-stack-md">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-3 md:gap-stack-md">
         {properties.length > 0 ? (
           properties.map((property, index) => {
             // Make every 3rd card a wide card
@@ -316,14 +316,11 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
                   key={property._id}
                   href={`/pgs/${property._id}`}
                   onClick={() => trackView(property._id)}
-                  className="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(76,29,149,0.05)] hover:shadow-[0px_8px_30px_rgba(76,29,149,0.15)] transition-shadow duration-300 border border-outline-variant/20 flex flex-col relative lg:col-span-2 cursor-pointer block"
+                  className="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(76,29,149,0.05)] hover:shadow-[0px_8px_30px_rgba(76,29,149,0.15)] transition-shadow duration-300 border border-outline-variant/20 flex flex-col relative col-span-2 cursor-pointer block"
                 >
                   <div className="flex flex-col md:flex-row h-full">
-                    <div className="md:w-2/5 h-56 md:h-auto relative overflow-hidden">
-                      <div className="absolute top-4 right-4 z-20 flex gap-2">
-                        <div className="bg-secondary text-on-secondary px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1 shadow-md">
-                          <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span> Verified
-                        </div>
+                    <div className="md:w-2/5 h-[120px] md:h-auto relative overflow-hidden bg-surface-variant flex">
+                      <div className="absolute top-3 right-3 z-20 flex gap-2">
                         <button 
                           onClick={(e) => handleSaveClick(e, property._id)}
                           disabled={isSavingMap[property._id]}
@@ -334,33 +331,60 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
                           </span>
                         </button>
                       </div>
-                      <Image
-                        alt={property.title}
-                        fill
-                        priority={index === 0}
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                        src={property.images?.[0] || '/placeholder.jpg'}
-                      />
+                      
+                      {/* First Image */}
+                      <div className={`relative h-full ${property.images?.length > 1 ? 'w-1/2 md:w-full' : 'w-full'} flex-grow`}>
+                        <Image
+                          alt={property.title}
+                          fill
+                          priority={index === 0}
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                          src={property.images?.[0] || '/placeholder.jpg'}
+                        />
+                      </div>
+                      
+                      {/* Second Image (Mobile only, if available) */}
+                      {property.images?.length > 1 && (
+                        <div className="relative h-full w-1/2 md:hidden border-l-2 border-surface-container-lowest">
+                          <Image
+                            alt={`${property.title} view 2`}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                            src={property.images[1]}
+                          />
+                        </div>
+                      )}
                     </div>
-                    <div className="p-6 flex flex-col flex-grow md:w-3/5">
-                      <div className="flex justify-between items-start mb-2">
-                        <div>
-                          <h3 className="font-h2 text-h2 text-on-surface group-hover:text-primary transition-colors">{property.title}</h3>
-                          <p className="font-body-md text-body-md text-on-surface-variant flex items-center gap-1 mt-1">
-                            <span className="material-symbols-outlined text-[18px]">location_on</span>
-                            {property.location?.address}
-                          </p>
+                    <div className="p-2 md:p-6 flex flex-col flex-grow md:w-3/5">
+                      <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-1 md:mb-2 md:gap-2">
+                        <div className="w-full">
+                          <h3 className="font-semibold text-sm md:font-h2 md:text-h2 text-on-surface group-hover:text-primary transition-colors">{property.title}</h3>
+
+                          {/* Mobile-only Price (Stacked under title) */}
+                          <div className="text-left md:hidden mt-0.5 flex items-end gap-0.5">
+                            <span className="text-sm text-primary font-bold">
+                              ₹{property.price?.toLocaleString('en-IN')}
+                            </span>
+                            <span className="text-[10px] text-on-surface-variant font-normal leading-4">/mo</span>
+                          </div>
+
+                          <div className="flex items-center gap-0.5 md:gap-1 text-on-surface-variant w-full overflow-hidden mt-1">
+                            <span className="material-symbols-outlined text-[12px] md:text-[18px] flex-shrink-0">location_on</span>
+                            <p className="text-[10px] md:font-body-md md:text-body-md line-clamp-1 m-0">
+                              {property.location?.address}
+                            </p>
+                          </div>
                         </div>
                         {property.roomTypes?.length > 0 && (
-                          <div className="bg-surface-container-high text-primary px-2 py-1 rounded font-label-sm text-label-sm">
+                          <div className="hidden md:block bg-surface-container-high text-primary px-2 py-1 rounded font-label-sm text-label-sm mt-2 md:mt-0">
                             {property.roomTypes[0]}
                           </div>
                         )}
                       </div>
-                      <p className="font-body-md text-body-md text-on-surface-variant line-clamp-2 mb-stack-md mt-2">
+                      <p className="hidden md:block font-body-md text-body-md text-on-surface-variant line-clamp-2 mb-stack-md mt-2">
                         {property.description}
                       </p>
-                      <div className="flex flex-wrap gap-2 mb-stack-md">
+                      <div className="hidden md:flex flex-wrap gap-2 mb-stack-md mt-auto">
                         {(() => {
                           const booleanAmenitiesList = [
                             { key: 'wifi', label: 'WiFi' },
@@ -377,7 +401,7 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
                             .filter(a => (property as any)[a.key])
                             .map(a => a.label);
                           const uniqueAmenities = Array.from(new Set([...(property.amenities || []), ...activeBooleans]));
-                          
+
                           return (
                             <>
                               {uniqueAmenities.slice(0, 4).map((amenity) => (
@@ -395,7 +419,8 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
                           );
                         })()}
                       </div>
-                      <div className="mt-auto pt-4 border-t border-outline-variant/30 flex justify-between items-end">
+
+                      <div className="hidden md:flex mt-auto pt-4 border-t border-outline-variant/30 justify-between items-end">
                         <div>
                           <p className="font-label-sm text-label-sm text-on-surface-variant mb-1">Starting from</p>
                           <p className="font-h2 text-h2 text-primary font-bold">
@@ -405,9 +430,9 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
                         </div>
                         <div className="flex gap-3">
                           <button className="bg-surface text-primary border border-primary px-4 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-primary/5 transition-colors hidden sm:block cursor-pointer">
-                            View Map
+                            View Details
                           </button>
-                          <button 
+                          <button
                             onClick={(e) => handleBookClick(e, property._id)}
                             disabled={isSavingMap[`book_${property._id}`]}
                             className="bg-secondary text-on-secondary px-6 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-on-secondary-fixed-variant transition-colors shadow-sm cursor-pointer disabled:opacity-70"
