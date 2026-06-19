@@ -129,8 +129,7 @@ function LoginContent() {
         if (loginRes?.error) {
           toast.error(loginRes.error);
         } else {
-          router.refresh();
-          router.push(callbackUrl || "/dashboard");
+          window.location.href = callbackUrl || "/dashboard";
         }
       } else {
         toast.error(data.error || "Failed to register");
@@ -171,8 +170,7 @@ function LoginContent() {
         toast.error(res.error);
       } else {
         toast.success("Logged in successfully!");
-        router.refresh();
-        router.push(callbackUrl || "/dashboard");
+        window.location.href = callbackUrl || "/dashboard";
       }
     } catch (error) {
       toast.error("Failed to login");
