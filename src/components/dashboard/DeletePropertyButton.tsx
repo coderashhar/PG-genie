@@ -36,10 +36,10 @@ export default function DeletePropertyButton({ propertyId, propertyTitle }: { pr
       <button 
         onClick={() => setShowConfirm(true)}
         disabled={isDeleting}
-        className="p-2 bg-surface-container rounded-lg text-error hover:bg-error/10 hover:border-error border border-transparent transition-all cursor-pointer disabled:opacity-50" 
+        className="p-1.5 bg-surface-container rounded-lg text-error hover:bg-error/10 hover:border-error border border-transparent transition-all cursor-pointer disabled:opacity-50" 
         title="Delete Listing"
       >
-        <span className="material-symbols-outlined text-[20px]">
+        <span className="material-symbols-outlined text-[18px]">
           {isDeleting ? 'progress_activity' : 'delete'}
         </span>
       </button>

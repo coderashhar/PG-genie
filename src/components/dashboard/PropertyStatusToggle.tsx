@@ -34,13 +34,13 @@ export default function PropertyStatusToggle({ propertyId, initialStatus }: { pr
     <button 
       onClick={handleStatusToggle}
       disabled={isLoading}
-      className={`font-label-sm text-label-sm px-4 py-2 rounded-full border transition-all cursor-pointer disabled:opacity-50 flex items-center gap-2 ${
+      className={`font-label-sm text-label-sm px-3 py-1.5 rounded-full border transition-all cursor-pointer disabled:opacity-50 flex items-center gap-1.5 ${
         status === 'active' 
           ? 'bg-secondary/10 text-secondary border-secondary hover:bg-secondary hover:text-on-secondary' 
           : 'bg-surface-container text-on-surface-variant border-outline-variant hover:border-secondary hover:text-secondary'
       }`}
     >
-      <span className="material-symbols-outlined text-[18px]">
+      <span className="material-symbols-outlined text-[16px]">
         {isLoading ? 'progress_activity' : (status === 'active' ? 'check_circle' : 'visibility_off')}
       </span>
       {status === 'active' ? 'Mark Filled' : 'Mark Available'}
