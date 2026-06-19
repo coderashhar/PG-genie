@@ -8,6 +8,8 @@ import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useInView } from 'react-intersection-observer';
 import toast from 'react-hot-toast';
 import PropertyCard from '@/components/PropertyCard';
+import { AnimatePresence, motion } from 'framer-motion';
+import FilterSidebar from '@/components/FilterSidebar';
 
 // Reuse amenityIconMap from page.tsx
 const amenityIconMap: Record<string, string> = {
@@ -73,6 +75,9 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
   const [hasMore, setHasMore] = useState(initialHasMore);
   const [page, setPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  const [isMobileSortOpen, setIsMobileSortOpen] = useState(false);
 
   const [savedPgIds, setSavedPgIds] = useState<Set<string>>(new Set(initialSavedPgIds));
   const [isSavingMap, setIsSavingMap] = useState<Record<string, boolean>>({});
@@ -151,10 +156,8 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
             next.delete(pgId);
             return next;
           });
-          toast.success('Removed from Favorites!');
-        } else {
-          toast.error('Failed to remove from favorites');
-        }
+          toast.success('Removed from saved');
+        } else throw new Error('Failed');
       } else {
         const res = await fetch('/api/users/favorites', {
           method: 'POST',
@@ -167,13 +170,11 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
             next.add(pgId);
             return next;
           });
-          toast.success('Added to Favorites!');
-        } else {
-          toast.error('Failed to save');
-        }
+          toast.success('Saved successfully');
+        } else throw new Error('Failed');
       }
-    } catch (err) {
-      toast.error('An error occurred');
+    } catch (error) {
+      toast.error('Failed to update saved status');
     } finally {
       setIsSavingMap(prev => ({ ...prev, [pgId]: false }));
     }
@@ -226,17 +227,6 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
   };
 
   // Search Handler
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (e.target.value) {
-      params.set('search', e.target.value);
-    } else {
-      params.delete('search');
-    }
-    // We only want to search on blur or Enter to avoid rapid re-renders on the server, but for simplicity we push here.
-    // Wait, replacing URL on every keystroke is bad. We should keep local state and only push on submit/blur.
-  };
-
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
 
   const submitSearch = () => {
@@ -263,8 +253,8 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
       {/* Mobile Filter Toggle & Sorting Bar */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-stack-md gap-4">
         <div>
-          <h1 className="font-h1 text-h1 text-on-surface">Available PGs in Kothri</h1>
-          <p className="font-body-md text-body-md text-on-surface-variant mt-1">
+          <h1 className="font-h1 text-[28px] md:text-h1 text-on-surface leading-tight">Available PGs in Kothri</h1>
+          <p className="font-body-md text-sm md:text-base text-on-surface-variant mt-1">
             Showing {properties.length} properties
           </p>
         </div>
@@ -273,7 +263,7 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
           <div className="flex items-center bg-surface-container-high rounded-full px-4 py-2 w-full sm:w-80 border border-outline-variant/50 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
             <span className="material-symbols-outlined text-on-surface-variant mr-2">search</span>
             <input
-              className="bg-transparent border-none focus:ring-0 text-body-md flex-grow text-on-surface outline-none"
+              className="bg-transparent border-none focus:ring-0 text-sm md:text-base flex-grow text-on-surface outline-none min-w-0"
               placeholder="Search Kothri..."
               type="text"
               value={searchQuery}
@@ -281,12 +271,17 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
               onKeyDown={handleSearchKeyDown}
               onBlur={submitSearch}
             />
-            <button className="md:hidden ml-2 p-1.5 bg-surface rounded-full text-on-surface-variant shadow-sm border border-outline-variant flex items-center justify-center cursor-pointer hover:text-primary transition-colors">
-              <span className="material-symbols-outlined text-sm">tune</span>
-            </button>
+            <div className="flex md:hidden items-center ml-2 gap-2 shrink-0">
+              <button onClick={() => setIsMobileSortOpen(true)} className="p-1.5 bg-surface rounded-full text-on-surface-variant shadow-sm border border-outline-variant flex items-center justify-center cursor-pointer hover:text-primary transition-colors">
+                <span className="material-symbols-outlined text-sm">swap_vert</span>
+              </button>
+              <button onClick={() => setIsMobileFilterOpen(true)} className="p-1.5 bg-surface rounded-full text-on-surface-variant shadow-sm border border-outline-variant flex items-center justify-center cursor-pointer hover:text-primary transition-colors">
+                <span className="material-symbols-outlined text-sm">tune</span>
+              </button>
+            </div>
           </div>
 
-          <div className="relative w-full sm:w-auto flex-1 sm:flex-none">
+          <div className="hidden md:block relative w-full sm:w-auto flex-1 sm:flex-none">
             <select
               value={sortOption}
               onChange={handleSortChange}
@@ -481,6 +476,78 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
           <PropertyCardSkeleton />
         </div>
       )}
+
+      {/* Mobile Sort Bottom Sheet */}
+      <AnimatePresence>
+        {isMobileSortOpen && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              onClick={() => setIsMobileSortOpen(false)}
+              className="fixed inset-0 bg-black/40 z-40 md:hidden"
+            />
+            <motion.div
+              initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed bottom-0 left-0 right-0 bg-surface z-50 rounded-t-3xl overflow-hidden md:hidden flex flex-col max-h-[85vh] shadow-[0_-8px_30px_rgb(0,0,0,0.12)] border-t border-outline-variant/30"
+            >
+              <div className="p-5 border-b border-outline-variant/30 flex justify-between items-center bg-surface-container-lowest shrink-0">
+                <h3 className="font-h3 text-[22px] text-on-surface">Sort by</h3>
+                <button onClick={() => setIsMobileSortOpen(false)} className="material-symbols-outlined text-on-surface-variant p-2 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors">close</button>
+              </div>
+              <div className="p-2 flex flex-col overflow-y-auto overscroll-contain bg-surface-container-lowest">
+                {[
+                  { id: 'popular', label: 'Popularity' },
+                  { id: 'price_asc', label: 'Price: Low to High' },
+                  { id: 'price_desc', label: 'Price: High to Low' },
+                  { id: 'newest', label: 'Newest First' },
+                  { id: 'closest', label: 'Closest to Campus' },
+                ].map(option => (
+                  <button 
+                    key={option.id}
+                    onClick={() => {
+                      handleSortChange({ target: { value: option.id } } as any);
+                      setIsMobileSortOpen(false);
+                    }}
+                    className={`p-4 rounded-xl text-left font-body-md transition-all flex justify-between items-center ${sortOption === option.id ? 'bg-primary/10 text-primary font-semibold' : 'hover:bg-surface-container-high text-on-surface'}`}
+                  >
+                    <span>{option.label}</span>
+                    {sortOption === option.id && <span className="material-symbols-outlined text-primary text-xl">check</span>}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile Filter Bottom Sheet */}
+      <AnimatePresence>
+        {isMobileFilterOpen && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              onClick={() => setIsMobileFilterOpen(false)}
+              className="fixed inset-0 bg-black/40 z-40 md:hidden"
+            />
+            <motion.div
+              initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed bottom-0 left-0 right-0 bg-surface z-50 rounded-t-3xl overflow-hidden md:hidden flex flex-col h-[90vh] shadow-[0_-8px_30px_rgb(0,0,0,0.12)] border-t border-outline-variant/30"
+            >
+              <div className="p-5 border-b border-outline-variant/30 flex justify-between items-center bg-surface shrink-0">
+                <h3 className="font-h3 text-[22px] text-on-surface">Filters</h3>
+                <button onClick={() => setIsMobileFilterOpen(false)} className="material-symbols-outlined text-on-surface-variant p-2 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors">close</button>
+              </div>
+              <div className="overflow-y-auto overscroll-contain flex-grow bg-surface">
+                <div className="p-4 pb-24">
+                  <FilterSidebar onApply={() => setIsMobileFilterOpen(false)} />
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

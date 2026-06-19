@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function FilterSidebar() {
+export default function FilterSidebar({ onApply }: { onApply?: () => void }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -69,6 +69,7 @@ export default function FilterSidebar() {
       params.delete('amenities');
     }
 
+    if (onApply) onApply();
     router.push(`/pgs?${params.toString()}`);
   };
 
@@ -90,7 +91,7 @@ export default function FilterSidebar() {
   };
 
   return (
-    <aside className="w-full md:w-72 flex-shrink-0 space-y-stack-md hidden md:block">
+    <aside className="w-full md:w-72 flex-shrink-0 space-y-stack-md">
       <div className="bg-surface-container-low rounded-xl p-6 shadow-sm border border-outline-variant/30">
         <div className="flex justify-between items-center mb-6">
           <h2 className="font-h2 text-h2 text-on-surface">Filters</h2>

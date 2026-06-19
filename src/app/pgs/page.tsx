@@ -25,7 +25,7 @@ export default async function PgsPage({ searchParams }: PgsPageProps) {
 function PgListSkeleton() {
   return (
     <div className="bg-background min-h-screen flex flex-col font-body-md animate-pulse">
-      <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-gutter py-stack-lg flex flex-col md:flex-row gap-stack-lg">
+      <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-gutter pt-6 pb-24 md:py-stack-lg flex flex-col md:flex-row gap-stack-lg">
         {/* Sidebar Skeleton */}
         <div className="w-full md:w-[320px] shrink-0 space-y-4">
           <div className="h-10 bg-surface-container rounded-lg w-full" />
@@ -77,9 +77,11 @@ async function PgsContent({ resolvedParams }: { resolvedParams: { [key: string]:
 
   return (
     <div className="bg-background text-on-background font-body-md min-h-screen flex flex-col">
-      <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-gutter py-stack-lg flex flex-col md:flex-row gap-stack-lg">
+      <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-gutter pt-6 pb-24 md:py-stack-lg flex flex-col md:flex-row gap-stack-lg">
         {/* Left Sidebar: Filters */}
-        <FilterSidebar />
+        <div className="hidden md:block">
+          <FilterSidebar />
+        </div>
 
         {/* Right Content Area: Infinite Scroll Feed */}
         <PropertyFeed 

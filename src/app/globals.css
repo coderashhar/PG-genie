@@ -169,6 +169,7 @@
 
 @layer utilities {
   /* Phase 1: Responsive Typography Overrides */
+  /* Mobile Scale */
   .text-label-sm { font-size: 12px; line-height: 1.2; font-weight: 600; letter-spacing: 0.05em; }
   .text-body-sm { font-size: 14px; line-height: 1.5; font-weight: 400; }
   .text-body-md { font-size: 14px; line-height: 1.5; font-weight: 400; }
@@ -180,15 +181,16 @@
   .text-display { font-size: 40px; line-height: 1.1; font-weight: 700; letter-spacing: -0.02em; }
 
   @media (min-width: 768px) {
-    .text-label-sm { font-size: 14px; line-height: 1.2; }
+    /* Restored Original Desktop Scale */
+    .text-label-sm { font-size: 12px; line-height: 1; letter-spacing: 0.05em; font-weight: 600; }
     .text-body-sm { font-size: 14px; line-height: 1.5; }
-    .text-body-md { font-size: 16px; line-height: 1.5; }
-    .text-body-lg { font-size: 18px; line-height: 1.6; }
+    .text-body-md { font-size: 16px; line-height: 1.6; font-weight: 400; }
+    .text-body-lg { font-size: 18px; line-height: 1.6; font-weight: 400; }
     
-    .text-h3 { font-size: 32px; line-height: 1.4; }
-    .text-h2 { font-size: 40px; line-height: 1.3; }
-    .text-h1 { font-size: 56px; line-height: 1.2; }
-    .text-display { font-size: 64px; line-height: 1.1; }
+    .text-h3 { font-size: 20px; line-height: 1.4; } /* Originally not explicitly defined, kept small */
+    .text-h2 { font-size: 24px; line-height: 1.4; font-weight: 600; }
+    .text-h1 { font-size: 32px; line-height: 1.3; font-weight: 700; }
+    .text-display { font-size: 56px; line-height: 1.1; font-weight: 500; letter-spacing: -0.02em; }
   }
 }
 

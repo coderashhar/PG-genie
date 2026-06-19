@@ -231,7 +231,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                       </Link>
                     )}
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+                  <div className="grid grid-cols-2 md:grid-cols-2 gap-3 md:gap-stack-md">
                     {dashData.savedPgs.length > 0 ? (
                       dashData.savedPgs.slice(0, 2).map((pg) => (
                         <PropertyCard
