@@ -11,14 +11,4 @@ const limiter = rateLimit({
 
 const handler = NextAuth(authOptions);
 
-async function rateLimitedPost(req: NextRequest, ctx: any) {
-  try {
-    const ip = getIP(req);
-    await limiter.check(5, ip); // 5 login attempts per minute
-  } catch {
-    return NextResponse.json({ error: 'please try after sometime' }, { status: 429 });
-  }
-  return handler(req, ctx);
-}
-
-export { handler as GET, rateLimitedPost as POST };
+export { handler as GET, handler as POST };
