@@ -38,17 +38,21 @@ const inquiryColors = [
 ];
 
 export default function InquiriesList({ initialInquiries }: { initialInquiries: any[] }) {
-  const [visibleCount, setVisibleCount] = useState(3);
+  const [visibleCount, setVisibleCount] = useState(2);
   const observerTarget = useRef(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          setVisibleCount((prev) => Math.min(prev + 3, initialInquiries.length));
+          setVisibleCount((prev) => Math.min(prev + 2, initialInquiries.length));
         }
       },
-      { threshold: 0.1 }
+      {
+        root: scrollContainerRef.current,
+        threshold: 0.1
+      }
     );
 
     if (observerTarget.current) {
@@ -72,11 +76,14 @@ export default function InquiriesList({ initialInquiries }: { initialInquiries: 
   }
 
   return (
-    <div className="space-y-4">
+    <div
+      className="space-y-4 max-h-[600px] overflow-y-auto pr-2 pb-4 scrollbar-thin scrollbar-thumb-surface-variant scrollbar-track-transparent"
+      ref={scrollContainerRef}
+    >
       {initialInquiries.slice(0, visibleCount).map((inquiry, index) => {
         const isPending = inquiry.status === 'pending';
         const colorClass = inquiryColors[index % inquiryColors.length];
-        
+
         return (
           <div key={inquiry._id} className={`p-4 rounded-xl border transition-all ${isPending ? 'bg-surface border-primary/20 shadow-sm' : 'bg-surface-container/50 border-transparent'}`}>
             <div className="flex justify-between items-start mb-3">
@@ -95,17 +102,17 @@ export default function InquiriesList({ initialInquiries }: { initialInquiries: 
                 </span>
               )}
             </div>
-            
+
             <p className="font-body-sm text-body-sm text-on-surface-variant mb-4 line-clamp-2">
               Interested in <span className="font-semibold text-on-surface">{inquiry.pgId?.title || 'Unknown Property'}</span>. {inquiry.message}
             </p>
-            
+
             <div className="flex flex-col gap-2 mt-auto pt-2">
               {inquiry.status === 'pending' && (
                 <InquiryActionButtons bookingId={String(inquiry._id)} />
               )}
-              
-              <a 
+
+              <a
                 href={inquiry.studentId?.phone ? `tel:${inquiry.studentId.phone}` : `mailto:${inquiry.studentId?.email}`}
                 className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-surface-container font-label-sm text-label-sm text-primary hover:bg-primary-container hover:text-on-primary-container hover:font-normal transition-all cursor-pointer text-center"
               >
@@ -118,7 +125,7 @@ export default function InquiriesList({ initialInquiries }: { initialInquiries: 
           </div>
         );
       })}
-      
+
       {visibleCount < initialInquiries.length && (
         <div ref={observerTarget} className="h-10 flex items-center justify-center">
           <span className="material-symbols-outlined animate-spin text-primary">progress_activity</span>

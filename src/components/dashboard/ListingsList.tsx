@@ -8,17 +8,21 @@ import EditPropertyButton from './EditPropertyButton';
 import DeletePropertyButton from './DeletePropertyButton';
 
 export default function ListingsList({ initialListings }: { initialListings: any[] }) {
-  const [visibleCount, setVisibleCount] = useState(4);
+  const [visibleCount, setVisibleCount] = useState(2);
   const observerTarget = useRef(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          setVisibleCount((prev) => Math.min(prev + 4, initialListings.length));
+          setVisibleCount((prev) => Math.min(prev + 2, initialListings.length));
         }
       },
-      { threshold: 0.1 }
+      {
+        root: scrollContainerRef.current,
+        threshold: 0.1
+      }
     );
 
     if (observerTarget.current) {
@@ -33,14 +37,17 @@ export default function ListingsList({ initialListings }: { initialListings: any
   }, [initialListings.length]);
 
   return (
-    <div className="space-y-4">
+    <div
+      className="space-y-4 max-h-[600px] overflow-y-auto pr-2 pb-4 scrollbar-thin scrollbar-thumb-surface-variant scrollbar-track-transparent"
+      ref={scrollContainerRef}
+    >
       {initialListings.length > 0 ? (
         <>
           {initialListings.slice(0, visibleCount).map((listing) => (
             <div key={listing._id} className="rounded-xl p-4 border border-outline-variant/50 flex flex-col sm:flex-row gap-4 bg-surface-container-lowest hover:border-primary/30 transition-all shadow-sm">
               <div className="w-full sm:w-48 h-32 rounded-lg relative overflow-hidden flex-shrink-0">
-                <Image 
-                  src={listing.images[0] || '/placeholder.jpg'} 
+                <Image
+                  src={listing.images[0] || '/placeholder.jpg'}
                   alt={listing.title}
                   fill
                   className="object-cover"
@@ -69,7 +76,7 @@ export default function ListingsList({ initialListings }: { initialListings: any
                   <div className="absolute inset-0 bg-surface/30 mix-blend-saturation pointer-events-none z-0"></div>
                 )}
               </div>
-              
+
               <div className="flex-1 flex flex-col justify-between">
                 <div>
                   <div className="flex justify-between items-start">
@@ -87,7 +94,7 @@ export default function ListingsList({ initialListings }: { initialListings: any
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center justify-between mt-4 sm:mt-0 pt-4 border-t border-outline-variant/30">
                   <div className="flex items-center gap-4 text-on-surface-variant">
                     <div className="flex items-center gap-1 font-label-sm text-label-sm">
