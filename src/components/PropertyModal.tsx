@@ -360,9 +360,10 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-6 overflow-y-auto flex-1 space-y-6">
-              {/* Basic Details */}
-              <div className="space-y-4">
+            <div className="overflow-y-auto flex-1 p-6">
+              <form id="property-form" onSubmit={handleSubmit} className="space-y-6">
+                {/* Basic Details */}
+                <div className="space-y-4">
                 <h3 className="font-h2 text-h2 text-primary border-b border-outline-variant pb-2">Basic Details</h3>
 
                 <div>
@@ -602,26 +603,29 @@ export default function PropertyModal({ isOpen, onClose, property, onSuccess }: 
                 </div>
               </div>
 
-              {/* Actions */}
-              <div className="pt-6 border-t border-outline-variant flex justify-end gap-3 sticky bottom-0 bg-surface dark:bg-surface-container pb-2">
-                <button
-                  type="button"
-                  onClick={onClose}
-                  disabled={loading}
-                  className="px-6 py-2.5 rounded-xl font-body-md text-on-surface-variant hover:bg-surface-variant transition-colors cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="px-8 py-2.5 rounded-xl font-h2 font-bold bg-primary text-on-primary shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:pointer-events-none flex items-center gap-2 cursor-pointer"
-                >
-                  {loading && <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>}
-                  {property ? 'Save Changes' : 'List Property'}
-                </button>
-              </div>
-            </form>
+              </form>
+            </div>
+
+            {/* Actions (Fixed Footer) */}
+            <div className="px-6 py-4 border-t border-outline-variant flex justify-end gap-3 bg-surface-container-low shrink-0">
+              <button
+                type="button"
+                onClick={onClose}
+                disabled={loading}
+                className="px-6 py-2.5 rounded-xl font-body-md text-on-surface-variant hover:bg-surface-variant transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                form="property-form"
+                type="submit"
+                disabled={loading}
+                className="px-8 py-2.5 rounded-xl font-h2 font-bold bg-primary text-on-primary shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:pointer-events-none flex items-center gap-2 cursor-pointer"
+              >
+                {loading && <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>}
+                {property ? 'Save Changes' : 'List Property'}
+              </button>
+            </div>
           </motion.div>
         </div>
       )}

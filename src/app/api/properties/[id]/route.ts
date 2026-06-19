@@ -100,8 +100,14 @@ export async function PUT(
     delete body.createdAt;
     delete body.updatedAt;
 
-    // Force status back to pending so admins can review the updated changes
-    body.status = 'pending';
+    // Force status back to pending so admins can review the updated changes,
+    // UNLESS the owner is simply toggling the status (Filled/Available) from the dashboard.
+    const updatedKeys = Object.keys(body);
+    const isOnlyStatusUpdate = updatedKeys.length === 1 && updatedKeys[0] === 'status';
+    
+    if (!isOnlyStatusUpdate) {
+      body.status = 'pending';
+    }
 
     const updatedProperty = await Property.findByIdAndUpdate(id, body, {
       new: true,

@@ -12,6 +12,8 @@ import OwnerEditProfileForm from '@/components/dashboard/OwnerEditProfileForm';
 import PropertyStatusToggle from '@/components/dashboard/PropertyStatusToggle';
 import InquiryActionButtons from '@/components/dashboard/InquiryActionButtons';
 import DeletePropertyButton from '@/components/dashboard/DeletePropertyButton';
+import AddPropertyButton from '@/components/dashboard/AddPropertyButton';
+import EditPropertyButton from '@/components/dashboard/EditPropertyButton';
 
 // --- Types ---
 interface PropertyLocation {
@@ -188,8 +190,8 @@ export default async function OwnerDashboardPage({ searchParams }: { searchParam
     viewsLastMonth > 0
       ? Math.round(((viewsThisMonth - viewsLastMonth) / viewsLastMonth) * 100)
       : viewsThisMonth > 0
-      ? 100
-      : 0;
+        ? 100
+        : 0;
 
   const newListingsThisMonth = listings.filter((l: any) => {
     const created = new Date(l.createdAt);
@@ -230,11 +232,14 @@ export default async function OwnerDashboardPage({ searchParams }: { searchParam
     <div className="bg-background text-on-background font-body-md text-body-md antialiased min-h-screen">
       <main className="w-full flex flex-col min-h-screen">
         <div className="flex-1 w-full px-margin-mobile md:px-gutter max-w-container-max mx-auto py-stack-md md:py-stack-lg">
-          <header className="mb-stack-lg">
-            <h1 className="font-display text-display text-primary mb-2">
-              Owner Dashboard
-            </h1>
-            <p className="font-body-lg text-body-lg text-on-surface-variant">Manage your properties and leads.</p>
+          <header className="mb-stack-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h1 className="font-display text-display text-primary mb-2">
+                Owner Dashboard
+              </h1>
+              <p className="font-body-lg text-body-lg text-on-surface-variant">Manage your properties and leads.</p>
+            </div>
+            <AddPropertyButton />
           </header>
 
           {/* Tab Navigation */}
@@ -270,7 +275,7 @@ export default async function OwnerDashboardPage({ searchParams }: { searchParam
                   <h3 className="font-body-md text-body-md text-on-surface-variant mb-1 relative z-10">Total Listings</h3>
                   <p className="font-display text-h1 text-on-surface relative z-10">{stats.totalListings}</p>
                 </div>
-                
+
                 <div className="bg-primary-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] relative overflow-hidden group hover:shadow-[0px_8px_30px_rgba(76,29,149,0.12)] transition-all text-on-primary-container">
                   <div className="absolute right-0 bottom-0 w-40 h-40 bg-primary opacity-10 rounded-tl-full"></div>
                   <div className="flex justify-between items-start mb-4 relative z-10">
@@ -285,7 +290,7 @@ export default async function OwnerDashboardPage({ searchParams }: { searchParam
                   <h3 className="font-body-md text-body-md text-on-primary-container/80 mb-1 relative z-10">Active Leads</h3>
                   <p className="font-display text-h1 relative z-10">{stats.activeLeads}</p>
                 </div>
-                
+
                 <div className="bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] border border-surface-container-high relative overflow-hidden group hover:shadow-[0px_8px_30px_rgba(76,29,149,0.12)] transition-all">
                   <div className="absolute -left-6 -bottom-6 w-32 h-32 bg-secondary-fixed rounded-full opacity-20"></div>
                   <div className="flex justify-between items-start mb-4 relative z-10">
@@ -313,7 +318,7 @@ export default async function OwnerDashboardPage({ searchParams }: { searchParam
                     <h2 className="font-h2 text-h2 text-on-surface">Your Listings</h2>
                     <Link href="/pgs" className="text-primary font-label-sm text-label-sm hover:underline cursor-pointer">View All</Link>
                   </div>
-                  
+
                   <div className="space-y-4">
                     {dashData.listings.length > 0 ? (
                       dashData.listings.map((listing) => (
@@ -325,13 +330,32 @@ export default async function OwnerDashboardPage({ searchParams }: { searchParam
                               fill
                               className="object-cover"
                             />
+                            <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
+                              {listing.status === 'pending' && (
+                                <span className="bg-tertiary text-on-tertiary px-2 py-1 rounded font-label-sm text-xs shadow-sm flex items-center gap-1">
+                                  <span className="material-symbols-outlined text-[14px]">pending_actions</span>
+                                  Pending Review
+                                </span>
+                              )}
+                              {listing.status === 'active' && (
+                                <span className="bg-primary text-on-primary px-2 py-1 rounded font-label-sm text-xs shadow-sm flex items-center gap-1">
+                                  <span className="material-symbols-outlined text-[14px]">check_circle</span>
+                                  Available
+                                </span>
+                              )}
+                              {listing.status === 'inactive' && (
+                                <span className="bg-surface-variant text-on-surface-variant px-2 py-1 rounded font-label-sm text-xs shadow-sm flex items-center gap-1 opacity-90">
+                                  <span className="material-symbols-outlined text-[14px]">visibility_off</span>
+                                  Filled
+                                </span>
+                              )}
+                            </div>
+                            {/* Optional: Add a very subtle greyscale overlay to the image if it's inactive so it looks 'disabled', but not pitch black */}
                             {listing.status === 'inactive' && (
-                              <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                                <span className="bg-surface text-on-surface px-2 py-1 rounded font-label-sm text-xs">Filled</span>
-                              </div>
+                              <div className="absolute inset-0 bg-surface/30 mix-blend-saturation pointer-events-none z-0"></div>
                             )}
                           </div>
-                          
+
                           <div className="flex-1 flex flex-col justify-between">
                             <div>
                               <div className="flex justify-between items-start">
@@ -349,7 +373,7 @@ export default async function OwnerDashboardPage({ searchParams }: { searchParam
                                 </div>
                               </div>
                             </div>
-                            
+
                             <div className="flex items-center justify-between mt-4 sm:mt-0 pt-4 border-t border-outline-variant/30">
                               <div className="flex items-center gap-4 text-on-surface-variant">
                                 <div className="flex items-center gap-1 font-label-sm text-label-sm">
@@ -359,9 +383,7 @@ export default async function OwnerDashboardPage({ searchParams }: { searchParam
                               </div>
                               <div className="flex gap-2">
                                 <PropertyStatusToggle propertyId={listing._id} initialStatus={listing.status} />
-                                <button className="p-2 bg-surface-container rounded-lg text-primary hover:bg-primary-container hover:text-on-primary-container transition-colors cursor-pointer" title="Edit Listing">
-                                  <span className="material-symbols-outlined text-[20px]">edit</span>
-                                </button>
+                                <EditPropertyButton property={listing} />
                                 <DeletePropertyButton propertyId={listing._id} propertyTitle={listing.title} />
                               </div>
                             </div>
@@ -391,7 +413,7 @@ export default async function OwnerDashboardPage({ searchParams }: { searchParam
                       {dashData.inquiries.slice(0, 5).map((inquiry, index) => {
                         const isPending = inquiry.status === 'pending';
                         const colorClass = inquiryColors[index % inquiryColors.length];
-                        
+
                         return (
                           <div key={inquiry._id} className={`p-4 rounded-xl border transition-all ${isPending ? 'bg-surface border-primary/20 shadow-sm' : 'bg-surface-container/50 border-transparent'}`}>
                             <div className="flex justify-between items-start mb-3">
@@ -410,19 +432,26 @@ export default async function OwnerDashboardPage({ searchParams }: { searchParam
                                 </span>
                               )}
                             </div>
-                            
+
                             <p className="font-body-sm text-body-sm text-on-surface-variant mb-4 line-clamp-2">
                               Interested in <span className="font-semibold text-on-surface">{inquiry.pgId?.title || 'Unknown Property'}</span>. {inquiry.message}
                             </p>
-                            
-                            {isPending ? (
-                              <InquiryActionButtons bookingId={inquiry._id} />
-                            ) : (
-                              <button className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-surface-container font-label-sm text-label-sm text-primary hover:bg-primary-container transition-colors cursor-pointer">
-                                <span className="material-symbols-outlined text-[16px]">call</span>
+
+                            <div className="flex flex-col gap-2 mt-auto pt-2">
+                              {inquiry.status === 'pending' && (
+                                <InquiryActionButtons bookingId={String(inquiry._id)} />
+                              )}
+
+                              <a
+                                href={inquiry.studentId?.phone ? `tel:${inquiry.studentId.phone}` : `mailto:${inquiry.studentId?.email}`}
+                                className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-surface-container font-label-sm text-label-sm text-primary hover:bg-primary-container hover:text-on-primary-container hover:font-normal transition-all cursor-pointer text-center"
+                              >
+                                <span className="material-symbols-outlined text-[16px]">
+                                  {inquiry.studentId?.phone ? 'call' : 'mail'}
+                                </span>
                                 Contact Student
-                              </button>
-                            )}
+                              </a>
+                            </div>
                           </div>
                         );
                       })}

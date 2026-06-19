@@ -109,6 +109,7 @@ const PropertySchema: Schema<IProperty> = new mongoose.Schema(
 PropertySchema.index({ status: 1, createdAt: -1 });
 PropertySchema.index({ status: 1, price: 1 });
 PropertySchema.index({ status: 1, views: -1 });
+PropertySchema.index({ ownerId: 1, createdAt: -1 });
 
 // Delete the cached model to ensure schema updates are applied during Next.js hot reloads
 if (mongoose.models.Property) {

@@ -295,7 +295,7 @@ export default function ChatWidget() {
           isOpen
             ? 'opacity-100 translate-y-0 pointer-events-auto'
             : 'opacity-0 translate-y-4 pointer-events-none'
-        } bottom-20 right-4 sm:bottom-24 sm:right-6 w-[calc(100vw-2rem)] sm:w-[400px] max-h-[70vh] sm:max-h-[600px] flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-outline-variant/20`}
+        } bottom-[90px] right-4 md:bottom-24 md:right-6 w-[calc(100vw-2rem)] sm:w-[400px] max-h-[70vh] sm:max-h-[600px] flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-outline-variant/20`}
         style={{
           background: 'var(--color-surface-container-lowest)',
           boxShadow:
@@ -484,7 +484,7 @@ export default function ChatWidget() {
       <button
         id="chat-widget-fab"
         onClick={() => setIsOpen(!isOpen)}
-        className={`fixed z-[9999] bottom-4 right-4 sm:bottom-6 sm:right-6 w-14 h-14 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 cursor-pointer hover:scale-110 active:scale-95 ${
+        className={`fixed z-[9999] bottom-20 right-4 md:bottom-6 md:right-6 w-14 h-14 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 cursor-pointer hover:scale-110 active:scale-95 ${
           isOpen ? 'rotate-0' : 'rotate-0'
         }`}
         style={{
