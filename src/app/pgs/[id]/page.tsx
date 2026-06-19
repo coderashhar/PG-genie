@@ -185,27 +185,35 @@ async function PgDetailContent({ id }: { id: string }) {
         {/* Main Layout: Content + Sticky Sidebar */}
         <div className="flex flex-col lg:flex-row gap-gutter relative">
           {/* Left Column: Details */}
-          <div className="flex-1 flex flex-col gap-stack-lg">
-            {/* Header Info */}
-            <div>
-              <div className="flex flex-wrap justify-between items-start gap-stack-sm mb-stack-sm">
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="bg-secondary-container text-on-secondary-container px-2 py-1 rounded font-label-sm text-label-sm flex items-center gap-1">
-                      <span className="material-symbols-outlined text-[14px]">verified</span> Verified Partner
-                    </span>
+          <div className="flex-1 flex flex-col gap-5 md:gap-stack-lg">
+            {/* Header & Mobile Actions Group */}
+            <div className="flex flex-col gap-3">
+              {/* Header Info */}
+              <div>
+                <div className="flex flex-wrap justify-between items-start gap-2">
+                  <div className="flex-1 pr-2">
+                    <h1 className="text-xl md:text-h1 md:font-h1 font-bold text-on-surface leading-snug">{property.title}</h1>
+                    <p className="text-sm md:text-body-md md:font-body-md text-on-surface-variant flex items-center gap-1 mt-1">
+                      <span className="material-symbols-outlined text-[16px] md:text-[18px]">location_on</span> {property.location?.address}, {property.location?.city}
+                    </p>
                   </div>
-                  <h1 className="font-h1 text-h1 text-on-surface">{property.title}</h1>
-                  <p className="font-body-md text-body-md text-on-surface-variant flex items-center gap-1 mt-1">
-                    <span className="material-symbols-outlined text-[18px]">location_on</span> {property.location?.address}, {property.location?.city}
-                  </p>
+                  <div className="text-right shrink-0">
+                    <p className="text-xl md:text-h1 md:font-display font-bold text-primary">₹{property.price?.toLocaleString('en-IN')}<span className="text-xs md:text-body-sm md:font-body-sm text-on-surface-variant font-normal">/mo</span></p>
+                    <p className="font-label-sm text-[10px] md:text-label-sm text-secondary flex items-center justify-end gap-1 mt-0.5">
+                      <span className="material-symbols-outlined text-[12px] md:text-[14px] fill-current" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span> Filling Fast
+                    </p>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="font-display text-h1 text-primary">₹{property.price?.toLocaleString('en-IN')}<span className="font-body-sm text-body-sm text-on-surface-variant font-normal">/mo</span></p>
-                  <p className="font-label-sm text-label-sm text-secondary flex items-center justify-end gap-1 mt-1">
-                    <span className="material-symbols-outlined text-[14px] fill-current" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span> Filling Fast
-                  </p>
-                </div>
+              </div>
+
+              {/* Mobile Action Buttons */}
+              <div className="block lg:hidden">
+                <PgActionButtons 
+                  propertyId={property._id}
+                  price={property.price}
+                  ownerPhone={property.ownerId?.phone}
+                  initialIsSaved={isSaved}
+                />
               </div>
             </div>
 
@@ -214,12 +222,12 @@ async function PgDetailContent({ id }: { id: string }) {
 
             {/* Facilities */}
             <div>
-              <h2 className="font-h2 text-h2 text-on-surface mb-stack-sm">Premium Facilities</h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <h2 className="text-lg md:font-h2 md:text-h2 font-bold text-on-surface mb-2">Facilities</h2>
+              <div className="grid grid-cols-4 md:grid-cols-4 gap-2">
                 {uniqueAmenities.map((amenity: string, idx: number) => (
-                  <div key={idx} className="flex flex-col items-center justify-center p-4 rounded-xl bg-primary/5 border border-primary/10 hover:shadow-md hover:border-primary/30 transition-all text-center gap-2">
-                    <span className="material-symbols-outlined text-[32px] text-primary">{amenityIconMap[amenity] || 'check_circle'}</span>
-                    <span className="font-label-sm text-label-sm text-on-surface">{amenity}</span>
+                  <div key={idx} className="flex flex-col items-center justify-center py-1.5 px-1 rounded-xl bg-primary/5 border border-primary/10 hover:shadow-md hover:border-primary/30 transition-all text-center gap-0.5">
+                    <span className="material-symbols-outlined text-[16px] text-primary">{amenityIconMap[amenity] || 'check_circle'}</span>
+                    <span className="font-label-sm text-[9px] leading-tight text-on-surface">{amenity}</span>
                   </div>
                 ))}
               </div>
@@ -230,18 +238,18 @@ async function PgDetailContent({ id }: { id: string }) {
 
             {/* Description */}
             <div>
-              <h2 className="font-h2 text-h2 text-on-surface mb-stack-sm">About the Property</h2>
-              <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm">
-                <p className="font-body-md text-body-md text-on-surface-variant mb-4 leading-relaxed whitespace-pre-line">
+              <h2 className="text-lg md:font-h2 md:text-h2 font-bold text-on-surface mb-2">About the Property</h2>
+              <div className="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm">
+                <p className="font-body-sm text-body-sm text-on-surface-variant mb-4 leading-relaxed whitespace-pre-line line-clamp-4">
                   {property.description}
                 </p>
-                <Link href={`/owner/profile`} className="flex items-center gap-4 bg-surface-container-low p-4 rounded-lg hover:bg-surface-container transition-colors group cursor-pointer w-full sm:w-fit pr-10 mt-6">
-                  <div className="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-h2 text-h2 group-hover:scale-105 transition-transform">
+                <Link href={`/owner/profile`} className="flex items-center gap-3 bg-surface-container-low p-3 rounded-lg hover:bg-surface-container transition-colors group cursor-pointer w-full sm:w-fit pr-10 mt-4">
+                  <div className="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-h2 text-h2 group-hover:scale-105 transition-transform">
                     {property.ownerId?.name?.charAt(0) || 'O'}
                   </div>
                   <div>
-                    <p className="font-label-sm text-label-sm text-on-surface mb-1">Managed by</p>
-                    <p className="font-body-md text-body-md font-semibold text-on-surface group-hover:text-primary transition-colors flex items-center gap-1">{property.ownerId?.name || 'Owner'} <span className="material-symbols-outlined text-[16px] opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span></p>
+                    <p className="font-label-sm text-[10px] text-on-surface mb-0.5">Managed by</p>
+                    <p className="font-body-sm text-body-sm font-semibold text-on-surface group-hover:text-primary transition-colors flex items-center gap-1">{property.ownerId?.name || 'Owner'} <span className="material-symbols-outlined text-[14px] opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span></p>
                   </div>
                 </Link>
               </div>
@@ -260,12 +268,14 @@ async function PgDetailContent({ id }: { id: string }) {
           </div>
 
           {/* Right Column: Sticky Action Sidebar */}
-          <PgActionButtons 
-            propertyId={property._id}
-            price={property.price}
-            ownerPhone={property.ownerId?.phone}
-            initialIsSaved={isSaved}
-          />
+          <div className="hidden lg:block">
+            <PgActionButtons 
+              propertyId={property._id}
+              price={property.price}
+              ownerPhone={property.ownerId?.phone}
+              initialIsSaved={isSaved}
+            />
+          </div>
         </div>
       </main>
     </div>

@@ -122,8 +122,8 @@ export default function PgActionButtons({ propertyId, price, ownerPhone, initial
 
   return (
     <div className="w-full lg:w-[350px]">
-      <div className="sticky top-[88px] bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-lg">
-        <div className="mb-6">
+      <div className="lg:sticky lg:top-[88px] bg-transparent lg:bg-surface-container-lowest lg:border border-outline-variant lg:rounded-xl lg:p-6 lg:shadow-lg">
+        <div className="hidden lg:block mb-6">
           <p className="font-body-md text-body-md text-on-surface-variant mb-1">Starting from</p>
           <div className="flex items-end gap-2">
             <span className="font-display text-h1 text-primary">₹{price?.toLocaleString('en-IN')}</span>

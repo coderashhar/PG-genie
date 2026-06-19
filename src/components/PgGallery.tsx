@@ -32,7 +32,23 @@ export default function PgGallery({ images }: PgGalleryProps) {
 
   return (
     <>
-      <section className={`grid gap-base h-[400px] md:h-[500px] rounded-xl overflow-hidden mb-stack-lg grid-cols-1 ${images.length === 1 ? 'md:grid-cols-1' : images.length === 2 ? 'md:grid-cols-2' : images.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-4'} grid-rows-2`}>
+      {/* Mobile Swipeable Gallery */}
+      <section className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-2 mb-stack-md -mx-margin-mobile px-margin-mobile md:hidden h-[220px]">
+        {images.map((img, idx) => (
+          <div key={idx} className="relative shrink-0 w-[90%] h-full snap-center rounded-xl overflow-hidden cursor-pointer" onClick={() => openGallery(idx)}>
+            <Image fill alt={`PG Image ${idx + 1}`} className="object-cover" src={img} />
+            {idx === 0 && (
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-100"></div>
+            )}
+            <div className="absolute bottom-3 right-3 bg-black/60 px-3 py-1 rounded-full text-white font-label-sm text-xs backdrop-blur-sm">
+              {idx + 1} / {images.length}
+            </div>
+          </div>
+        ))}
+      </section>
+
+      {/* Desktop Bento Grid */}
+      <section className={`hidden md:grid gap-base h-[500px] rounded-xl overflow-hidden mb-stack-lg grid-cols-1 ${images.length === 1 ? 'md:grid-cols-1' : images.length === 2 ? 'md:grid-cols-2' : images.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-4'} grid-rows-2`}>
         {images[0] && (
           <div className={`${images.length === 1 ? 'md:col-span-1 md:row-span-2' : images.length === 2 ? 'md:col-span-1 md:row-span-2' : 'md:col-span-2 md:row-span-2'} relative group cursor-pointer overflow-hidden`} onClick={() => openGallery(0)}>
             <Image fill alt="Main PG Image" className="object-cover transition-transform duration-500 group-hover:scale-105" src={images[0]} />
@@ -40,22 +56,22 @@ export default function PgGallery({ images }: PgGalleryProps) {
           </div>
         )}
         {images[1] && (
-          <div className={`hidden md:block relative group cursor-pointer overflow-hidden ${images.length === 2 ? 'md:col-span-1 md:row-span-2' : ''}`} onClick={() => openGallery(1)}>
+          <div className={`relative group cursor-pointer overflow-hidden ${images.length === 2 ? 'md:col-span-1 md:row-span-2' : ''}`} onClick={() => openGallery(1)}>
             <Image fill alt="PG Image 2" className="object-cover transition-transform duration-500 group-hover:scale-105" src={images[1]} />
           </div>
         )}
         {images[2] && (
-          <div className={`hidden md:block relative group cursor-pointer overflow-hidden ${images.length === 3 ? 'md:col-span-1 md:row-span-2' : ''}`} onClick={() => openGallery(2)}>
+          <div className={`relative group cursor-pointer overflow-hidden ${images.length === 3 ? 'md:col-span-1 md:row-span-2' : ''}`} onClick={() => openGallery(2)}>
             <Image fill alt="PG Image 3" className="object-cover transition-transform duration-500 group-hover:scale-105" src={images[2]} />
           </div>
         )}
         {images[3] && (
-          <div className={`hidden md:block relative group cursor-pointer overflow-hidden ${images.length === 4 ? 'md:col-span-2' : ''}`} onClick={() => openGallery(3)}>
+          <div className={`relative group cursor-pointer overflow-hidden ${images.length === 4 ? 'md:col-span-2' : ''}`} onClick={() => openGallery(3)}>
             <Image fill alt="PG Image 4" className="object-cover transition-transform duration-500 group-hover:scale-105" src={images[3]} />
           </div>
         )}
         {images[4] && (
-          <div className="hidden md:block relative group cursor-pointer overflow-hidden" onClick={() => openGallery(4)}>
+          <div className="relative group cursor-pointer overflow-hidden" onClick={() => openGallery(4)}>
             <Image fill alt="PG Image 5" className="object-cover transition-transform duration-500 group-hover:scale-105" src={images[4]} />
             <div className="absolute inset-0 bg-black/40 flex items-center justify-center transition-colors group-hover:bg-black/50">
               <span className="text-on-primary font-h2 text-h2 flex items-center gap-2">
