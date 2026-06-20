@@ -20,6 +20,10 @@ function AccountMenu({ session, isHome }: { session: any, isHome?: boolean }) {
   const iconSize = isHome ? "text-[28px]" : "text-[24px]";
   const imgSize = isHome ? "w-7 h-7" : "w-6 h-6";
 
+  if (!mounted) {
+    return <div className={`w-6 h-6 md:w-10 md:h-10 ${colorClass}`}></div>;
+  }
+
   if (!session) {
     const loginUrl = `/login?callbackUrl=${encodeURIComponent(pathname || '/')}`;
     return (

@@ -129,6 +129,7 @@ export default function NotificationDropdown({ isHome }: { isHome?: boolean }) {
     }
   };
 
+  if (!mounted) return <div className="w-10 h-10 hidden md:block"></div>; // Placeholder to avoid layout shift, but safe for hydration
   if (!session) return null;
 
   const colorClass = isHome ? "text-white hover:opacity-80" : "text-primary dark:text-primary-fixed-dim hover:bg-primary-container/10";
