@@ -356,7 +356,7 @@ export default function ChatWidget() {
         {/* Messages */}
         <div
           ref={chatContainerRef}
-          className="flex-1 overflow-y-auto px-4 py-4 space-y-4 min-h-0"
+          className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-4 min-h-0"
           style={{
             scrollbarWidth: 'thin',
             scrollbarColor:
@@ -365,7 +365,7 @@ export default function ChatWidget() {
         >
           {messages.length === 0 ? (
             // Welcome state
-            <div className="flex flex-col items-center justify-center h-full py-2 md:py-6 text-center">
+            <div className="flex-1 flex flex-col items-center justify-center py-2 md:py-6 text-center mt-[-20px] md:mt-0">
               <div
                 className="hidden md:flex w-16 h-16 rounded-2xl items-center justify-center mb-4 shadow-lg"
                 style={{
