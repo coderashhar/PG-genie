@@ -307,8 +307,8 @@ export default function ChatWidget() {
       <div
         className={`fixed z-[9998] transition-all duration-300 ease-out ${isOpen
           ? 'opacity-100 translate-y-0 pointer-events-auto'
-          : 'opacity-0 translate-y-4 pointer-events-none'
-          } bottom-[140px] right-4 md:bottom-24 md:right-6 w-[calc(100vw-2rem)] sm:w-[400px] max-h-[55vh] sm:max-h-[600px] flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-outline-variant/20`}
+          : 'opacity-0 translate-y-[100%] md:translate-y-4 pointer-events-none'
+          } inset-0 md:inset-auto md:bottom-24 md:right-6 w-full md:w-[400px] h-[100dvh] md:h-auto max-h-[100dvh] md:max-h-[600px] flex flex-col rounded-none md:rounded-2xl overflow-hidden shadow-2xl border-0 md:border md:border-outline-variant/20`}
         style={{
           background: 'var(--color-surface-container-lowest)',
           boxShadow:
@@ -489,7 +489,7 @@ export default function ChatWidget() {
       <button
         id="chat-widget-fab"
         onClick={() => setIsOpen(!isOpen)}
-        className={`fixed z-[9999] bottom-20 right-4 md:bottom-6 md:right-6 w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 cursor-pointer hover:scale-110 active:scale-95 ${isOpen ? 'rotate-0' : 'rotate-0'
+        className={`fixed z-[9999] bottom-20 right-4 md:bottom-6 md:right-6 w-12 h-12 md:w-14 md:h-14 rounded-full items-center justify-center shadow-xl transition-all duration-300 cursor-pointer hover:scale-110 active:scale-95 ${isOpen ? 'hidden md:flex rotate-0' : 'flex rotate-0'
           }`}
         style={{
           background:
