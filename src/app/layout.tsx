@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Playfair_Display, Caveat } from "next/font/google";
 import SessionProvider from "@/components/SessionProvider";
 import PageTransition from "@/components/PageTransition";
@@ -30,6 +30,13 @@ const caveat = Caveat({
 export const metadata: Metadata = {
   title: "PG Genie - Find your perfect PG near VIT Bhopal",
   description: "The smartest way for students to discover, compare, and book verified accommodations. Your digital concierge to student living.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  interactiveWidget: "resizes-content",
 };
 
 export default function RootLayout({
