@@ -109,6 +109,8 @@ export default function ChatWidget() {
   const [input, setInput] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
   const [showPulse, setShowPulse] = useState(true);
+  const [viewportHeight, setViewportHeight] = useState('100dvh');
+  const [isMobile, setIsMobile] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -135,6 +137,31 @@ export default function ChatWidget() {
       sessionStorage.setItem('pg-genie-chat', JSON.stringify(messages));
     }
   }, [messages]);
+
+  // Track visual viewport to handle mobile keyboard smoothly
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      if (window.visualViewport) {
+        setViewportHeight(`${window.visualViewport.height}px`);
+      } else {
+        setViewportHeight(`${window.innerHeight}px`);
+      }
+    };
+
+    window.visualViewport?.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize);
+    
+    // Initial set
+    handleResize();
+
+    return () => {
+      window.visualViewport?.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   // Disable background scrolling when modal is open
   useEffect(() => {
@@ -317,6 +344,7 @@ export default function ChatWidget() {
           background: 'var(--color-surface-container-lowest)',
           boxShadow:
             '0 25px 50px -12px rgba(52, 0, 117, 0.25), 0 0 0 1px rgba(52, 0, 117, 0.05)',
+          height: isMobile ? viewportHeight : undefined,
         }}
       >
         {/* Header */}
