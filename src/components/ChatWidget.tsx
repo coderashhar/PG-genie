@@ -155,10 +155,14 @@ export default function ChatWidget() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isStreaming]);
 
-  // Focus input when chat opens
+  // Focus input when chat opens (only on desktop to prevent keyboard popping up on mobile)
   useEffect(() => {
     if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 300);
+      setTimeout(() => {
+        if (window.innerWidth >= 768) {
+          inputRef.current?.focus();
+        }
+      }, 300);
       setShowPulse(false);
     }
   }, [isOpen]);
