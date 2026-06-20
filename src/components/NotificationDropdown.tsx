@@ -54,7 +54,16 @@ export default function NotificationDropdown({ isHome }: { isHome?: boolean }) {
     return () => clearInterval(interval);
   }, [session]);
 
-
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
 
   const markAllAsRead = async () => {
     if (unreadCount === 0) return;
@@ -124,6 +133,81 @@ export default function NotificationDropdown({ isHome }: { isHome?: boolean }) {
 
   const colorClass = isHome ? "text-white hover:opacity-80" : "text-primary dark:text-primary-fixed-dim hover:bg-primary-container/10";
 
+  const renderNotificationContent = () => (
+    <>
+      <div className="p-3 md:p-4 border-b border-outline-variant flex justify-between items-center bg-surface shrink-0">
+        <h3 className="font-headline text-base md:text-lg font-bold text-on-surface">Notifications</h3>
+        <div className="flex items-center gap-2">
+          {unreadCount > 0 && (
+            <span className="bg-primary text-on-primary text-xs font-bold px-2 py-1 rounded-full">
+              {unreadCount} New
+            </span>
+          )}
+          <button onClick={(e) => { e.stopPropagation(); setIsOpen(false); }} className="md:hidden material-symbols-outlined text-on-surface-variant p-1 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors">close</button>
+        </div>
+      </div>
+
+      <div className="max-h-[60vh] md:max-h-[400px] overflow-y-auto overscroll-contain">
+        {notifications.length === 0 ? (
+          <div className="p-6 md:p-8 text-center text-on-surface-variant flex flex-col items-center">
+            <span className="material-symbols-outlined text-3xl md:text-4xl mb-2 opacity-50">notifications_off</span>
+            <p className="font-body-md text-sm md:text-base">No notifications yet</p>
+          </div>
+        ) : (
+          <div className="flex flex-col">
+            {notifications.map((notif) => (
+              <div 
+                key={notif._id}
+                onClick={() => markAsRead(notif._id)}
+                className={`p-3 md:p-4 border-b border-outline-variant last:border-0 hover:bg-surface-container/50 transition-colors cursor-pointer flex gap-3 md:gap-4 ${!notif.isRead ? 'bg-primary-container/10' : ''}`}
+              >
+                <div className={`mt-1 flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center ${!notif.isRead ? 'bg-primary/10 text-primary' : 'bg-surface-variant/30 text-on-surface-variant'}`}>
+                  <span className="material-symbols-outlined text-base md:text-xl">{getIconForType(notif.type)}</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex justify-between items-start gap-2 mb-1">
+                    <h4 className={`text-xs md:text-sm font-semibold truncate ${!notif.isRead ? 'text-on-surface' : 'text-on-surface-variant'}`}>
+                      {notif.title}
+                    </h4>
+                    <span className="text-[10px] md:text-xs text-on-surface-variant whitespace-nowrap">
+                      {formatTime(notif.createdAt)}
+                    </span>
+                  </div>
+                  <p className={`text-[11px] md:text-sm leading-snug line-clamp-2 md:line-clamp-none ${!notif.isRead ? 'text-on-surface-variant' : 'text-on-surface-variant/70'}`}>
+                    {notif.message}
+                  </p>
+                  {notif.link && (
+                    <Link 
+                      href={notif.link}
+                      className="inline-block mt-2 text-xs font-bold text-primary hover:underline"
+                      onClick={(e) => { e.stopPropagation(); markAsRead(notif._id); setIsOpen(false); }}
+                    >
+                      View details
+                    </Link>
+                  )}
+                </div>
+                {!notif.isRead && (
+                  <div className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0" />
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      
+      {notifications.length > 0 && (
+        <div className="p-3 bg-surface-container-low text-center border-t border-outline-variant shrink-0">
+          <button 
+            className="text-primary text-sm font-bold hover:underline cursor-pointer"
+            onClick={markAllAsRead}
+          >
+            Mark all as read
+          </button>
+        </div>
+      )}
+    </>
+  );
+
   return (
     <div className="relative" ref={dropdownRef}>
       <button 
@@ -140,81 +224,30 @@ export default function NotificationDropdown({ isHome }: { isHome?: boolean }) {
         <AnimatePresence>
           {isOpen && (
             <div className="fixed inset-0 z-[9999] pointer-events-none">
-              <div className="absolute inset-0 pointer-events-auto" onClick={(e) => { e.stopPropagation(); setIsOpen(false); }}></div>
+              <div className="absolute inset-0 pointer-events-auto bg-black/40 md:bg-transparent" onClick={(e) => { e.stopPropagation(); setIsOpen(false); }}></div>
+              
+              {/* Desktop Dropdown */}
               <motion.div
                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                 transition={{ duration: 0.2 }}
-                className="absolute right-4 md:right-8 lg:right-16 top-16 mt-2 w-80 md:w-96 bg-surface-container-lowest border border-outline-variant shadow-lg rounded-xl overflow-hidden z-50 origin-top-right text-on-surface pointer-events-auto"
+                className="hidden md:flex flex-col absolute right-8 lg:right-16 top-16 mt-2 w-96 bg-surface-container-lowest border border-outline-variant shadow-lg rounded-xl overflow-hidden z-50 origin-top-right text-on-surface pointer-events-auto"
               >
-                <div className="p-4 border-b border-outline-variant flex justify-between items-center bg-surface">
-                  <h3 className="font-headline text-lg font-bold text-on-surface">Notifications</h3>
-                  {unreadCount > 0 && (
-                    <span className="bg-primary text-on-primary text-xs font-bold px-2 py-1 rounded-full">
-                      {unreadCount} New
-                    </span>
-                  )}
-                </div>
+                {renderNotificationContent()}
+              </motion.div>
 
-                <div className="max-h-[400px] overflow-y-auto">
-                  {notifications.length === 0 ? (
-                    <div className="p-8 text-center text-on-surface-variant flex flex-col items-center">
-                      <span className="material-symbols-outlined text-4xl mb-2 opacity-50">notifications_off</span>
-                      <p className="font-body-md">No notifications yet</p>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col">
-                      {notifications.map((notif) => (
-                        <div 
-                          key={notif._id}
-                          onClick={() => markAsRead(notif._id)}
-                          className={`p-4 border-b border-outline-variant last:border-0 hover:bg-surface-container/50 transition-colors cursor-pointer flex gap-4 ${!notif.isRead ? 'bg-primary-container/10' : ''}`}
-                        >
-                          <div className={`mt-1 flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${!notif.isRead ? 'bg-primary/10 text-primary' : 'bg-surface-variant/30 text-on-surface-variant'}`}>
-                            <span className="material-symbols-outlined text-xl">{getIconForType(notif.type)}</span>
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex justify-between items-start gap-2 mb-1">
-                              <h4 className={`text-sm font-semibold ${!notif.isRead ? 'text-on-surface' : 'text-on-surface-variant'}`}>
-                                {notif.title}
-                              </h4>
-                              <span className="text-xs text-on-surface-variant whitespace-nowrap">
-                                {formatTime(notif.createdAt)}
-                              </span>
-                            </div>
-                            <p className={`text-sm ${!notif.isRead ? 'text-on-surface-variant' : 'text-on-surface-variant/70'}`}>
-                              {notif.message}
-                            </p>
-                            {notif.link && (
-                              <Link 
-                                href={notif.link}
-                                className="inline-block mt-2 text-xs font-bold text-primary hover:underline"
-                                onClick={(e) => { e.stopPropagation(); markAsRead(notif._id); setIsOpen(false); }}
-                              >
-                                View details
-                              </Link>
-                            )}
-                          </div>
-                          {!notif.isRead && (
-                            <div className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0" />
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                
-                {notifications.length > 0 && (
-                  <div className="p-3 bg-surface-container-low text-center border-t border-outline-variant">
-                    <button 
-                      className="text-primary text-sm font-bold hover:underline cursor-pointer"
-                      onClick={markAllAsRead}
-                    >
-                      Mark all as read
-                    </button>
-                  </div>
-                )}
+              {/* Mobile Top Sheet */}
+              <motion.div
+                initial={{ y: '-100%' }}
+                animate={{ y: 0 }}
+                exit={{ y: '-100%' }}
+                transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                className="md:hidden fixed top-0 left-0 right-0 bg-surface-container-lowest shadow-[0_8px_30px_rgb(0,0,0,0.12)] border-b border-outline-variant/30 rounded-b-3xl overflow-hidden z-50 flex flex-col max-h-[85vh] text-on-surface pointer-events-auto"
+              >
+                {renderNotificationContent()}
+                {/* Drag handle for aesthetics */}
+                <div className="w-12 h-1.5 bg-outline-variant/50 rounded-full mx-auto my-3 shrink-0" />
               </motion.div>
             </div>
           )}

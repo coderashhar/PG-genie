@@ -194,8 +194,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         <div className="flex-1 w-full px-margin-mobile md:px-gutter max-w-container-max mx-auto py-stack-md md:py-stack-lg">
           {/* Header Section */}
           <header className="mb-stack-lg">
-            <h1 className="font-display text-display text-primary mb-2">
-              Welcome back, {userName.split(' ')[0]}
+            <h1 className="font-display text-[40px] md:text-[64px] leading-[1.1] text-primary mb-2">
+              Welcome back,<br className="md:hidden" /> {userName.split(' ')[0]}
             </h1>
             <p className="font-body-lg text-body-lg text-on-surface-variant">Here is an overview of your housing search.</p>
           </header>
@@ -225,7 +225,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                 {/* Saved PGs */}
                 <section>
                   <div className="flex justify-between items-center mb-stack-md">
-                    <h2 className="font-h1 text-h1 text-on-surface">Saved PGs</h2>
+                    <h2 className="font-h1 text-h2 md:text-h1 text-on-surface">Saved PGs</h2>
                     {dashData.savedPgs.length > 2 && (
                       <Link href="/dashboard/saved" className="text-primary hover:text-primary-fixed-dim hover:translate-x-1 transition-all duration-300 font-label-sm text-label-sm flex items-center gap-1 cursor-pointer">
                         View All <span className="material-symbols-outlined text-sm">arrow_forward</span>
@@ -256,7 +256,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
                 {/* Booked Visits */}
                 <section>
-                  <h2 className="font-h1 text-h1 text-on-surface mb-stack-md">Booked Visits</h2>
+                  <h2 className="font-h1 text-h2 md:text-h1 text-on-surface mb-stack-md">Booked Visits</h2>
                   <div className="bg-surface rounded-xl shadow-[0px_4px_20px_rgba(76,29,149,0.05)] border border-surface-container overflow-hidden">
                     {dashData.bookings.length > 0 ? (
                       <ul className="divide-y divide-surface-container">
