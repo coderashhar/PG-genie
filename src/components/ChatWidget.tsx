@@ -369,7 +369,7 @@ export default function ChatWidget() {
         >
           {messages.length === 0 ? (
             // Welcome state
-            <div className="flex-1 flex flex-col items-center justify-center py-2 md:py-6 text-center mt-[-20px] md:mt-0">
+            <div className="flex-1 flex flex-col items-center justify-end md:justify-center pb-2 md:pb-0 pt-6 text-center">
               <div
                 className="hidden md:flex w-16 h-16 rounded-2xl items-center justify-center mb-4 shadow-lg"
                 style={{
