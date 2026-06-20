@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Playfair_Display, Caveat } from "next/font/google";
 import SessionProvider from "@/components/SessionProvider";
@@ -46,12 +47,18 @@ export default function RootLayout({
       <body className="bg-surface-container-lowest text-on-background font-body-md antialiased overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col relative">
         <SessionProvider>
           <Toaster position="top-center" containerStyle={{ zIndex: 999999 }} />
-          <Navbar />
+          <Suspense fallback={null}>
+            <Navbar />
+          </Suspense>
           <PageTransition>
             {children}
           </PageTransition>
-          <BottomNav />
-          <ChatWidgetWrapper />
+          <Suspense fallback={null}>
+            <BottomNav />
+          </Suspense>
+          <Suspense fallback={null}>
+            <ChatWidgetWrapper />
+          </Suspense>
           <Footer />
           <Analytics />
           <SpeedInsights />
