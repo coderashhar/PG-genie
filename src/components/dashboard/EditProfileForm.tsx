@@ -100,23 +100,23 @@ export default function EditProfileForm({ profile }: { profile: any }) {
     }
   };
 
-  const inputClass = "w-full bg-surface-container border border-outline-variant rounded-lg pl-12 pr-4 py-3 text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors";
+  const inputClass = "w-full bg-surface-container border border-outline-variant rounded-lg pl-10 md:pl-12 pr-3 md:pr-4 py-2 md:py-3 text-sm md:text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors";
 
   return (
-    <div className="bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)]">
-      <h2 className="font-h2 text-h2 text-on-background flex items-center gap-2 mb-stack-md">
-        <span className="material-symbols-outlined text-primary">edit</span>
+    <div className="bg-surface-container rounded-xl p-4 md:p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)]">
+      <h2 className="font-h2 text-[20px] md:text-h2 text-on-background flex items-center gap-2 mb-4 md:mb-stack-md">
+        <span className="material-symbols-outlined text-primary text-[20px] md:text-[24px]">edit</span>
         Edit Profile
       </h2>
 
-      <form onSubmit={handleSave} className="space-y-5">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <form onSubmit={handleSave} className="space-y-4 md:space-y-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-5">
           {/* Name */}
           <div>
-            <label className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Full Name</label>
+            <label className="block text-[11px] md:text-label-sm font-label-sm text-on-surface-variant mb-1">Full Name</label>
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant">
-                <span className="material-symbols-outlined text-[20px]">person</span>
+              <span className="absolute inset-y-0 left-0 flex items-center pl-3 md:pl-4 text-on-surface-variant">
+                <span className="material-symbols-outlined text-[18px] md:text-[20px]">person</span>
               </span>
               <input
                 type="text"
@@ -131,10 +131,10 @@ export default function EditProfileForm({ profile }: { profile: any }) {
 
           {/* Email */}
           <div>
-            <label className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Email</label>
+            <label className="block text-[11px] md:text-label-sm font-label-sm text-on-surface-variant mb-1">Email</label>
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant">
-                <span className="material-symbols-outlined text-[20px]">mail</span>
+              <span className="absolute inset-y-0 left-0 flex items-center pl-3 md:pl-4 text-on-surface-variant">
+                <span className="material-symbols-outlined text-[18px] md:text-[20px]">mail</span>
               </span>
               <input
                 type="email"
@@ -149,9 +149,9 @@ export default function EditProfileForm({ profile }: { profile: any }) {
 
           {/* Phone */}
           <div>
-            <label className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Phone Number</label>
+            <label className="block text-[11px] md:text-label-sm font-label-sm text-on-surface-variant mb-1">Phone Number</label>
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant font-body-md border-r border-outline-variant pr-3">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-3 md:pl-4 text-on-surface-variant text-[11px] md:text-body-md border-r border-outline-variant pr-2 md:pr-3">
                 +91
               </span>
               <input
@@ -159,7 +159,7 @@ export default function EditProfileForm({ profile }: { profile: any }) {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full bg-surface-container border border-outline-variant rounded-lg pl-16 pr-4 py-3 text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
+                className="w-full bg-surface-container border border-outline-variant rounded-lg pl-[3.2rem] md:pl-16 pr-3 md:pr-4 py-2 md:py-3 text-sm md:text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
                 placeholder="9876543210"
               />
             </div>
@@ -167,10 +167,10 @@ export default function EditProfileForm({ profile }: { profile: any }) {
 
           {/* Batch */}
           <div>
-            <label className="block text-label-sm font-label-sm text-on-surface-variant mb-1">Batch</label>
+            <label className="block text-[11px] md:text-label-sm font-label-sm text-on-surface-variant mb-1">Batch</label>
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant">
-                <span className="material-symbols-outlined text-[20px]">calendar_month</span>
+              <span className="absolute inset-y-0 left-0 flex items-center pl-3 md:pl-4 text-on-surface-variant">
+                <span className="material-symbols-outlined text-[18px] md:text-[20px]">calendar_month</span>
               </span>
               <input
                 type="text"
@@ -189,9 +189,9 @@ export default function EditProfileForm({ profile }: { profile: any }) {
           <button
             type="submit"
             disabled={saving}
-            className="bg-primary text-on-primary hover:bg-primary/90 px-8 py-3 rounded-xl font-h2 font-bold text-body-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:pointer-events-none flex items-center gap-2 cursor-pointer"
+            className="w-full md:w-auto bg-primary text-on-primary hover:bg-primary/90 px-6 md:px-8 py-2 md:py-3 rounded-xl font-h2 font-bold text-sm md:text-body-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2 cursor-pointer"
           >
-            {saving && <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>}
+            {saving && <span className="material-symbols-outlined animate-spin text-[16px] md:text-[18px]">progress_activity</span>}
             {saving ? 'Saving...' : 'Save Changes'}
           </button>
         </div>

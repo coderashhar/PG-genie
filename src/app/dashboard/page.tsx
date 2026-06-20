@@ -318,59 +318,59 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             /* Profile Tab Layout */
             <div className="flex flex-col">
               {/* Profile Header */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-stack-md mb-stack-lg">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-stack-md mb-6 md:mb-stack-lg">
                 {/* User Avatar & Identity Card */}
-                <div className="col-span-1 md:col-span-1 bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-                  <div className="relative mb-stack-sm w-32 h-32">
-                    <div className="w-32 h-32 rounded-full bg-primary flex items-center justify-center relative group">
-                      <span className="text-on-primary font-display text-4xl">{userInitial}</span>
+                <div className="col-span-1 md:col-span-1 bg-surface-container rounded-xl p-4 md:p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                  <div className="relative mb-2 md:mb-stack-sm w-20 h-20 md:w-32 md:h-32">
+                    <div className="w-20 h-20 md:w-32 md:h-32 rounded-full bg-primary flex items-center justify-center relative group">
+                      <span className="text-on-primary font-display text-2xl md:text-4xl">{userInitial}</span>
                     </div>
                   </div>
-                  <h1 className="font-h1 text-h1 text-on-background mb-1">{userName}</h1>
+                  <h1 className="font-h1 text-[24px] md:text-h1 text-on-background mb-1">{userName}</h1>
                   <p className="font-body-md text-body-md text-on-surface-variant flex items-center justify-center gap-1">
                     <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>school</span>
                     {dashData.user.university || 'University'}
                   </p>
                   {dashData.user.batch && (
-                    <div className="mt-4 inline-block bg-primary-container/10 text-primary rounded-full px-4 py-1 font-label-sm text-label-sm">
+                    <div className="mt-2 md:mt-4 inline-block bg-primary-container/10 text-primary rounded-full px-3 md:px-4 py-0.5 md:py-1 font-label-sm text-[10px] md:text-label-sm">
                       Batch of {dashData.user.batch}
                     </div>
                   )}
                 </div>
 
                 {/* Quick Info Card */}
-                <div className="col-span-1 md:col-span-2 bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] flex flex-col justify-center">
-                  <h2 className="font-h2 text-h2 text-on-background flex items-center gap-2 mb-stack-md">
-                    <span className="material-symbols-outlined text-primary">account_circle</span>
+                <div className="col-span-1 md:col-span-2 bg-surface-container rounded-xl p-4 md:p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] flex flex-col justify-center">
+                  <h2 className="font-h2 text-[20px] md:text-h2 text-on-background flex items-center gap-2 mb-4 md:mb-stack-md">
+                    <span className="material-symbols-outlined text-primary text-[20px] md:text-[24px]">account_circle</span>
                     Account Information
                   </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="flex items-center gap-3 bg-surface p-4 rounded-lg border border-surface-variant">
-                      <span className="material-symbols-outlined text-primary">mail</span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                    <div className="flex items-center gap-3 bg-surface p-3 md:p-4 rounded-lg border border-surface-variant">
+                      <span className="material-symbols-outlined text-primary text-[20px] md:text-[24px]">mail</span>
                       <div>
-                        <p className="font-label-sm text-label-sm text-on-surface-variant">Email</p>
-                        <p className="font-body-md text-body-md text-on-surface">{dashData.user.email || '—'}</p>
+                        <p className="font-label-sm text-[11px] md:text-label-sm text-on-surface-variant">Email</p>
+                        <p className="font-body-md text-sm md:text-body-md text-on-surface">{dashData.user.email || '—'}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3 bg-surface p-4 rounded-lg border border-surface-variant">
-                      <span className="material-symbols-outlined text-primary">call</span>
+                    <div className="flex items-center gap-3 bg-surface p-3 md:p-4 rounded-lg border border-surface-variant">
+                      <span className="material-symbols-outlined text-primary text-[20px] md:text-[24px]">call</span>
                       <div>
-                        <p className="font-label-sm text-label-sm text-on-surface-variant">Phone</p>
-                        <p className="font-body-md text-body-md text-on-surface">{dashData.user.phone || '—'}</p>
+                        <p className="font-label-sm text-[11px] md:text-label-sm text-on-surface-variant">Phone</p>
+                        <p className="font-body-md text-sm md:text-body-md text-on-surface">{dashData.user.phone || '—'}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3 bg-surface p-4 rounded-lg border border-surface-variant">
-                      <span className="material-symbols-outlined text-primary">badge</span>
+                    <div className="flex items-center gap-3 bg-surface p-3 md:p-4 rounded-lg border border-surface-variant">
+                      <span className="material-symbols-outlined text-primary text-[20px] md:text-[24px]">badge</span>
                       <div>
-                        <p className="font-label-sm text-label-sm text-on-surface-variant">Role</p>
-                        <p className="font-body-md text-body-md text-on-surface capitalize">{dashData.user.role || '—'}</p>
+                        <p className="font-label-sm text-[11px] md:text-label-sm text-on-surface-variant">Role</p>
+                        <p className="font-body-md text-sm md:text-body-md text-on-surface capitalize">{dashData.user.role || '—'}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3 bg-surface p-4 rounded-lg border border-surface-variant">
-                      <span className="material-symbols-outlined text-primary">calendar_month</span>
+                    <div className="flex items-center gap-3 bg-surface p-3 md:p-4 rounded-lg border border-surface-variant">
+                      <span className="material-symbols-outlined text-primary text-[20px] md:text-[24px]">calendar_month</span>
                       <div>
-                        <p className="font-label-sm text-label-sm text-on-surface-variant">Batch</p>
-                        <p className="font-body-md text-body-md text-on-surface">{dashData.user.batch || '—'}</p>
+                        <p className="font-label-sm text-[11px] md:text-label-sm text-on-surface-variant">Batch</p>
+                        <p className="font-body-md text-sm md:text-body-md text-on-surface">{dashData.user.batch || '—'}</p>
                       </div>
                     </div>
                   </div>
