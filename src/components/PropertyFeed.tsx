@@ -8,6 +8,8 @@ import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useInView } from 'react-intersection-observer';
 import toast from 'react-hot-toast';
 import PropertyCard from '@/components/PropertyCard';
+import { AnimatePresence, motion } from 'framer-motion';
+import FilterSidebar from '@/components/FilterSidebar';
 
 // Reuse amenityIconMap from page.tsx
 const amenityIconMap: Record<string, string> = {
@@ -73,7 +75,10 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
   const [hasMore, setHasMore] = useState(initialHasMore);
   const [page, setPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  
+
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  const [isMobileSortOpen, setIsMobileSortOpen] = useState(false);
+
   const [savedPgIds, setSavedPgIds] = useState<Set<string>>(new Set(initialSavedPgIds));
   const [isSavingMap, setIsSavingMap] = useState<Record<string, boolean>>({});
 
@@ -151,10 +156,8 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
             next.delete(pgId);
             return next;
           });
-          toast.success('Removed from Favorites!');
-        } else {
-          toast.error('Failed to remove from favorites');
-        }
+          toast.success('Removed from saved');
+        } else throw new Error('Failed');
       } else {
         const res = await fetch('/api/users/favorites', {
           method: 'POST',
@@ -167,13 +170,11 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
             next.add(pgId);
             return next;
           });
-          toast.success('Added to Favorites!');
-        } else {
-          toast.error('Failed to save');
-        }
+          toast.success('Saved successfully');
+        } else throw new Error('Failed');
       }
-    } catch (err) {
-      toast.error('An error occurred');
+    } catch (error) {
+      toast.error('Failed to update saved status');
     } finally {
       setIsSavingMap(prev => ({ ...prev, [pgId]: false }));
     }
@@ -187,7 +188,7 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
       router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
       return;
     }
-    
+
     if (isSavingMap[`book_${pgId}`]) return;
     setIsSavingMap(prev => ({ ...prev, [`book_${pgId}`]: true }));
 
@@ -198,7 +199,7 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
       const res = await fetch('/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           pgId,
           message: "I am interested in visiting this PG.",
           visitDate: visitDate.toISOString()
@@ -226,19 +227,8 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
   };
 
   // Search Handler
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (e.target.value) {
-      params.set('search', e.target.value);
-    } else {
-      params.delete('search');
-    }
-    // We only want to search on blur or Enter to avoid rapid re-renders on the server, but for simplicity we push here.
-    // Wait, replacing URL on every keystroke is bad. We should keep local state and only push on submit/blur.
-  };
-
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
-  
+
   const submitSearch = () => {
     const params = new URLSearchParams(searchParams.toString());
     if (searchQuery) {
@@ -263,8 +253,8 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
       {/* Mobile Filter Toggle & Sorting Bar */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-stack-md gap-4">
         <div>
-          <h1 className="font-h1 text-h1 text-on-surface">Available PGs in Kothri</h1>
-          <p className="font-body-md text-body-md text-on-surface-variant mt-1">
+          <h1 className="font-h1 text-[28px] md:text-h1 text-on-surface leading-tight">Available PGs in Kothri</h1>
+          <p className="font-body-md text-sm md:text-base text-on-surface-variant mt-1">
             Showing {properties.length} properties
           </p>
         </div>
@@ -273,7 +263,7 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
           <div className="flex items-center bg-surface-container-high rounded-full px-4 py-2 w-full sm:w-80 border border-outline-variant/50 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
             <span className="material-symbols-outlined text-on-surface-variant mr-2">search</span>
             <input
-              className="bg-transparent border-none focus:ring-0 text-body-md flex-grow text-on-surface outline-none"
+              className="bg-transparent border-none focus:ring-0 text-sm md:text-base flex-grow text-on-surface outline-none min-w-0"
               placeholder="Search Kothri..."
               type="text"
               value={searchQuery}
@@ -281,12 +271,17 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
               onKeyDown={handleSearchKeyDown}
               onBlur={submitSearch}
             />
-            <button className="md:hidden ml-2 p-1.5 bg-surface rounded-full text-on-surface-variant shadow-sm border border-outline-variant flex items-center justify-center cursor-pointer hover:text-primary transition-colors">
-              <span className="material-symbols-outlined text-sm">tune</span>
-            </button>
+            <div className="flex md:hidden items-center ml-2 gap-2 shrink-0">
+              <button onClick={() => setIsMobileSortOpen(true)} className="p-1.5 bg-surface rounded-full text-on-surface-variant shadow-sm border border-outline-variant flex items-center justify-center cursor-pointer hover:text-primary transition-colors">
+                <span className="material-symbols-outlined text-sm">swap_vert</span>
+              </button>
+              <button onClick={() => setIsMobileFilterOpen(true)} className="p-1.5 bg-surface rounded-full text-on-surface-variant shadow-sm border border-outline-variant flex items-center justify-center cursor-pointer hover:text-primary transition-colors">
+                <span className="material-symbols-outlined text-sm">tune</span>
+              </button>
+            </div>
           </div>
 
-          <div className="relative w-full sm:w-auto flex-1 sm:flex-none">
+          <div className="hidden md:block relative w-full sm:w-auto flex-1 sm:flex-none">
             <select
               value={sortOption}
               onChange={handleSortChange}
@@ -304,7 +299,7 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
       </div>
 
       {/* Property Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-stack-md">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-3 md:gap-stack-md">
         {properties.length > 0 ? (
           properties.map((property, index) => {
             // Make every 3rd card a wide card
@@ -316,14 +311,11 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
                   key={property._id}
                   href={`/pgs/${property._id}`}
                   onClick={() => trackView(property._id)}
-                  className="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(76,29,149,0.05)] hover:shadow-[0px_8px_30px_rgba(76,29,149,0.15)] transition-shadow duration-300 border border-outline-variant/20 flex flex-col relative lg:col-span-2 cursor-pointer block"
+                  className="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(76,29,149,0.05)] hover:shadow-[0px_8px_30px_rgba(76,29,149,0.15)] transition-shadow duration-300 border border-outline-variant/20 flex flex-col relative col-span-2 cursor-pointer block"
                 >
                   <div className="flex flex-col md:flex-row h-full">
-                    <div className="md:w-2/5 h-56 md:h-auto relative overflow-hidden">
-                      <div className="absolute top-4 right-4 z-20 flex gap-2">
-                        <div className="bg-secondary text-on-secondary px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1 shadow-md">
-                          <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span> Verified
-                        </div>
+                    <div className="md:w-2/5 h-[120px] md:h-auto relative overflow-hidden bg-surface-variant flex">
+                      <div className="absolute top-3 right-3 z-20 flex gap-2">
                         <button 
                           onClick={(e) => handleSaveClick(e, property._id)}
                           disabled={isSavingMap[property._id]}
@@ -334,33 +326,60 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
                           </span>
                         </button>
                       </div>
-                      <Image
-                        alt={property.title}
-                        fill
-                        priority={index === 0}
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                        src={property.images?.[0] || '/placeholder.jpg'}
-                      />
+                      
+                      {/* First Image */}
+                      <div className={`relative h-full ${property.images?.length > 1 ? 'w-1/2 md:w-full' : 'w-full'} flex-grow`}>
+                        <Image
+                          alt={property.title}
+                          fill
+                          priority={index === 0}
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                          src={property.images?.[0] || '/placeholder.jpg'}
+                        />
+                      </div>
+                      
+                      {/* Second Image (Mobile only, if available) */}
+                      {property.images?.length > 1 && (
+                        <div className="relative h-full w-1/2 md:hidden border-l-2 border-surface-container-lowest">
+                          <Image
+                            alt={`${property.title} view 2`}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                            src={property.images[1]}
+                          />
+                        </div>
+                      )}
                     </div>
-                    <div className="p-6 flex flex-col flex-grow md:w-3/5">
-                      <div className="flex justify-between items-start mb-2">
-                        <div>
-                          <h3 className="font-h2 text-h2 text-on-surface group-hover:text-primary transition-colors">{property.title}</h3>
-                          <p className="font-body-md text-body-md text-on-surface-variant flex items-center gap-1 mt-1">
-                            <span className="material-symbols-outlined text-[18px]">location_on</span>
-                            {property.location?.address}
-                          </p>
+                    <div className="p-2 md:p-6 flex flex-col flex-grow md:w-3/5">
+                      <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-1 md:mb-2 md:gap-2">
+                        <div className="w-full">
+                          <h3 className="font-semibold text-sm md:font-h2 md:text-h2 text-on-surface group-hover:text-primary transition-colors">{property.title}</h3>
+
+                          {/* Mobile-only Price (Stacked under title) */}
+                          <div className="text-left md:hidden mt-0.5 flex items-end gap-0.5">
+                            <span className="text-sm text-primary font-bold">
+                              ₹{property.price?.toLocaleString('en-IN')}
+                            </span>
+                            <span className="text-[10px] text-on-surface-variant font-normal leading-4">/mo</span>
+                          </div>
+
+                          <div className="flex items-center gap-0.5 md:gap-1 text-on-surface-variant w-full overflow-hidden mt-1">
+                            <span className="material-symbols-outlined text-[12px] md:text-[18px] flex-shrink-0">location_on</span>
+                            <p className="text-[10px] md:font-body-md md:text-body-md line-clamp-1 m-0">
+                              {property.location?.address}
+                            </p>
+                          </div>
                         </div>
                         {property.roomTypes?.length > 0 && (
-                          <div className="bg-surface-container-high text-primary px-2 py-1 rounded font-label-sm text-label-sm">
+                          <div className="hidden md:block bg-surface-container-high text-primary px-2 py-1 rounded font-label-sm text-label-sm mt-2 md:mt-0">
                             {property.roomTypes[0]}
                           </div>
                         )}
                       </div>
-                      <p className="font-body-md text-body-md text-on-surface-variant line-clamp-2 mb-stack-md mt-2">
+                      <p className="hidden md:block font-body-md text-body-md text-on-surface-variant line-clamp-2 mb-stack-md mt-2">
                         {property.description}
                       </p>
-                      <div className="flex flex-wrap gap-2 mb-stack-md">
+                      <div className="hidden md:flex flex-wrap gap-2 mb-stack-md mt-auto">
                         {(() => {
                           const booleanAmenitiesList = [
                             { key: 'wifi', label: 'WiFi' },
@@ -377,7 +396,7 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
                             .filter(a => (property as any)[a.key])
                             .map(a => a.label);
                           const uniqueAmenities = Array.from(new Set([...(property.amenities || []), ...activeBooleans]));
-                          
+
                           return (
                             <>
                               {uniqueAmenities.slice(0, 4).map((amenity) => (
@@ -395,7 +414,8 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
                           );
                         })()}
                       </div>
-                      <div className="mt-auto pt-4 border-t border-outline-variant/30 flex justify-between items-end">
+
+                      <div className="hidden md:flex mt-auto pt-4 border-t border-outline-variant/30 justify-between items-end">
                         <div>
                           <p className="font-label-sm text-label-sm text-on-surface-variant mb-1">Starting from</p>
                           <p className="font-h2 text-h2 text-primary font-bold">
@@ -405,9 +425,9 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
                         </div>
                         <div className="flex gap-3">
                           <button className="bg-surface text-primary border border-primary px-4 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-primary/5 transition-colors hidden sm:block cursor-pointer">
-                            View Map
+                            View Details
                           </button>
-                          <button 
+                          <button
                             onClick={(e) => handleBookClick(e, property._id)}
                             disabled={isSavingMap[`book_${property._id}`]}
                             className="bg-secondary text-on-secondary px-6 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-on-secondary-fixed-variant transition-colors shadow-sm cursor-pointer disabled:opacity-70"
@@ -456,6 +476,78 @@ export default function PropertyFeed({ initialProperties, initialHasMore, initia
           <PropertyCardSkeleton />
         </div>
       )}
+
+      {/* Mobile Sort Bottom Sheet */}
+      <AnimatePresence>
+        {isMobileSortOpen && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              onClick={() => setIsMobileSortOpen(false)}
+              className="fixed inset-0 bg-black/40 z-40 md:hidden"
+            />
+            <motion.div
+              initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed bottom-0 left-0 right-0 bg-surface z-50 rounded-t-3xl overflow-hidden md:hidden flex flex-col max-h-[85vh] shadow-[0_-8px_30px_rgb(0,0,0,0.12)] border-t border-outline-variant/30"
+            >
+              <div className="p-5 border-b border-outline-variant/30 flex justify-between items-center bg-surface-container-lowest shrink-0">
+                <h3 className="font-h3 text-[22px] text-on-surface">Sort by</h3>
+                <button onClick={() => setIsMobileSortOpen(false)} className="material-symbols-outlined text-on-surface-variant p-2 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors">close</button>
+              </div>
+              <div className="p-2 flex flex-col overflow-y-auto overscroll-contain bg-surface-container-lowest">
+                {[
+                  { id: 'popular', label: 'Popularity' },
+                  { id: 'price_asc', label: 'Price: Low to High' },
+                  { id: 'price_desc', label: 'Price: High to Low' },
+                  { id: 'newest', label: 'Newest First' },
+                  { id: 'closest', label: 'Closest to Campus' },
+                ].map(option => (
+                  <button 
+                    key={option.id}
+                    onClick={() => {
+                      handleSortChange({ target: { value: option.id } } as any);
+                      setIsMobileSortOpen(false);
+                    }}
+                    className={`p-4 rounded-xl text-left font-body-md transition-all flex justify-between items-center ${sortOption === option.id ? 'bg-primary/10 text-primary font-semibold' : 'hover:bg-surface-container-high text-on-surface'}`}
+                  >
+                    <span>{option.label}</span>
+                    {sortOption === option.id && <span className="material-symbols-outlined text-primary text-xl">check</span>}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile Filter Bottom Sheet */}
+      <AnimatePresence>
+        {isMobileFilterOpen && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              onClick={() => setIsMobileFilterOpen(false)}
+              className="fixed inset-0 bg-black/40 z-40 md:hidden"
+            />
+            <motion.div
+              initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed bottom-0 left-0 right-0 bg-surface z-50 rounded-t-3xl overflow-hidden md:hidden flex flex-col h-[90vh] shadow-[0_-8px_30px_rgb(0,0,0,0.12)] border-t border-outline-variant/30"
+            >
+              <div className="p-5 border-b border-outline-variant/30 flex justify-between items-center bg-surface shrink-0">
+                <h3 className="font-h3 text-[22px] text-on-surface">Filters</h3>
+                <button onClick={() => setIsMobileFilterOpen(false)} className="material-symbols-outlined text-on-surface-variant p-2 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors">close</button>
+              </div>
+              <div className="overflow-y-auto overscroll-contain flex-grow bg-surface">
+                <div className="p-4 pb-24">
+                  <FilterSidebar onApply={() => setIsMobileFilterOpen(false)} />
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

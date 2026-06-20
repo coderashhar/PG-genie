@@ -147,10 +147,7 @@ export default function PropertyCard({ property, initialIsSaved, onSaveToggle, o
       onClick={() => { if (onClick) onClick(); }}
       className="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_4px_20px_rgba(76,29,149,0.05)] hover:shadow-[0px_8px_30px_rgba(76,29,149,0.15)] transition-shadow duration-300 border border-outline-variant/20 flex flex-col relative cursor-pointer block"
     >
-      <div className="absolute top-4 right-4 z-20 flex gap-2">
-        <div className="bg-secondary text-on-secondary px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1 shadow-md">
-          <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span> Verified
-        </div>
+      <div className="absolute top-3 right-3 z-20 flex gap-2">
         <button 
           onClick={handleSaveClick}
           disabled={isSaving}
@@ -161,7 +158,9 @@ export default function PropertyCard({ property, initialIsSaved, onSaveToggle, o
           </span>
         </button>
       </div>
-      <div className="h-56 w-full relative overflow-hidden">
+      
+      {/* Image with reduced ratio on mobile */}
+      <div className="h-[120px] md:h-[224px] w-full relative overflow-hidden bg-surface-variant">
         <Image
           alt={property.title}
           fill
@@ -170,15 +169,34 @@ export default function PropertyCard({ property, initialIsSaved, onSaveToggle, o
           src={property.images?.[0] || '/placeholder.jpg'}
         />
       </div>
-      <div className="p-6 flex flex-col flex-grow">
-        <div className="flex justify-between items-start mb-2">
-          <h3 className="font-h2 text-h2 text-on-surface group-hover:text-primary transition-colors">{property.title}</h3>
+      
+      {/* Compact Content Section (Mobile & Desktop Unified with Responsive Classes) */}
+      <div className="p-2 md:p-6 flex flex-col flex-grow">
+        {/* Title and Price */}
+        <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-1 md:mb-2 md:gap-2">
+          <h3 className="font-semibold text-sm md:font-h2 md:text-h2 text-on-surface group-hover:text-primary transition-colors line-clamp-1 md:line-clamp-none">{property.title}</h3>
+          
+          {/* Mobile-only Price (Stacked under title) */}
+          <div className="text-left md:hidden mt-0.5 flex items-end gap-0.5">
+            <span className="text-sm text-primary font-bold">
+              ₹{property.price?.toLocaleString('en-IN')}
+            </span>
+            <span className="text-[10px] text-on-surface-variant font-normal leading-4">/mo</span>
+          </div>
         </div>
-        <p className="font-body-md text-body-md text-on-surface-variant flex items-center gap-1 mb-stack-sm">
-          <span className="material-symbols-outlined text-[18px]">location_on</span>
-          {property.location?.address}
-        </p>
-        <div className="flex flex-wrap gap-2 mb-stack-md">
+        
+        {/* Location */}
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-0 md:mb-4 gap-1 md:gap-0">
+          <div className="flex items-center gap-0.5 md:gap-1 text-on-surface-variant w-full overflow-hidden">
+            <span className="material-symbols-outlined text-[12px] md:text-[18px] flex-shrink-0">location_on</span>
+            <p className="text-[10px] md:font-body-md md:text-body-md line-clamp-1 m-0">
+              {property.location?.address}
+            </p>
+          </div>
+        </div>
+        
+        {/* Amenities: Hidden on Mobile entirely, Chips on Desktop */}
+        <div className="hidden md:flex flex-wrap gap-2 mb-stack-md mt-auto">
           {uniqueAmenities.slice(0, 3).map((amenity) => (
             <div key={amenity} className="bg-primary/5 text-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm flex items-center gap-1.5 border border-primary/10 whitespace-nowrap">
               <span className="material-symbols-outlined text-[16px]">{amenityIconMap[amenity] || 'check_circle'}</span>
@@ -191,7 +209,10 @@ export default function PropertyCard({ property, initialIsSaved, onSaveToggle, o
             </div>
           )}
         </div>
-        <div className="mt-auto pt-4 border-t border-outline-variant/30 flex justify-between items-end">
+        
+        {/* Bottom Section: Price + button on desktop ONLY */}
+        <div className="hidden md:flex mt-auto pt-4 border-t border-outline-variant/30 justify-between items-end">
+          {/* Desktop-only Price (Bottom Left) */}
           <div>
             <p className="font-label-sm text-label-sm text-on-surface-variant mb-1">Starting from</p>
             <p className="font-h2 text-h2 text-primary font-bold">
@@ -199,7 +220,8 @@ export default function PropertyCard({ property, initialIsSaved, onSaveToggle, o
               <span className="font-body-md text-body-md font-normal text-on-surface-variant">/mo</span>
             </p>
           </div>
-          <button className="bg-secondary text-on-secondary px-6 py-2.5 rounded-lg font-body-md text-body-md font-semibold hover:bg-on-secondary-fixed-variant transition-colors shadow-sm cursor-pointer">
+          
+          <button className="bg-secondary text-on-secondary hover:bg-on-secondary-fixed-variant px-6 py-2.5 rounded-lg text-base font-semibold transition-colors shadow-sm cursor-pointer border border-transparent">
             View Details
           </button>
         </div>

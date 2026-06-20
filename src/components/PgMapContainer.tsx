@@ -6,7 +6,7 @@ import { useInView } from 'react-intersection-observer';
 
 const PropertyDisplayMap = dynamic(() => import('@/components/PropertyDisplayMap'), {
   ssr: false,
-  loading: () => <div className="w-full h-[300px] md:h-[400px] bg-surface-container rounded-xl flex items-center justify-center animate-pulse border border-outline-variant"><span className="material-symbols-outlined text-primary text-3xl">map</span></div>
+  loading: () => <div className="w-full h-[200px] md:h-[400px] bg-surface-container rounded-xl flex items-center justify-center animate-pulse border border-outline-variant"><span className="material-symbols-outlined text-primary text-3xl">map</span></div>
 });
 
 interface PgMapContainerProps {
@@ -24,7 +24,7 @@ export default function PgMapContainer({ lat, lng, address, title }: PgMapContai
 
   return (
     <div className="mb-stack-lg" ref={ref}>
-      <h2 className="font-h2 text-h2 text-on-surface mb-stack-sm">Location</h2>
+      <h2 className="text-lg md:font-h2 md:text-h2 font-bold text-on-surface mb-2">Location</h2>
       {inView ? (
         <PropertyDisplayMap 
           lat={lat} 
@@ -33,7 +33,7 @@ export default function PgMapContainer({ lat, lng, address, title }: PgMapContai
           title={title}
         />
       ) : (
-        <div className="w-full h-[300px] md:h-[400px] bg-surface-container rounded-xl flex items-center justify-center border border-outline-variant animate-pulse"></div>
+        <div className="w-full h-[200px] md:h-[400px] bg-surface-container rounded-xl flex items-center justify-center border border-outline-variant animate-pulse"></div>
       )}
     </div>
   );

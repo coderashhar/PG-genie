@@ -12,6 +12,7 @@ import OwnerDashboardPage from '../owner/dashboard/page';
 import PropertyCard from '@/components/PropertyCard';
 import EditProfileForm from '@/components/dashboard/EditProfileForm';
 import DeleteBookingButton from '@/components/dashboard/DeleteBookingButton';
+import ChatTriggerButton from '@/components/dashboard/ChatTriggerButton';
 
 // --- Types for DB Data ---
 interface PropertyLocation {
@@ -71,7 +72,7 @@ const statusConfig: Record<string, { bg: string; text: string; icon: string; lab
   pending: {
     bg: 'bg-tertiary-fixed',
     text: 'text-on-tertiary-fixed-variant',
-    icon: 'pending',
+    icon: 'pending_actions',
     label: 'Pending',
   },
   accepted: {
@@ -193,8 +194,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         <div className="flex-1 w-full px-margin-mobile md:px-gutter max-w-container-max mx-auto py-stack-md md:py-stack-lg">
           {/* Header Section */}
           <header className="mb-stack-lg">
-            <h1 className="font-display text-display text-primary mb-2">
-              Welcome back, {userName.split(' ')[0]}
+            <h1 className="font-display text-[40px] md:text-[64px] leading-[1.1] text-primary mb-2">
+              Welcome back,<br className="md:hidden" /> {userName.split(' ')[0]}
             </h1>
             <p className="font-body-lg text-body-lg text-on-surface-variant">Here is an overview of your housing search.</p>
           </header>
@@ -220,25 +221,26 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-stack-lg">
               {/* Main Column (Saved PGs & Applications) */}
               <div className="lg:col-span-2 flex flex-col gap-stack-lg">
-                
+
                 {/* Saved PGs */}
                 <section>
                   <div className="flex justify-between items-center mb-stack-md">
-                    <h2 className="font-h1 text-h1 text-on-surface">Saved PGs</h2>
+                    <h2 className="font-h1 text-h2 md:text-h1 text-on-surface">Saved PGs</h2>
                     {dashData.savedPgs.length > 2 && (
                       <Link href="/dashboard/saved" className="text-primary hover:text-primary-fixed-dim hover:translate-x-1 transition-all duration-300 font-label-sm text-label-sm flex items-center gap-1 cursor-pointer">
                         View All <span className="material-symbols-outlined text-sm">arrow_forward</span>
                       </Link>
                     )}
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+                  <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-4 md:grid md:grid-cols-2 pb-2 -mx-margin-mobile px-margin-mobile md:mx-0 md:px-0 md:pb-0">
                     {dashData.savedPgs.length > 0 ? (
-                      dashData.savedPgs.slice(0, 2).map((pg) => (
-                        <PropertyCard
-                          key={pg._id}
-                          property={pg}
-                          initialIsSaved={true}
-                        />
+                      dashData.savedPgs.slice(0, 4).map((pg) => (
+                        <div key={pg._id} className="min-w-[50vw] sm:min-w-[300px] md:min-w-0 snap-center">
+                          <PropertyCard
+                            property={pg}
+                            initialIsSaved={true}
+                          />
+                        </div>
                       ))
                     ) : (
                       <div className="md:col-span-2 bg-surface-container rounded-xl p-8 text-center">
@@ -251,10 +253,10 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                     )}
                   </div>
                 </section>
-  
+
                 {/* Booked Visits */}
                 <section>
-                  <h2 className="font-h1 text-h1 text-on-surface mb-stack-md">Booked Visits</h2>
+                  <h2 className="font-h1 text-h2 md:text-h1 text-on-surface mb-stack-md">Booked Visits</h2>
                   <div className="bg-surface rounded-xl shadow-[0px_4px_20px_rgba(76,29,149,0.05)] border border-surface-container overflow-hidden">
                     {dashData.bookings.length > 0 ? (
                       <ul className="divide-y divide-surface-container">
@@ -262,9 +264,9 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                           const config = statusConfig[booking.status];
                           const property = booking.pgId;
                           return (
-                            <div key={booking._id} className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-surface-container transition-colors">
-                              <Link href={`/pgs/${property?._id || '#'}`} className="flex items-start gap-4 flex-1">
-                                <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 relative">
+                            <div key={booking._id} className="p-3 md:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 md:gap-4 hover:bg-surface-container transition-colors">
+                              <Link href={`/pgs/${property?._id || '#'}`} className="flex items-center sm:items-start gap-3 md:gap-4 flex-1">
+                                <div className="w-12 h-12 md:w-12 md:h-12 rounded-lg overflow-hidden flex-shrink-0 relative">
                                   <Image
                                     alt="PG Thumbnail"
                                     fill
@@ -272,16 +274,16 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                                     src={property?.images?.[0] || '/placeholder.jpg'}
                                   />
                                 </div>
-                                <div>
-                                  <h3 className="font-h2 text-h2 text-on-surface hover:underline">{property?.title || 'Unknown PG'}</h3>
-                                  <p className="font-body-md text-body-md text-on-surface-variant">
-                                    Booked on {formatDate(booking.createdAt)}
+                                <div className="flex-1 min-w-0">
+                                  <h3 className="font-h2 text-body-lg md:text-h2 text-on-surface hover:underline truncate">{property?.title || 'Unknown PG'}</h3>
+                                  <p className="font-label-sm md:text-body-md text-on-surface-variant">
+                                    Booked {formatDate(booking.createdAt)}
                                   </p>
                                 </div>
                               </Link>
-                              <div className="flex items-center gap-3">
-                                <span className={`${config.bg} ${config.text} px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1`}>
-                                  <span className="material-symbols-outlined text-xs">{config.icon}</span>
+                              <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto mt-2 sm:mt-0">
+                                <span className={`${config.bg} ${config.text} px-2 py-0.5 md:px-3 md:py-1 rounded-full text-[10px] md:text-xs font-medium flex items-center gap-1`}>
+                                  <span className="material-symbols-outlined text-[10px] md:text-[12px]">{config.icon}</span>
                                   {config.label}
                                 </span>
                                 <DeleteBookingButton bookingId={booking._id} />
@@ -299,67 +301,16 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                   </div>
                 </section>
               </div>
-  
+
               {/* Side Column (Recent Visits & Activity) */}
               <div className="flex flex-col gap-stack-lg">
-                {/* Upcoming Visits */}
-                <section className="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(76,29,149,0.05)] border border-surface-container p-6 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -z-10"></div>
-                  <h2 className="font-h2 text-h2 text-on-surface mb-4 flex items-center gap-2">
-                    <span className="material-symbols-outlined text-primary">event_available</span>
-                    Upcoming Visits
-                  </h2>
-                  {upcomingVisits.length > 0 ? (
-                    <div className="space-y-4 relative before:absolute before:inset-y-0 before:left-[11px] before:w-[2px] before:bg-surface-container">
-                      {upcomingVisits.map((visit, index) => {
-                        const property = visit.pgId;
-                        const isFirst = index === 0;
-                        return (
-                          <div key={visit._id} className="relative pl-8">
-                            <div className={`absolute left-0 top-1 w-6 h-6 rounded-full flex items-center justify-center border-4 border-surface-container-lowest shadow-sm z-10 ${
-                              isFirst
-                                ? 'bg-secondary text-on-secondary'
-                                : 'bg-surface-container border-2 border-outline-variant'
-                            }`}>
-                              {isFirst && <div className="w-2 h-2 bg-on-secondary rounded-full"></div>}
-                            </div>
-                            <div className={`bg-surface border border-surface-container rounded-lg p-3 hover:border-${isFirst ? 'secondary' : 'primary-container'} transition-colors cursor-pointer ${!isFirst ? 'opacity-70' : ''}`}>
-                              <p className={`font-label-sm text-label-sm ${isFirst ? 'text-secondary' : 'text-on-surface-variant'} mb-1`}>
-                                {formatVisitDate(visit.visitDate!)}{visit.visitTime ? `, ${visit.visitTime}` : ''}
-                              </p>
-                              <h4 className="font-h2 text-body-lg text-on-surface mb-2">{property?.title || 'Unknown PG'}</h4>
-                              <div className="flex gap-2">
-                                <button className="flex-1 bg-surface-container text-primary py-1.5 rounded-md font-label-sm text-label-sm hover:bg-primary-container hover:text-on-primary-container transition-colors text-center cursor-pointer">
-                                  Reschedule
-                                </button>
-                                <button className="w-10 bg-secondary text-on-secondary rounded-md flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer">
-                                  <span className="material-symbols-outlined text-sm">call</span>
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    <div className="text-center py-4">
-                      <span className="material-symbols-outlined text-3xl text-on-surface-variant mb-2 block">event_busy</span>
-                      <p className="font-body-md text-on-surface-variant">No upcoming visits scheduled.</p>
-                    </div>
-                  )}
-                  <button className="w-full mt-4 text-primary font-label-sm text-label-sm py-2 hover:bg-primary-container/5 hover:text-primary-fixed-dim hover:translate-x-1 transition-all duration-300 rounded-lg cursor-pointer">
-                    View All Schedule
-                  </button>
-                </section>
-                
+
                 {/* Quick Actions Widget */}
-                <section className="bg-primary text-on-primary rounded-xl p-6 shadow-lg relative overflow-hidden">
-                  <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-xl"></div>
-                  <h3 className="font-h2 text-h2 mb-2 relative z-10">Need Help Finding a PG?</h3>
-                  <p className="font-body-md text-body-md text-primary-fixed-dim mb-4 relative z-10">Tell us your requirements and we&apos;ll send you curated recommendations.</p>
-                  <button className="w-full bg-secondary text-on-secondary font-label-sm text-label-sm py-3 rounded-lg shadow-md hover:opacity-90 transition-opacity relative z-10 flex justify-center items-center gap-2 cursor-pointer">
-                    <span className="material-symbols-outlined text-sm">magic_button</span> Get Recommendations
-                  </button>
+                <section className="bg-primary text-on-primary rounded-xl p-4 md:p-6 shadow-lg relative overflow-hidden">
+                  <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-xl hidden md:block"></div>
+                  <h3 className="font-h2 text-body-lg md:text-h2 mb-1 md:mb-2 relative z-10">Need Help Finding a PG?</h3>
+                  <p className="font-label-sm md:text-body-md text-primary-fixed-dim mb-3 md:mb-4 relative z-10">Tell us your requirements and we&apos;ll send you curated recommendations.</p>
+                  <ChatTriggerButton />
                 </section>
               </div>
             </div>
@@ -367,59 +318,59 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             /* Profile Tab Layout */
             <div className="flex flex-col">
               {/* Profile Header */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-stack-md mb-stack-lg">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-stack-md mb-6 md:mb-stack-lg">
                 {/* User Avatar & Identity Card */}
-                <div className="col-span-1 md:col-span-1 bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-                  <div className="relative mb-stack-sm w-32 h-32">
-                    <div className="w-32 h-32 rounded-full bg-primary flex items-center justify-center relative group">
-                      <span className="text-on-primary font-display text-4xl">{userInitial}</span>
+                <div className="col-span-1 md:col-span-1 bg-surface-container rounded-xl p-4 md:p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                  <div className="relative mb-2 md:mb-stack-sm w-20 h-20 md:w-32 md:h-32">
+                    <div className="w-20 h-20 md:w-32 md:h-32 rounded-full bg-primary flex items-center justify-center relative group">
+                      <span className="text-on-primary font-display text-2xl md:text-4xl">{userInitial}</span>
                     </div>
                   </div>
-                  <h1 className="font-h1 text-h1 text-on-background mb-1">{userName}</h1>
+                  <h1 className="font-h1 text-[24px] md:text-h1 text-on-background mb-1">{userName}</h1>
                   <p className="font-body-md text-body-md text-on-surface-variant flex items-center justify-center gap-1">
                     <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>school</span>
                     {dashData.user.university || 'University'}
                   </p>
                   {dashData.user.batch && (
-                    <div className="mt-4 inline-block bg-primary-container/10 text-primary rounded-full px-4 py-1 font-label-sm text-label-sm">
+                    <div className="mt-2 md:mt-4 inline-block bg-primary-container/10 text-primary rounded-full px-3 md:px-4 py-0.5 md:py-1 font-label-sm text-[10px] md:text-label-sm">
                       Batch of {dashData.user.batch}
                     </div>
                   )}
                 </div>
 
                 {/* Quick Info Card */}
-                <div className="col-span-1 md:col-span-2 bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] flex flex-col justify-center">
-                  <h2 className="font-h2 text-h2 text-on-background flex items-center gap-2 mb-stack-md">
-                    <span className="material-symbols-outlined text-primary">account_circle</span>
+                <div className="col-span-1 md:col-span-2 bg-surface-container rounded-xl p-4 md:p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] flex flex-col justify-center">
+                  <h2 className="font-h2 text-[20px] md:text-h2 text-on-background flex items-center gap-2 mb-4 md:mb-stack-md">
+                    <span className="material-symbols-outlined text-primary text-[20px] md:text-[24px]">account_circle</span>
                     Account Information
                   </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="flex items-center gap-3 bg-surface p-4 rounded-lg border border-surface-variant">
-                      <span className="material-symbols-outlined text-primary">mail</span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                    <div className="flex items-center gap-3 bg-surface p-3 md:p-4 rounded-lg border border-surface-variant">
+                      <span className="material-symbols-outlined text-primary text-[20px] md:text-[24px]">mail</span>
                       <div>
-                        <p className="font-label-sm text-label-sm text-on-surface-variant">Email</p>
-                        <p className="font-body-md text-body-md text-on-surface">{dashData.user.email || '—'}</p>
+                        <p className="font-label-sm text-[11px] md:text-label-sm text-on-surface-variant">Email</p>
+                        <p className="font-body-md text-sm md:text-body-md text-on-surface">{dashData.user.email || '—'}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3 bg-surface p-4 rounded-lg border border-surface-variant">
-                      <span className="material-symbols-outlined text-primary">call</span>
+                    <div className="flex items-center gap-3 bg-surface p-3 md:p-4 rounded-lg border border-surface-variant">
+                      <span className="material-symbols-outlined text-primary text-[20px] md:text-[24px]">call</span>
                       <div>
-                        <p className="font-label-sm text-label-sm text-on-surface-variant">Phone</p>
-                        <p className="font-body-md text-body-md text-on-surface">{dashData.user.phone || '—'}</p>
+                        <p className="font-label-sm text-[11px] md:text-label-sm text-on-surface-variant">Phone</p>
+                        <p className="font-body-md text-sm md:text-body-md text-on-surface">{dashData.user.phone || '—'}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3 bg-surface p-4 rounded-lg border border-surface-variant">
-                      <span className="material-symbols-outlined text-primary">badge</span>
+                    <div className="flex items-center gap-3 bg-surface p-3 md:p-4 rounded-lg border border-surface-variant">
+                      <span className="material-symbols-outlined text-primary text-[20px] md:text-[24px]">badge</span>
                       <div>
-                        <p className="font-label-sm text-label-sm text-on-surface-variant">Role</p>
-                        <p className="font-body-md text-body-md text-on-surface capitalize">{dashData.user.role || '—'}</p>
+                        <p className="font-label-sm text-[11px] md:text-label-sm text-on-surface-variant">Role</p>
+                        <p className="font-body-md text-sm md:text-body-md text-on-surface capitalize">{dashData.user.role || '—'}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3 bg-surface p-4 rounded-lg border border-surface-variant">
-                      <span className="material-symbols-outlined text-primary">calendar_month</span>
+                    <div className="flex items-center gap-3 bg-surface p-3 md:p-4 rounded-lg border border-surface-variant">
+                      <span className="material-symbols-outlined text-primary text-[20px] md:text-[24px]">calendar_month</span>
                       <div>
-                        <p className="font-label-sm text-label-sm text-on-surface-variant">Batch</p>
-                        <p className="font-body-md text-body-md text-on-surface">{dashData.user.batch || '—'}</p>
+                        <p className="font-label-sm text-[11px] md:text-label-sm text-on-surface-variant">Batch</p>
+                        <p className="font-body-md text-sm md:text-body-md text-on-surface">{dashData.user.batch || '—'}</p>
                       </div>
                     </div>
                   </div>
