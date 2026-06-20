@@ -109,8 +109,6 @@ export default function ChatWidget() {
   const [input, setInput] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
   const [showPulse, setShowPulse] = useState(true);
-  const [viewportHeight, setViewportHeight] = useState('100dvh');
-  const [isMobile, setIsMobile] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -137,31 +135,6 @@ export default function ChatWidget() {
       sessionStorage.setItem('pg-genie-chat', JSON.stringify(messages));
     }
   }, [messages]);
-
-  // Track visual viewport to handle mobile keyboard smoothly
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-      if (window.visualViewport) {
-        setViewportHeight(`${window.visualViewport.height}px`);
-      } else {
-        setViewportHeight(`${window.innerHeight}px`);
-      }
-    };
-
-    window.visualViewport?.addEventListener('resize', handleResize);
-    window.addEventListener('resize', handleResize);
-    
-    // Initial set
-    handleResize();
-
-    return () => {
-      window.visualViewport?.removeEventListener('resize', handleResize);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
 
   // Disable background scrolling when modal is open
   useEffect(() => {
@@ -339,12 +312,11 @@ export default function ChatWidget() {
         className={`fixed z-[9998] transition-all duration-300 ease-out ${isOpen
           ? 'opacity-100 translate-y-0 pointer-events-auto'
           : 'opacity-0 translate-y-[100%] md:translate-y-4 pointer-events-none'
-          } inset-0 md:inset-auto md:bottom-24 md:right-6 w-full md:w-[400px] h-[100dvh] md:h-auto max-h-[100dvh] md:max-h-[600px] flex flex-col rounded-none md:rounded-2xl overflow-hidden shadow-2xl border-0 md:border md:border-outline-variant/20`}
+          } inset-0 md:inset-auto md:bottom-24 md:right-6 w-full md:w-[400px] md:h-auto md:max-h-[600px] flex flex-col rounded-none md:rounded-2xl overflow-hidden shadow-2xl border-0 md:border md:border-outline-variant/20`}
         style={{
           background: 'var(--color-surface-container-lowest)',
           boxShadow:
             '0 25px 50px -12px rgba(52, 0, 117, 0.25), 0 0 0 1px rgba(52, 0, 117, 0.05)',
-          height: isMobile ? viewportHeight : undefined,
         }}
       >
         {/* Header */}
