@@ -211,10 +211,10 @@ export default async function OwnerDashboardPage({ searchParams }: { searchParam
         <div className="flex-1 w-full px-margin-mobile md:px-gutter max-w-container-max mx-auto py-stack-md md:py-stack-lg">
           <header className="mb-stack-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="font-display text-display text-primary mb-2">
-                Owner Dashboard
+              <h1 className="font-display text-[40px] md:text-[64px] leading-[1.1] text-primary mb-2">
+                Welcome back,<br className="md:hidden" /> {userName.split(' ')[0]}
               </h1>
-              <p className="font-body-lg text-body-lg text-on-surface-variant">Manage your properties and leads.</p>
+              <p className="font-body-lg text-body-lg text-on-surface-variant">Here is an overview of your properties and leads.</p>
             </div>
             <AddPropertyButton />
           </header>
@@ -238,53 +238,72 @@ export default async function OwnerDashboardPage({ searchParams }: { searchParam
           {activeTab === 'overview' ? (
             <div className="space-y-stack-lg">
               {/* Stats Overview */}
-              <section className="grid grid-cols-1 md:grid-cols-3 gap-stack-md">
-                <div className="bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] border border-surface-container-high relative overflow-hidden group hover:shadow-[0px_8px_30px_rgba(76,29,149,0.12)] transition-all">
+              <section className="grid grid-cols-3 gap-2 md:gap-stack-md">
+                <div className="bg-surface-container rounded-xl p-2 md:p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] border border-surface-container-high relative overflow-hidden group hover:shadow-[0px_8px_30px_rgba(76,29,149,0.12)] transition-all flex flex-col justify-between">
                   <div className="absolute -right-6 -top-6 w-32 h-32 bg-primary-fixed rounded-full opacity-20"></div>
-                  <div className="flex justify-between items-start mb-4 relative z-10">
-                    <div className="p-3 bg-surface rounded-lg text-primary">
-                      <span className="material-symbols-outlined fill text-[32px]" style={{ fontVariationSettings: "'FILL' 1" }}>apartment</span>
+                  <div className="flex justify-between items-start mb-1 md:mb-4 relative z-10">
+                    <div className="p-1 md:p-3 bg-surface rounded-lg text-primary flex items-center justify-center">
+                      <span className="material-symbols-outlined fill text-[18px] md:text-[32px]" style={{ fontVariationSettings: "'FILL' 1" }}>apartment</span>
                     </div>
-                    <span className="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-sm text-label-sm">
+                    <span className="hidden md:inline-flex bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-sm text-label-sm">
                       +{stats.newListingsThisMonth} this month
                     </span>
+                    <span className="md:hidden bg-secondary-container text-on-secondary-container px-1 py-0.5 rounded-full text-[8px] font-bold">
+                      +{stats.newListingsThisMonth}
+                    </span>
                   </div>
-                  <h3 className="font-body-md text-body-md text-on-surface-variant mb-1 relative z-10">Total Listings</h3>
-                  <p className="font-display text-h1 text-on-surface relative z-10">{stats.totalListings}</p>
+                  <div>
+                    <h3 className="font-label-sm text-[10px] md:text-body-md md:font-body-md text-on-surface-variant mb-0 md:mb-1 relative z-10 truncate">Listings</h3>
+                    <p className="font-display text-[20px] md:text-h1 text-on-surface relative z-10 leading-none">{stats.totalListings}</p>
+                  </div>
                 </div>
 
-                <div className="bg-primary-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] relative overflow-hidden group hover:shadow-[0px_8px_30px_rgba(76,29,149,0.12)] transition-all text-on-primary-container">
+                <div className="bg-primary-container rounded-xl p-2 md:p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] relative overflow-hidden group hover:shadow-[0px_8px_30px_rgba(76,29,149,0.12)] transition-all text-on-primary-container flex flex-col justify-between">
                   <div className="absolute right-0 bottom-0 w-40 h-40 bg-primary opacity-10 rounded-tl-full"></div>
-                  <div className="flex justify-between items-start mb-4 relative z-10">
-                    <div className="p-3 bg-surface/20 rounded-lg text-on-primary-container">
-                      <span className="material-symbols-outlined fill text-[32px]" style={{ fontVariationSettings: "'FILL' 1" }}>forum</span>
+                  <div className="flex justify-between items-start mb-1 md:mb-4 relative z-10">
+                    <div className="p-1 md:p-3 bg-surface/20 rounded-lg text-on-primary-container flex items-center justify-center">
+                      <span className="material-symbols-outlined fill text-[18px] md:text-[32px]" style={{ fontVariationSettings: "'FILL' 1" }}>forum</span>
                     </div>
-                    <span className="bg-surface/20 px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1">
+                    <span className="hidden md:flex bg-surface/20 px-3 py-1 rounded-full font-label-sm text-label-sm items-center gap-1">
                       <span className="w-2 h-2 rounded-full bg-secondary"></span>
                       {stats.unreadInquiries} Unread
                     </span>
+                    <span className="md:hidden bg-surface/20 px-1 py-0.5 rounded-full text-[8px] font-bold flex items-center gap-0.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                      {stats.unreadInquiries}
+                    </span>
                   </div>
-                  <h3 className="font-body-md text-body-md text-on-primary-container/80 mb-1 relative z-10">Active Leads</h3>
-                  <p className="font-display text-h1 relative z-10">{stats.activeLeads}</p>
+                  <div>
+                    <h3 className="font-label-sm text-[10px] md:text-body-md md:font-body-md text-on-primary-container/80 mb-0 md:mb-1 relative z-10 truncate">Leads</h3>
+                    <p className="font-display text-[20px] md:text-h1 relative z-10 leading-none">{stats.activeLeads}</p>
+                  </div>
                 </div>
 
-                <div className="bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] border border-surface-container-high relative overflow-hidden group hover:shadow-[0px_8px_30px_rgba(76,29,149,0.12)] transition-all">
+                <div className="bg-surface-container rounded-xl p-2 md:p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] border border-surface-container-high relative overflow-hidden group hover:shadow-[0px_8px_30px_rgba(76,29,149,0.12)] transition-all flex flex-col justify-between">
                   <div className="absolute -left-6 -bottom-6 w-32 h-32 bg-secondary-fixed rounded-full opacity-20"></div>
-                  <div className="flex justify-between items-start mb-4 relative z-10">
-                    <div className="p-3 bg-surface rounded-lg text-secondary">
-                      <span className="material-symbols-outlined fill text-[32px]" style={{ fontVariationSettings: "'FILL' 1" }}>visibility</span>
+                  <div className="flex justify-between items-start mb-1 md:mb-4 relative z-10">
+                    <div className="p-1 md:p-3 bg-surface rounded-lg text-secondary flex items-center justify-center">
+                      <span className="material-symbols-outlined fill text-[18px] md:text-[32px]" style={{ fontVariationSettings: "'FILL' 1" }}>visibility</span>
                     </div>
-                    <span className="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1">
+                    <span className="hidden md:flex bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-sm text-label-sm items-center gap-1">
                       <span className="material-symbols-outlined text-[14px]">
                         {stats.viewsChangePercent >= 0 ? 'trending_up' : 'trending_down'}
                       </span>
                       {Math.abs(stats.viewsChangePercent)}%
                     </span>
+                    <span className="md:hidden bg-secondary-container text-on-secondary-container px-1 py-0.5 rounded-full text-[8px] font-bold flex items-center gap-0.5">
+                      <span className="material-symbols-outlined text-[10px]">
+                        {stats.viewsChangePercent >= 0 ? 'trending_up' : 'trending_down'}
+                      </span>
+                      {Math.abs(stats.viewsChangePercent)}%
+                    </span>
                   </div>
-                  <h3 className="font-body-md text-body-md text-on-surface-variant mb-1 relative z-10">Views this Month</h3>
-                  <p className="font-display text-h1 text-on-surface relative z-10">
-                    {stats.viewsThisMonth.toLocaleString('en-IN')}
-                  </p>
+                  <div>
+                    <h3 className="font-label-sm text-[10px] md:text-body-md md:font-body-md text-on-surface-variant mb-0 md:mb-1 relative z-10 truncate">Views</h3>
+                    <p className="font-display text-[20px] md:text-h1 text-on-surface relative z-10 leading-none">
+                      {stats.viewsThisMonth >= 1000 ? (stats.viewsThisMonth / 1000).toFixed(1) + 'k' : stats.viewsThisMonth}
+                    </p>
+                  </div>
                 </div>
               </section>
 
@@ -313,45 +332,45 @@ export default async function OwnerDashboardPage({ searchParams }: { searchParam
             </div>
           ) : (
             <div className="flex flex-col">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-stack-md mb-stack-lg">
-                <div className="col-span-1 md:col-span-1 bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-                  <div className="relative mb-stack-sm w-32 h-32">
-                    <div className="w-32 h-32 rounded-full bg-primary flex items-center justify-center relative group">
-                      <span className="text-on-primary font-display text-4xl">{getInitials(dashData.owner.name)}</span>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-stack-md mb-6 md:mb-stack-lg">
+                <div className="col-span-1 md:col-span-1 bg-surface-container rounded-xl p-4 md:p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                  <div className="relative mb-2 md:mb-stack-sm w-20 h-20 md:w-32 md:h-32">
+                    <div className="w-20 h-20 md:w-32 md:h-32 rounded-full bg-primary flex items-center justify-center relative group">
+                      <span className="text-on-primary font-display text-2xl md:text-4xl">{getInitials(dashData.owner.name)}</span>
                     </div>
                   </div>
-                  <h1 className="font-h1 text-h1 text-on-background mb-1">{userName}</h1>
-                  <p className="font-body-md text-body-md text-on-surface-variant flex items-center justify-center gap-1">
+                  <h1 className="font-h1 text-[24px] md:text-h1 text-on-background mb-1">{userName}</h1>
+                  <p className="font-body-md text-sm md:text-body-md text-on-surface-variant flex items-center justify-center gap-1">
                     <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>store</span>
                     {dashData.owner.businessName || 'Property Owner'}
                   </p>
                 </div>
 
-                <div className="col-span-1 md:col-span-2 bg-surface-container rounded-xl p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] flex flex-col justify-center">
-                  <h2 className="font-h2 text-h2 text-on-background flex items-center gap-2 mb-stack-md">
-                    <span className="material-symbols-outlined text-primary">account_circle</span>
+                <div className="col-span-1 md:col-span-2 bg-surface-container rounded-xl p-4 md:p-gutter shadow-[0px_4px_20px_rgba(76,29,149,0.05)] flex flex-col justify-center">
+                  <h2 className="font-h2 text-[20px] md:text-h2 text-on-background flex items-center gap-2 mb-4 md:mb-stack-md">
+                    <span className="material-symbols-outlined text-primary text-[20px] md:text-[24px]">account_circle</span>
                     Business Information
                   </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="flex items-center gap-3 bg-surface p-4 rounded-lg border border-surface-variant">
-                      <span className="material-symbols-outlined text-primary">mail</span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                    <div className="flex items-center gap-3 bg-surface p-3 md:p-4 rounded-lg border border-surface-variant">
+                      <span className="material-symbols-outlined text-primary text-[20px] md:text-[24px]">mail</span>
                       <div>
-                        <p className="font-label-sm text-label-sm text-on-surface-variant">Email</p>
-                        <p className="font-body-md text-body-md text-on-surface">{dashData.owner.email || '—'}</p>
+                        <p className="font-label-sm text-[11px] md:text-label-sm text-on-surface-variant">Email</p>
+                        <p className="font-body-md text-sm md:text-body-md text-on-surface">{dashData.owner.email || '—'}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3 bg-surface p-4 rounded-lg border border-surface-variant">
-                      <span className="material-symbols-outlined text-primary">call</span>
+                    <div className="flex items-center gap-3 bg-surface p-3 md:p-4 rounded-lg border border-surface-variant">
+                      <span className="material-symbols-outlined text-primary text-[20px] md:text-[24px]">call</span>
                       <div>
-                        <p className="font-label-sm text-label-sm text-on-surface-variant">Phone</p>
-                        <p className="font-body-md text-body-md text-on-surface">{dashData.owner.phone || '—'}</p>
+                        <p className="font-label-sm text-[11px] md:text-label-sm text-on-surface-variant">Phone</p>
+                        <p className="font-body-md text-sm md:text-body-md text-on-surface">{dashData.owner.phone || '—'}</p>
                       </div>
                     </div>
-                    <div className="col-span-1 sm:col-span-2 flex items-center gap-3 bg-surface p-4 rounded-lg border border-surface-variant">
-                      <span className="material-symbols-outlined text-primary">location_on</span>
+                    <div className="col-span-1 sm:col-span-2 flex items-center gap-3 bg-surface p-3 md:p-4 rounded-lg border border-surface-variant">
+                      <span className="material-symbols-outlined text-primary text-[20px] md:text-[24px]">location_on</span>
                       <div>
-                        <p className="font-label-sm text-label-sm text-on-surface-variant">Business Address</p>
-                        <p className="font-body-md text-body-md text-on-surface">{dashData.owner.businessAddress || '—'}</p>
+                        <p className="font-label-sm text-[11px] md:text-label-sm text-on-surface-variant">Business Address</p>
+                        <p className="font-body-md text-sm md:text-body-md text-on-surface">{dashData.owner.businessAddress || '—'}</p>
                       </div>
                     </div>
                   </div>

@@ -38,18 +38,19 @@ export default function ListingsList({ initialListings }: { initialListings: any
 
   return (
     <div
-      className="space-y-4 max-h-[600px] overflow-y-auto pr-2 pb-4 scrollbar-thin scrollbar-thumb-surface-variant scrollbar-track-transparent"
+      className="flex flex-row overflow-x-auto snap-x snap-mandatory gap-4 pb-4 px-margin-mobile -mx-margin-mobile hide-scrollbar md:flex-col md:overflow-y-auto md:max-h-[600px] md:px-0 md:mx-0 md:gap-4 md:scrollbar-thin md:scrollbar-thumb-surface-variant md:scrollbar-track-transparent"
       ref={scrollContainerRef}
     >
       {initialListings.length > 0 ? (
         <>
           {initialListings.slice(0, visibleCount).map((listing) => (
-            <div key={listing._id} className="rounded-xl p-4 border border-outline-variant/50 flex flex-col sm:flex-row gap-4 bg-surface-container-lowest hover:border-primary/30 transition-all shadow-sm">
-              <div className="w-full sm:w-48 h-32 rounded-lg relative overflow-hidden flex-shrink-0">
+            <div key={listing._id} className="min-w-[85vw] sm:min-w-[350px] md:min-w-0 flex-shrink-0 md:flex-shrink snap-center md:snap-align-none rounded-xl p-4 border border-outline-variant/50 flex flex-col sm:flex-row gap-4 bg-surface-container-lowest hover:border-primary/30 transition-all shadow-sm">
+              <div className="w-full sm:w-48 h-40 sm:h-32 rounded-lg relative overflow-hidden flex-shrink-0">
                 <Image
                   src={listing.images[0] || '/placeholder.jpg'}
                   alt={listing.title}
                   fill
+                  sizes="(max-width: 640px) 100vw, 200px"
                   className="object-cover"
                 />
                 <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
@@ -81,28 +82,28 @@ export default function ListingsList({ initialListings }: { initialListings: any
                 <div>
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="font-h2 text-body-lg text-on-surface hover:text-primary transition-colors cursor-pointer">
+                      <h3 className="font-h2 text-body-lg text-on-surface hover:text-primary transition-colors cursor-pointer line-clamp-1">
                         <Link href={`/pgs/${listing._id}`}>{listing.title}</Link>
                       </h3>
-                      <p className="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-1">
+                      <p className="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-1 line-clamp-1">
                         <span className="material-symbols-outlined text-[14px]">location_on</span>
                         {listing.location.address}, {listing.location.city}
                       </p>
                     </div>
-                    <div className="text-right">
-                      <p className="font-h2 text-primary">₹{listing.price.toLocaleString('en-IN')}</p>
+                    <div className="text-right flex-shrink-0 ml-2">
+                      <p suppressHydrationWarning className="font-h2 text-primary text-sm sm:text-base">₹{listing.price.toLocaleString('en-IN')}</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between mt-4 sm:mt-0 pt-4 border-t border-outline-variant/30">
-                  <div className="flex items-center gap-4 text-on-surface-variant">
-                    <div className="flex items-center gap-1 font-label-sm text-label-sm">
+                <div className="flex items-center justify-between mt-4 sm:mt-0 pt-4 border-t border-outline-variant/30 flex-wrap gap-2">
+                  <div className="flex items-center gap-4 text-on-surface-variant w-full sm:w-auto">
+                    <div className="flex items-center gap-1 font-label-sm text-label-sm" suppressHydrationWarning>
                       <span className="material-symbols-outlined text-[16px]">visibility</span>
-                      {listing.views}
+                      {listing.views} views
                     </div>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 w-full sm:w-auto justify-end">
                     <PropertyStatusToggle propertyId={listing._id} initialStatus={listing.status} />
                     <EditPropertyButton property={listing} />
                     <DeletePropertyButton propertyId={listing._id} propertyTitle={listing.title} />
@@ -112,7 +113,7 @@ export default function ListingsList({ initialListings }: { initialListings: any
             </div>
           ))}
           {visibleCount < initialListings.length && (
-            <div ref={observerTarget} className="h-10 flex items-center justify-center">
+            <div ref={observerTarget} className="h-40 sm:h-32 flex items-center justify-center min-w-[50px] md:min-w-0 flex-shrink-0 snap-center md:w-full">
               <span className="material-symbols-outlined animate-spin text-primary">progress_activity</span>
             </div>
           )}

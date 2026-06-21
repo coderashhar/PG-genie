@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import InquiryActionButtons from './InquiryActionButtons';
+import DeleteBookingButton from './DeleteBookingButton';
 
 function timeAgo(dateString: string): string {
   const now = new Date();
@@ -77,7 +78,7 @@ export default function InquiriesList({ initialInquiries }: { initialInquiries: 
 
   return (
     <div
-      className="space-y-4 max-h-[600px] overflow-y-auto pr-2 pb-4 scrollbar-thin scrollbar-thumb-surface-variant scrollbar-track-transparent"
+      className="space-y-4 md:max-h-[600px] md:overflow-y-auto pr-2 pb-4 md:scrollbar-thin md:scrollbar-thumb-surface-variant md:scrollbar-track-transparent"
       ref={scrollContainerRef}
     >
       {initialInquiries.slice(0, visibleCount).map((inquiry, index) => {
@@ -96,11 +97,14 @@ export default function InquiriesList({ initialInquiries }: { initialInquiries: 
                   <p className="font-label-sm text-xs text-on-surface-variant">{timeAgo(inquiry.createdAt)}</p>
                 </div>
               </div>
-              {!isPending && (
-                <span className={`text-[10px] uppercase font-bold px-2 py-1 rounded-sm ${inquiry.status === 'accepted' ? 'bg-secondary/10 text-secondary' : 'bg-error/10 text-error'}`}>
-                  {inquiry.status}
-                </span>
-              )}
+              <div className="flex items-center gap-2">
+                {!isPending && (
+                  <span className={`text-[10px] uppercase font-bold px-2 py-1 rounded-sm ${inquiry.status === 'accepted' ? 'bg-secondary/10 text-secondary' : 'bg-error/10 text-error'}`}>
+                    {inquiry.status}
+                  </span>
+                )}
+                <DeleteBookingButton bookingId={String(inquiry._id)} />
+              </div>
             </div>
 
             <p className="font-body-sm text-body-sm text-on-surface-variant mb-4 line-clamp-2">

@@ -75,9 +75,23 @@ export async function DELETE(
       return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
     }
 
-    // Only the student who created the booking can delete/cancel it
-    if (booking.studentId.toString() !== (session.user as any).id) {
+    const userId = (session.user as any).id;
+    const isStudent = booking.studentId.toString() === userId;
+    const isOwner = booking.ownerId.toString() === userId;
+
+    if (!isStudent && !isOwner) {
       return NextResponse.json({ error: 'Not authorized to delete this booking' }, { status: 403 });
+    }
+
+    if (isOwner && !isStudent) {
+      // Owner logic: can only delete if 1 month older
+      const oneMonthAgo = new Date();
+      oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+      const createdAt = new Date(booking.createdAt);
+      
+      if (createdAt > oneMonthAgo) {
+        return NextResponse.json({ error: 'Owners can only delete inquiries that are older than 1 month' }, { status: 403 });
+      }
     }
 
     // Business logic: allowed to remove from history even if accepted/rejected.
