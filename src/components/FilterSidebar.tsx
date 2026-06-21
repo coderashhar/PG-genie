@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useId } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function FilterSidebar({ onApply }: { onApply?: () => void }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const formId = useId();
 
   // Initialize state from URL params
   const [priceRange, setPriceRange] = useState<string>(() => {
@@ -103,23 +104,23 @@ export default function FilterSidebar({ onApply }: { onApply?: () => void }) {
           <h3 className="font-body-lg text-body-lg font-semibold mb-stack-sm text-on-surface">Price Range (Monthly)</h3>
           <div className="flex flex-col gap-3">
             <label className="flex items-center gap-3 cursor-pointer">
-              <input checked={priceRange === 'any'} onChange={() => setPriceRange('any')} className="form-radio text-primary focus:ring-primary h-5 w-5 border-outline" name="price" type="radio" />
+              <input checked={priceRange === 'any'} onChange={() => setPriceRange('any')} className="form-radio text-primary focus:ring-primary h-5 w-5 border-outline" name={`price-${formId}`} type="radio" />
               <span className="font-body-md text-body-md text-on-surface-variant">Any Price</span>
             </label>
             <label className="flex items-center gap-3 cursor-pointer">
-              <input checked={priceRange === 'under_5k'} onChange={() => setPriceRange('under_5k')} className="form-radio text-primary focus:ring-primary h-5 w-5 border-outline" name="price" type="radio" />
+              <input checked={priceRange === 'under_5k'} onChange={() => setPriceRange('under_5k')} className="form-radio text-primary focus:ring-primary h-5 w-5 border-outline" name={`price-${formId}`} type="radio" />
               <span className="font-body-md text-body-md text-on-surface-variant">Under ₹5,000</span>
             </label>
             <label className="flex items-center gap-3 cursor-pointer">
-              <input checked={priceRange === '5k_8k'} onChange={() => setPriceRange('5k_8k')} className="form-radio text-primary focus:ring-primary h-5 w-5 border-outline" name="price" type="radio" />
+              <input checked={priceRange === '5k_8k'} onChange={() => setPriceRange('5k_8k')} className="form-radio text-primary focus:ring-primary h-5 w-5 border-outline" name={`price-${formId}`} type="radio" />
               <span className="font-body-md text-body-md text-on-surface-variant">₹5,000 - ₹8,000</span>
             </label>
             <label className="flex items-center gap-3 cursor-pointer">
-              <input checked={priceRange === '8k_12k'} onChange={() => setPriceRange('8k_12k')} className="form-radio text-primary focus:ring-primary h-5 w-5 border-outline" name="price" type="radio" />
+              <input checked={priceRange === '8k_12k'} onChange={() => setPriceRange('8k_12k')} className="form-radio text-primary focus:ring-primary h-5 w-5 border-outline" name={`price-${formId}`} type="radio" />
               <span className="font-body-md text-body-md text-on-surface-variant">₹8,000 - ₹12,000</span>
             </label>
             <label className="flex items-center gap-3 cursor-pointer">
-              <input checked={priceRange === 'above_12k'} onChange={() => setPriceRange('above_12k')} className="form-radio text-primary focus:ring-primary h-5 w-5 border-outline" name="price" type="radio" />
+              <input checked={priceRange === 'above_12k'} onChange={() => setPriceRange('above_12k')} className="form-radio text-primary focus:ring-primary h-5 w-5 border-outline" name={`price-${formId}`} type="radio" />
               <span className="font-body-md text-body-md text-on-surface-variant">Above ₹12,000</span>
             </label>
           </div>
