@@ -10,4 +10,4 @@ if a bug is resolved change '[ ]' to  '[x]'
 
 - [x] : the login bug is still there i tried to login as owner using email and password and it showed that i am logged in but no redirect happened and when i tried to access dashboard it asked me to log in again 
 
-- [] : icons missing - _sweep, 
+- [x] : When in Mobile View, if we change the price filter the active status blue dot disappears and comes back if we change or click on gender preference or facilities, this bug is there only in mobile view. 
