@@ -3,10 +3,25 @@
 import Link from "next/link";
 import React from "react";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export default function Footer() {
   const pathname = usePathname();
+  const { data: session } = useSession();
+
   if (pathname === "/login" || pathname.startsWith("/admin")) return null;
+
+  const role = (session?.user as any)?.role;
+  let dashboardLink = "/login";
+  let dashboardText = "Dashboard";
+
+  if (role === 'student') {
+    dashboardLink = "/dashboard";
+    dashboardText = "Student Dashboard";
+  } else if (role === 'owner') {
+    dashboardLink = "/owner/dashboard";
+    dashboardText = "Owner Dashboard";
+  }
 
   return (
     <footer className="w-full bg-on-background text-surface py-20 px-margin-mobile md:px-gutter z-50 relative mt-auto">
@@ -26,7 +41,7 @@ export default function Footer() {
           <div className="flex flex-col gap-4">
             <span className="font-label-sm uppercase tracking-widest text-surface-variant/40 mb-2">Platform</span>
             <Link className="font-body-md text-surface-variant hover:text-white transition-colors" href="/pgs">Curated Listings</Link>
-            <Link className="font-body-md text-surface-variant hover:text-white transition-colors" href="/owner/dashboard">Owner Portal</Link>
+            <Link className="font-body-md text-surface-variant hover:text-white transition-colors" href={dashboardLink}>{dashboardText}</Link>
           </div>
           <div className="flex flex-col gap-4">
             <span className="font-label-sm uppercase tracking-widest text-surface-variant/40 mb-2">Legal &amp; Help</span>
