@@ -8,6 +8,7 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import * as dotenv from 'dotenv';
+import crypto from 'crypto';
 
 // Load environment variables from .env.local
 dotenv.config({ path: '.env.local' });
@@ -109,15 +110,15 @@ if (!MONGODB_URI) {
 }
 
 const PG_IMAGES = [
-  'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80',
-  'https://images.unsplash.com/photo-1502672260266-1c1de2d9d00c?w=800&q=80',
-  'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80',
-  'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80',
-  'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&q=80',
-  'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=80',
-  'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800&q=80',
-  'https://images.unsplash.com/photo-1583847268964-b28ce8fba1f3?w=800&q=80',
-  'https://images.unsplash.com/photo-1554995207-c18c203602cb?w=800&q=80',
+  '/images/img1.jpg',
+  '/images/img2.jpg',
+  '/images/img3.jpg',
+  '/images/img4.jpg',
+  '/images/img5.jpg',
+  '/images/img6.jpg',
+  '/images/img7.jpg',
+  '/images/img8.jpg',
+  '/images/img9.jpg',
 ];
 
 async function seed() {
@@ -136,7 +137,9 @@ async function seed() {
   console.log('🗑️  Cleared existing data');
 
   // --- Create Owners ---
-  const hashedPassword = await bcrypt.hash('password123', 10);
+  // Using a random unguessable password so these seeded profiles cannot be logged into
+  const randomPassword = crypto.randomUUID();
+  const hashedPassword = await bcrypt.hash(randomPassword, 10);
 
   const owner1 = await User.create({
     name: 'Sharma Ji',
@@ -200,17 +203,24 @@ async function seed() {
   const lastMonth = currentMonth === 1 ? 12 : currentMonth - 1;
   const lastMonthYear = currentMonth === 1 ? currentYear - 1 : currentYear;
 
+  const commonLocation = {
+    address: 'Kothri',
+    city: 'Kothri Kalan',
+    state: 'Madhya Pradesh',
+    zipCode: '466114',
+  };
+
   const properties = await Property.insertMany([
     {
       ownerId: owner1._id,
       title: 'Sunrise Student Housing',
       description:
         'Modern student accommodation with premium amenities. Spacious rooms with attached balcony, high-speed WiFi, AC, and 24/7 security. Just 1.2 km from VIT Bhopal campus.',
-      location: { address: 'Near Main Gate, Kothri', city: 'Bhopal', state: 'Madhya Pradesh', zipCode: '462046' },
+      location: commonLocation,
       price: 6500,
       roomTypes: ['Single', 'Double', 'Triple'],
       amenities: ['WiFi', 'AC', 'Laundry', 'Power Backup', 'CCTV'],
-      images: [PG_IMAGES[0], PG_IMAGES[4]],
+      images: [PG_IMAGES[0], PG_IMAGES[4], PG_IMAGES[8]],
       status: 'active',
       views: 342,
       monthlyViews: [
@@ -223,11 +233,11 @@ async function seed() {
       title: 'Kothri Boys Hostel',
       description:
         'Affordable boys hostel with homely meals and a welcoming atmosphere. Just 0.8 km from VIT Bhopal. Includes breakfast and dinner.',
-      location: { address: 'Market Road, Kothri', city: 'Bhopal', state: 'Madhya Pradesh', zipCode: '462046' },
+      location: commonLocation,
       price: 5000,
       roomTypes: ['Double', 'Triple'],
       amenities: ['WiFi', 'Meals', 'Power Backup'],
-      images: [PG_IMAGES[1], PG_IMAGES[7]],
+      images: [PG_IMAGES[1], PG_IMAGES[7], PG_IMAGES[8]],
       status: 'active',
       views: 218,
       monthlyViews: [
@@ -240,11 +250,11 @@ async function seed() {
       title: 'Elite Girls Premium PG',
       description:
         'Premium all-girls PG with laundry service, 3 meals/day, and dedicated study rooms. Safe, secure, and close to campus.',
-      location: { address: 'Main Market, Kothri', city: 'Bhopal', state: 'Madhya Pradesh', zipCode: '462046' },
+      location: commonLocation,
       price: 8000,
       roomTypes: ['Single', 'Double'],
       amenities: ['Laundry', 'Meals', 'Study Room', 'AC', 'WiFi'],
-      images: [PG_IMAGES[8], PG_IMAGES[5]],
+      images: [PG_IMAGES[2], PG_IMAGES[5], PG_IMAGES[8]],
       status: 'active',
       views: 156,
       monthlyViews: [
@@ -257,11 +267,11 @@ async function seed() {
       title: 'Green Valley Residency',
       description:
         'Peaceful living with lush green surroundings. Includes gym access, rooftop garden, and high-speed fiber internet. 1.5 km from VIT.',
-      location: { address: 'Valley Road, Kothri', city: 'Bhopal', state: 'Madhya Pradesh', zipCode: '462046' },
+      location: commonLocation,
       price: 7500,
       roomTypes: ['Single', 'Double'],
       amenities: ['WiFi', 'AC', 'Gym', 'Garden', 'Power Backup'],
-      images: [PG_IMAGES[2], PG_IMAGES[6]],
+      images: [PG_IMAGES[3], PG_IMAGES[6], PG_IMAGES[8]],
       status: 'active',
       views: 289,
       monthlyViews: [
@@ -274,11 +284,11 @@ async function seed() {
       title: 'Shanti Niwas',
       description:
         'Budget-friendly student PG with homely food. Clean rooms, attached bathrooms, and friendly staff. Walking distance from VIT campus.',
-      location: { address: 'Temple Street, Kothri', city: 'Bhopal', state: 'Madhya Pradesh', zipCode: '462046' },
+      location: commonLocation,
       price: 4500,
       roomTypes: ['Double', 'Triple'],
       amenities: ['Meals', 'Power Backup', 'Parking'],
-      images: [PG_IMAGES[3], PG_IMAGES[1]],
+      images: [PG_IMAGES[4], PG_IMAGES[0], PG_IMAGES[8]],
       status: 'active',
       views: 178,
       monthlyViews: [
@@ -291,11 +301,11 @@ async function seed() {
       title: 'Elite Co-living Spaces',
       description:
         'Experience premium student living with state-of-the-art facilities, dedicated study zones, and high-speed internet designed for modern academic needs.',
-      location: { address: 'Premium Sector, Kothri', city: 'Bhopal', state: 'Madhya Pradesh', zipCode: '462046' },
+      location: commonLocation,
       price: 11000,
       roomTypes: ['Single', 'Double'],
       amenities: ['Fiber Internet', 'Premium Meals', 'Central AC', 'Gym', 'Study Zone'],
-      images: [PG_IMAGES[6], PG_IMAGES[4]],
+      images: [PG_IMAGES[5], PG_IMAGES[2], PG_IMAGES[8]],
       status: 'active',
       views: 412,
       monthlyViews: [
@@ -425,13 +435,6 @@ async function seed() {
   console.log(`   Students: ${await User.countDocuments({ role: 'student' })}`);
   console.log(`   Properties: ${await Property.countDocuments()}`);
   console.log(`   Bookings: ${await Booking.countDocuments()}`);
-
-  console.log('\n📧 Test credentials:');
-  console.log('   Student: aryan@vitstudent.ac.in / password123');
-  console.log('   Student: priya@vitstudent.ac.in / password123');
-  console.log('   Student: rahul@vitstudent.ac.in / password123');
-  console.log('   Owner:   sharma@pggenie.com / password123');
-  console.log('   Owner:   gupta@pggenie.com / password123');
 
   await mongoose.disconnect();
   console.log('\n✅ Disconnected from MongoDB');
