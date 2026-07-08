@@ -119,7 +119,7 @@ export default function Home() {
                   <span className="text-label-sm text-on-surface-variant/80 uppercase tracking-wider mt-1 text-[10px]">Verified</span>
                 </div>
                 <div className="glass-minimal rounded-2xl p-4 flex flex-col items-center justify-center text-center backdrop-blur-md">
-                  <span className="font-display text-2xl font-semibold text-primary">1.2k</span>
+                  <span className="font-display text-2xl font-semibold text-primary">100+</span>
                   <span className="text-label-sm text-on-surface-variant/80 uppercase tracking-wider mt-1 text-[10px]">Students</span>
                 </div>
                 <div className="glass-minimal rounded-2xl p-4 flex flex-col items-center justify-center text-center backdrop-blur-md">
@@ -147,11 +147,11 @@ export default function Home() {
 
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 items-start">
               <div className="md:col-span-8 flex flex-col group cursor-pointer w-full">
-                <Link href="/pgs/6a131e6f34188a11736f3cde" className="relative block w-full aspect-[21/9] md:aspect-[16/9] overflow-hidden rounded-2xl md:rounded-3xl mb-3 md:mb-6 bg-surface-container">
+                <Link href="/pgs/6a4d438f1faf1b9fd182706d" className="relative block w-full aspect-[21/9] md:aspect-[16/9] overflow-hidden rounded-2xl md:rounded-3xl mb-3 md:mb-6 bg-surface-container">
                   <img
                     alt="Premium student accommodation"
                     className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                    src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80"
+                    src="/images/img6.jpg"
                   />
                   <div className="absolute top-3 right-3 md:top-6 md:right-6 bg-white/90 backdrop-blur-md px-2 py-1 md:px-4 md:py-2 rounded-full flex items-center shadow-lg">
                     <span className="material-symbols-outlined text-secondary text-[10px] md:text-sm mr-1 md:mr-2" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
@@ -177,11 +177,11 @@ export default function Home() {
               </div>
 
               <div className="md:col-span-4 flex flex-col group cursor-pointer mt-2 md:mt-24 w-full">
-                <Link href="/pgs/6a131e6f34188a11736f3cdb" className="relative block w-full aspect-[21/9] md:aspect-[3/4] overflow-hidden rounded-2xl md:rounded-3xl mb-3 md:mb-6 bg-surface-container">
+                <Link href="/pgs/6a4d438f1faf1b9fd182706a" className="relative block w-full aspect-[21/9] md:aspect-[3/4] overflow-hidden rounded-2xl md:rounded-3xl mb-3 md:mb-6 bg-surface-container">
                   <img
                     alt="Student PG interior"
                     className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                    src="https://images.unsplash.com/photo-1502672260266-1c1de2d9d00c?w=800&q=80"
+                    src="/images/img5.jpg"
                   />
                   <div className="absolute top-3 left-3 md:top-6 md:left-6 bg-primary text-white px-2 py-0.5 md:px-3 md:py-1 rounded-full text-[10px] md:text-xs font-bold shadow-lg tracking-wider uppercase">
                     New
