@@ -54,18 +54,30 @@ export async function getProperties(params: PropertyQueryParams) {
     };
 
     const stringAmenities: string[] = [];
+    query.$and = query.$and || [];
 
     amenitiesList.forEach(a => {
       const key = a.toLowerCase();
       if (booleanMap[key]) {
-        query[booleanMap[key]] = true;
+        query.$and.push({
+          $or: [
+            { [booleanMap[key]]: true },
+            { amenities: new RegExp(a, 'i') }
+          ]
+        });
       } else {
         stringAmenities.push(a);
       }
     });
 
     if (stringAmenities.length > 0) {
-      query.amenities = { $all: stringAmenities.map(a => new RegExp(a, 'i')) };
+      query.$and.push({
+        amenities: { $all: stringAmenities.map(a => new RegExp(a, 'i')) }
+      });
+    }
+
+    if (query.$and.length === 0) {
+      delete query.$and;
     }
   }
 
