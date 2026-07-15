@@ -8,6 +8,32 @@ A state-of-the-art, redesigned PG rental portal custom-tailored for the **VIT Bh
 
 ---
 
+## 🏗️ Project Architecture
+
+PG Genie is built on a modern **Client-Server Architecture** powered by the **Next.js App Router**:
+- **Frontend**: React 19 server components (RSC) and client components styled with Tailwind CSS 4.
+- **Backend**: Next.js API routes providing RESTful endpoints, alongside Server Actions for seamless data mutations.
+- **Database**: MongoDB hosted on Atlas, interfaced via Mongoose ODM.
+- **Storage**: Amazon S3 for handling client-side direct uploads of images and media via presigned URLs.
+- **Authentication**: NextAuth.js (v4) managing JWT-based sessions for role-based access control (Student, Owner, Admin).
+
+---
+
+## 💻 Tech Stack
+
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
+- **UI Library**: [React 19](https://react.dev/)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/) & Custom CSS Modules
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **Database**: [MongoDB](https://www.mongodb.com/) & [Mongoose](https://mongoosejs.com/)
+- **Authentication**: [NextAuth.js](https://next-auth.js.org/) & `bcryptjs`
+- **Cloud & Storage**: AWS S3, AWS SES, AWS SNS (via `@aws-sdk`)
+- **Maps**: `@react-google-maps/api`
+- **Validation**: [Zod](https://zod.dev/)
+- **Analytics & Performance**: Vercel Analytics, Vercel Speed Insights, `lru-cache`
+
+---
+
 ## ✨ Key Core Features
 
 ### 🔍 1. Advanced Search & Discovery
@@ -24,7 +50,7 @@ A state-of-the-art, redesigned PG rental portal custom-tailored for the **VIT Bh
 - **Engagement Analytics**: Automatic page view tracking to calculate property popularity ranks dynamically.
 - **Verified Badging**: Secure visual cues showing property verification statuses for high-trust bookings.
 
-### 🛡️ 4. Full Authentication System (NextAuth.js)
+### 🛡️ 4. Full Authentication System
 - **OAuth & Credentials Support**: Native Google Sign-In alongside traditional Email/Phone credential login powered by `bcryptjs` password hashing.
 - **Role-Based Access Control (RBAC)**: Distinguishes interface and API authorizations between `student` and `owner` accounts.
 
@@ -34,5 +60,28 @@ A state-of-the-art, redesigned PG rental portal custom-tailored for the **VIT Bh
 
 ---
 
+## 🗄️ Database Design (MongoDB/Mongoose)
 
+The data layer is meticulously designed around distinct Mongoose models:
+- **`User`**: Core user profiles holding authentication details, role (`student`, `owner`, `admin`), preferences, and contact information.
+- **`Property`**: Details of PG accommodations including title, description, location (geo-coordinates), amenities, rules, media, pricing, and landlord references.
+- **`Booking`**: Tracks rental reservations connecting `User` (student) and `Property`, including check-in/out dates, status (`pending`, `confirmed`, `cancelled`), and payment history.
+- **`Ticket`**: Support ticketing system for users to report issues, linked to specific properties or generic platform support.
+- **`Notification`**: In-app alerts for users (e.g., booking updates, messages, system announcements).
+- **`Otp`**: Short-lived codes for phone/email verification processes.
 
+---
+
+## 🌐 API Overview
+
+The backend exposes structured REST API routes under `/api` for decoupled client interactions:
+- **`/api/auth/*`**: NextAuth.js endpoints for login, signup, session management, and OAuth callbacks.
+- **`/api/properties`**: CRUD operations for PG listings, search queries, and filtering.
+- **`/api/bookings`**: Handling reservation requests, status updates, and owner approvals.
+- **`/api/users`**: Managing user profiles, bookmarks, and preferences.
+- **`/api/upload`**: Secure endpoint to generate AWS S3 presigned URLs for direct file uploads.
+- **`/api/chat`**: Endpoints supporting real-time messaging between students and owners.
+- **`/api/notifications`**: Fetching, reading, and dismissing in-app notifications.
+- **`/api/tickets`**: Creating and resolving support/maintenance tickets.
+- **`/api/dashboard`**: Aggregated analytics and data for owner and admin panels.
+- **`/api/admin & /api/owner`**: Protected endpoints restricted by specific user roles.
